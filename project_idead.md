@@ -2,11 +2,9 @@
 
 A website aimed toward the VFX matchmove community. Matchmovers need camera information, specifically sensor size, filmback size and image resolution. The site will allow them to easily find relevant camera data based either on the camera make and model or on the show it is used on. The camera data will be sourced manually and via the imdb api.
 
-## Mastodon Client
+## Booky
 
-A very simple Mastodon client. Mostly to read posts as a start, later can add more functionality
-
-https://docs.joinmastodon.org/api/
+A website aimed toward indie authors. Will allow users to collect reading lists and reviews (using goodreads api), research prices/ads (using amazon api) and design book cover mockups using Three.js
 
 ## A bookmark/Favorite collector
 
