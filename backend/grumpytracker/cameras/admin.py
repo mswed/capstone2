@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CameraManufacturer, Camera, Format
+from .models import CameraManufacturer, Camera, Format, Source
 
 
 @admin.register(CameraManufacturer)
@@ -14,7 +14,10 @@ class CameraAdmin(admin.ModelAdmin):
         "manufacturer",
         "model",
         "sensor_type",
-        "max_filmback_size",
+        "max_filmback_width",
+        "max_filmback_height",
+        "max_image_width",
+        "max_image_height",
         "min_frame_rate",
         "max_frame_rate",
     ]
@@ -26,6 +29,7 @@ class CameraAdmin(admin.ModelAdmin):
 class FormatAdmin(admin.ModelAdmin):
     list_display = [
         "camera",
+        "source",
         "image_format",
         "image_aspect",
         "format_name",
@@ -33,9 +37,22 @@ class FormatAdmin(admin.ModelAdmin):
         "image_height",
         "sensor_width",
         "sensor_height",
+        "is_downsampled",
+        "codec",
         "anamorphic",
         "pixel_aspect",
         "notes",
     ]
     list_filter = ["image_format", "anamorphic", "pixel_aspect"]
     search_fields = ["camera", "image_format", "image_aspect"]
+
+
+@admin.register(Source)
+class Source(admin.ModelAdmin):
+    list_display = [
+        "name",
+        "url",
+        "note",
+    ]
+    list_filter = ["name", "url"]
+    search_fields = ["name", "url"]
