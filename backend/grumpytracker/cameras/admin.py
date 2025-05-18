@@ -37,13 +37,19 @@ class FormatAdmin(admin.ModelAdmin):
         "image_height",
         "sensor_width",
         "sensor_height",
+        "is_anamorphic",
+        "anamorphic_squeeze",
+        "is_desqueezed",
+        "pixel_aspect",
+        "filmback_width_3de",
+        "filmback_height_3de",
+        "distortion_model_3de",
         "is_downsampled",
         "codec",
-        "anamorphic",
-        "pixel_aspect",
         "notes",
+        "tracking_workflow",
     ]
-    list_filter = ["image_format", "anamorphic", "pixel_aspect"]
+    list_filter = ["image_format", "is_anamorphic", "pixel_aspect"]
     search_fields = ["camera", "image_format", "image_aspect"]
 
 
