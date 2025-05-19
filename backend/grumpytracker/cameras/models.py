@@ -47,6 +47,8 @@ class Camera(models.Model):
         max_digits=6, decimal_places=2, validators=[MinValueValidator(0)]
     )
 
+    notes = models.CharField(max_length=500, blank=True)
+
     # Audit fields
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -144,6 +146,7 @@ class Format(models.Model):
 
     # Additionl info
     is_downsampled = models.BooleanField(default=False)
+    is_upscaled = models.BooleanField(default=False)
     codec = models.CharField(max_length=20, blank=True)
     raw_recording_available = models.BooleanField(
         default=True,
