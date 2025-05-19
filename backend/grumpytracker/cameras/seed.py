@@ -5,22 +5,23 @@ from loguru import logger
 
 @transaction.atomic
 def clear_database():
-    formats_count = Format.objects.count()
-    Format.objects.all().delete()
+    # Format.objects.delete() returns a tuple (count_deleted, dict_with_details)
+    formats_deleted = Format.objects.all().delete()[0]
+    sources_deleted = Source.objects.all().delete()[0]
+    cameras_deleted = Camera.objects.all().delete()[0]
+    manufacturers_deleted = CameraManufacturer.objects.all().delete()[0]
 
-    sources_count = Source.objects.count()
-    Source.objects.all().delete()
+    logger.info(f"Deleted {manufacturers_deleted} manufacturers")
+    logger.info(f"Deleted {cameras_deleted} cameras")
+    logger.info(f"Deleted {sources_deleted} sources")
+    logger.info(f"Deleted {formats_deleted} formats")
 
-    cameras_count = Camera.objects.count()
-    Camera.objects.all().delete()
-
-    manufacturers_count = CameraManufacturer.objects.count()
-    CameraManufacturer.objects.all().delete()
-
-    logger.info(f"Deleted {manufacturers_count} manufacturers")
-    logger.info(f"Deleted {cameras_count} cameras")
-    logger.info(f"Deleted {sources_count} sources")
-    logger.info(f"Deleted {formats_count} formats")
+    return {
+        "manufacturers": manufacturers_deleted,
+        "cameras": cameras_deleted,
+        "sources": sources_deleted,
+        "formats": formats_deleted,
+    }
 
 
 @transaction.atomic
@@ -56,6 +57,18 @@ def seed_cameras(manufacturers):
             "min_frame_rate": 0.75,
             "max_frame_rate": 120,
         },
+        {
+            "manufacturer": manufacturers.get("Arri")
+            or CameraManufacturer.objects.get("Arri"),
+            "model": "Alexa Mini LF",
+            "sensor_type": "Large Format ARRI ALEV III (A2X) CMOS sensor with Bayer pattern color filter array",
+            "max_filmback_width": 36.70,
+            "max_filmback_height": 25.54,
+            "max_image_width": 4448,
+            "max_image_height": 3096,
+            "min_frame_rate": 0.75,
+            "max_frame_rate": 90,
+        },
     ]
 
     created_cameras = {}
@@ -73,7 +86,13 @@ def seed_sources():
         {
             "name": "Alexa 35 User Manual",
             "url": "https://www.arri.com/resource/blob/389818/03a1421ba039d246cd4c895c2f791f79/alexa-35-user-manual-sup-4-0-0-data.pdf",
-        }
+            "file_name": "ARRI ALEXA 35 SUP 4.0.0 - User Manual.pdf",
+        },
+        {
+            "name": "Alexa Mini User Manual",
+            "url": "https://www.arri.com/resource/blob/347174/6b8fd84caac842b3c9292c910fcee693/alexa-mini-lf-sup-7-3-user-manual-data.pdf",
+            "file_name": "ALEXA Mini LF SUP 7.3 - User Manual.pdf",
+        },
     ]
 
     created_sources = {}
@@ -383,6 +402,224 @@ def seed_formats(cameras, sources):
             "codec": "ProRes",
             "source": sources.get("Alexa 35 User Manual"),
             "manufacturer_notes": "2K 16:9 S16 mimics the traditional Super 16 format for use with Super 16 lenses or as an in-camera center crop.",
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "4.5K LF",
+            "image_aspect": "3:2",
+            "format_name": "Open Gate",
+            "sensor_width": 36.70,
+            "sensor_height": 25.54,
+            "image_width": 4448,
+            "image_height": 3096,
+            "codec": "ARRIRAW",
+            "source": sources.get("Alexa Mini User Manual"),
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "4.5K LF",
+            "image_aspect": "2.39:1",
+            "format_name": "Open Gate",
+            "sensor_width": 36.70,
+            "sensor_height": 15.31,
+            "image_width": 4448,
+            "image_height": 1856,
+            "codec": "ARRIRAW",
+            "source": sources.get("Alexa Mini User Manual"),
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "3.8K LF",
+            "image_aspect": "16:9",
+            "format_name": "UHD",
+            "sensor_width": 31.68,
+            "sensor_height": 17.82,
+            "image_width": 3840,
+            "image_height": 2160,
+            "codec": "ARRIRAW",
+            "source": sources.get("Alexa Mini User Manual"),
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "2.8K LF",
+            "image_aspect": "1:1",
+            "sensor_width": 23.76,
+            "sensor_height": 23.76,
+            "image_width": 2880,
+            "image_height": 2880,
+            "codec": "ARRIRAW",
+            "source": sources.get("Alexa Mini User Manual"),
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "3.4K",
+            "image_aspect": "3.2",
+            "format_name": "S35",
+            "sensor_width": 28.25,
+            "sensor_height": 18.16,
+            "image_width": 3424,
+            "image_height": 2202,
+            "codec": "ARRIRAW",
+            "source": sources.get("Alexa Mini User Manual"),
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "4.5K LF",
+            "image_aspect": "3:2",
+            "format_name": "Open Gate",
+            "sensor_width": 36.70,
+            "sensor_height": 25.54,
+            "image_width": 4480,
+            "image_height": 3096,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+            "manufacturer_notes": "This format adds 16px clip padding on left and right sides of frames. Sensor resolution is 4448x3096",
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "4.5K LF",
+            "image_aspect": "2.39:1",
+            "sensor_width": 36.70,
+            "sensor_height": 15.31,
+            "image_width": 4480,
+            "image_height": 1856,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+            "manufacturer_notes": "This format adds 16px clip padding on left and right sides of frames. Sensor resolution is 4448x1856",
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "4.3K LF",
+            "image_aspect": "16:9",
+            "format_name": "UHD",
+            "sensor_width": 35.64,
+            "sensor_height": 20.05,
+            "image_width": 3840,
+            "image_height": 2160,
+            "is_downsampled": True,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+            "notes": "This is a downsampled UHD format. Original sensor resolution was 4320×2430 pixels.",
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "4.3K LF",
+            "image_aspect": "16:9",
+            "format_name": "HD",
+            "sensor_width": 35.64,
+            "sensor_height": 20.05,
+            "image_width": 1920,
+            "image_height": 1080,
+            "is_downsampled": True,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+            "notes": "This is a downsampled format. Original sensor resolution was 4320×2430 pixels.",
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "3.8K LF",
+            "image_aspect": "16:9",
+            "format_name": "UHD",
+            "sensor_width": 31.68,
+            "sensor_height": 17.82,
+            "image_width": 3840,
+            "image_height": 2160,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "3.8K LF",
+            "image_aspect": "16:9",
+            "format_name": "2K",
+            "sensor_width": 31.68,
+            "sensor_height": 17.82,
+            "image_width": 2048,
+            "image_height": 1152,
+            "is_downsampled": True,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+            "notes": "This is a downsampled format. Original sensor resolution was 3840x2160 pixels.",
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "3.8K LF",
+            "image_aspect": "16:9",
+            "format_name": "HD",
+            "sensor_width": 31.68,
+            "sensor_height": 17.82,
+            "image_width": 1920,
+            "image_height": 1080,
+            "is_downsampled": True,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+            "notes": "This is a downsampled format. Original sensor resolution was 3840x2160 pixels.",
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "2.8K LF",
+            "image_aspect": "1:1",
+            "sensor_width": 23.76,
+            "sensor_height": 26.76,
+            "image_width": 3072,
+            "image_height": 3024,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+            "manufacturer_notes": "This format adds 96 px clip padding on left and right sides of frames and 72px padding on top and bottom. Sensor resolution is 2880x2880",
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "3.2K LF",
+            "image_aspect": "16:9",
+            "format_name": "S35",
+            "sensor_width": 26.40,
+            "sensor_height": 14.85,
+            "image_width": 3200,
+            "image_height": 1800,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "2.8K",
+            "image_aspect": "4:3",
+            "format_name": "S35",
+            "sensor_width": 23.76,
+            "sensor_height": 17.81,
+            "image_width": 2880,
+            "image_height": 2160,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+        },
+        {
+            "camera": cameras.get("Alexa Mini LF")
+            or Camera.objects.get("Alexa Mini LF"),
+            "image_format": "2.8K",
+            "image_aspect": "4:3",
+            "format_name": "HD",
+            "sensor_width": 23.76,
+            "sensor_height": 13.36,
+            "image_width": 1920,
+            "image_height": 1080,
+            "is_downsampled": True,
+            "codec": "ProRes",
+            "source": sources.get("Alexa Mini User Manual"),
+            "notes": "This is a downsampled format. Original sensor resolution was 2880x1620 pixels.",
         },
     ]
 

@@ -61,6 +61,7 @@ class Camera(models.Model):
 class Source(models.Model):
     name = models.CharField(max_length=100)
     url = models.URLField(blank=True)
+    file_name = models.CharField(max_length=100, blank=True)
     note = models.CharField(max_length=500, blank=True, null=True)
 
     # Audit fields
@@ -171,6 +172,7 @@ class Format(models.Model):
             "camera",
             "image_format",
             "image_aspect",
+            "format_name",
             "is_anamorphic",
             "codec",
             "is_downsampled",
