@@ -144,9 +144,14 @@ class Format(models.Model):
     # Additionl info
     is_downsampled = models.BooleanField(default=False)
     codec = models.CharField(max_length=20, blank=True)
-    notes = models.CharField(max_length=500, blank=True, null=True)
+    raw_recording_available = models.BooleanField(
+        default=True,
+        help_text="Is the raw, unprocessed format available for recording?",
+    )
 
-    # Detailed tracking workflow notes
+    # Different types of notes
+    notes = models.CharField(max_length=500, blank=True, null=True)
+    manufacturer_notes = models.CharField(max_length=500, blank=True, null=True)
     tracking_workflow = models.TextField(
         blank=True,
         null=True,
