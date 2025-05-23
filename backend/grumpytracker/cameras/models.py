@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-from django.db.models.fields.related import RelatedIsNull
 
 
 class CameraManufacturer(models.Model):
@@ -164,6 +163,8 @@ class Format(models.Model):
         null=True,
         help_text="Step-by-step instructions for setting up this format in tracking software",
     )
+
+    display_name = f"{camera.model} {image_format} {image_aspect} {format_name} ({image_width} x {image_height} ) {'Anamorphic' if is_anamorphic else ''} {pixel_aspect if pixel_aspect != 1.0 else ''}"
 
     # Audit fields
     created_at = models.DateTimeField(auto_now_add=True)

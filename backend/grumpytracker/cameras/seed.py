@@ -1,5 +1,5 @@
 from cameras.models import CameraManufacturer, Camera, Format, Source
-from django.db import transaction
+from django.db import transaction, connection
 from loguru import logger
 
 
@@ -10,6 +10,9 @@ def clear_database():
     sources_deleted = Source.objects.all().delete()[0]
     cameras_deleted = Camera.objects.all().delete()[0]
     manufacturers_deleted = CameraManufacturer.objects.all().delete()[0]
+
+    with connection.cursor() as cursor:
+        cursor.execute("ALTER SEQUENCE cameras_format_id_seq RESTART WITH 1;")
 
     logger.info(f"Deleted {manufacturers_deleted} manufacturers")
     logger.info(f"Deleted {cameras_deleted} cameras")
@@ -1752,7 +1755,7 @@ def seed_formats(cameras, sources):
         format_record, new = Format.objects.get_or_create(**fmt)
         created_formats[format_record.id] = format_record
         logger.info(
-            f"{'Created' if new else 'Found'} format: {format_record.image_format} {format_record.image_aspect} {format_record.format_name} {format_record.codec}"
+            f"{'Created' if new else 'Found'} format: {format_record.image_format} {format_record.image_aspect} {format_record.format_name} {format_record.codec} {format_record.id}"
         )
 
 
