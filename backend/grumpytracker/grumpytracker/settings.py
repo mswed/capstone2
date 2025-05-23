@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "cameras",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -86,6 +87,8 @@ DATABASES = {
     }
 }
 
+# Register our user model
+AUTH_USER_MODEL = "users.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
