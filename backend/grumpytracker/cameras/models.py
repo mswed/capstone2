@@ -48,6 +48,9 @@ class Camera(models.Model):
     )
 
     notes = models.CharField(max_length=500, blank=True)
+    discontinued = models.BooleanField(
+        default=False, help_text="Was this model discontinued by the manufacturer?"
+    )
 
     # Audit fields
     created_at = models.DateTimeField(auto_now_add=True)
@@ -179,6 +182,7 @@ class Format(models.Model):
             "is_anamorphic",
             "codec",
             "is_downsampled",
+            "pixel_aspect",
         ]
 
     def ensure_sperical_filmback(self) -> bool:
