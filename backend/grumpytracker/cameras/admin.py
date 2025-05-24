@@ -54,7 +54,7 @@ class FormatAdmin(admin.ModelAdmin):
 
 
 @admin.register(Source)
-class Source(admin.ModelAdmin):
+class SourceAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "url",

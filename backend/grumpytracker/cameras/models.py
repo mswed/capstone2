@@ -164,15 +164,12 @@ class Format(models.Model):
         help_text="Step-by-step instructions for setting up this format in tracking software",
     )
 
-    display_name = f"{camera.model} {image_format} {image_aspect} {format_name} ({image_width} x {image_height} ) {'Anamorphic' if is_anamorphic else ''} {pixel_aspect if pixel_aspect != 1.0 else ''}"
-
     # Audit fields
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        suffix = " (downsampled)" if self.is_downsampled else ""
-        return f"{self.camera} {self.format_name}{suffix}"
+        return f"{self.camera.model} {self.image_format} {self.image_aspect} {self.format_name} ({self.image_width} x {self.image_height} ) {'Anamorphic' if self.is_anamorphic else ''} {self.pixel_aspect if self.pixel_aspect != 1.0 else ''}"
 
     class Meta:
         unique_together = [
