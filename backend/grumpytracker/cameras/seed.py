@@ -13,9 +13,11 @@ def clear_database():
 
     with connection.cursor() as cursor:
         cursor.execute("ALTER SEQUENCE cameras_format_id_seq RESTART WITH 1;")
-        cursor.execute("ALTER SEQUENCE cameras_source_id RESTART WITH 1;")
-        cursor.execute("ALTER SEQUENCE cameras_camera_id RESTART WITH 1;")
-        cursor.execute("ALTER SEQUENCE cameras_cameramanufacturer_id RESTART WITH 1;")
+        cursor.execute("ALTER SEQUENCE cameras_source_id_seq RESTART WITH 1;")
+        cursor.execute("ALTER SEQUENCE cameras_camera_id_seq RESTART WITH 1;")
+        cursor.execute(
+            "ALTER SEQUENCE cameras_cameramanufacturer_id_seq RESTART WITH 1;"
+        )
 
     logger.info(f"Deleted {manufacturers_deleted} manufacturers")
     logger.info(f"Deleted {cameras_deleted} cameras")
@@ -1763,7 +1765,6 @@ def seed_formats(cameras, sources):
 
 
 def seed_db():
-    clear_database()
     manufacturers = seed_manufacturers()
     cameras = seed_cameras(manufacturers)
     sources = seed_sources()
