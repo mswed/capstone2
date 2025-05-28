@@ -1,4 +1,4 @@
-from cameras.models import CameraManufacturer, Camera, Format, Source
+from cameras.models import Make, Camera, Format, Source
 from django.db import transaction, connection
 from loguru import logger
 
@@ -9,7 +9,7 @@ def clear_database():
     formats_deleted = Format.objects.all().delete()[0]
     sources_deleted = Source.objects.all().delete()[0]
     cameras_deleted = Camera.objects.all().delete()[0]
-    manufacturers_deleted = CameraManufacturer.objects.all().delete()[0]
+    manufacturers_deleted = Make.objects.all().delete()[0]
 
     with connection.cursor() as cursor:
         cursor.execute("ALTER SEQUENCE cameras_format_id_seq RESTART WITH 1;")
@@ -41,7 +41,7 @@ def seed_manufacturers():
 
     created_manufacturers = {}
     for mfg in manufacturers:
-        manufacturer, new = CameraManufacturer.objects.get_or_create(**mfg)
+        manufacturer, new = Make.objects.get_or_create(**mfg)
         created_manufacturers[mfg["name"]] = manufacturer
         logger.info(
             f"{'Created' if new else 'Found'} manufacturer: {manufacturer.name}"
@@ -54,8 +54,7 @@ def seed_manufacturers():
 def seed_cameras(manufacturers):
     cameras = [
         {
-            "manufacturer": manufacturers.get("Arri")
-            or CameraManufacturer.objects.get("Arri"),
+            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
             "model": "Alexa 35",
             "sensor_type": "Super 35 format ARRI ALEV 4 CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 27.99,
@@ -66,8 +65,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 120,
         },
         {
-            "manufacturer": manufacturers.get("Arri")
-            or CameraManufacturer.objects.get("Arri"),
+            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
             "model": "Alexa Mini LF",
             "sensor_type": "Large Format ARRI ALEV III (A2X) CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 36.70,
@@ -78,8 +76,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 90,
         },
         {
-            "manufacturer": manufacturers.get("Arri")
-            or CameraManufacturer.objects.get("Arri"),
+            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
             "model": "Alexa LF",
             "sensor_type": "Large Format ARRI ALEV III (A2X) CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 36.70,
@@ -90,8 +87,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 150,
         },
         {
-            "manufacturer": manufacturers.get("Arri")
-            or CameraManufacturer.objects.get("Arri"),
+            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
             "model": "Alexa Amira",
             "sensor_type": "Super 35 format ARRI ALEV III CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 26.40,
@@ -102,8 +98,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 200,
         },
         {
-            "manufacturer": manufacturers.get("Arri")
-            or CameraManufacturer.objects.get("Arri"),
+            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
             "model": "Alexa SXT W",
             "sensor_type": "Super 35 format ARRI ALEV III CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 28.25,
@@ -115,8 +110,7 @@ def seed_cameras(manufacturers):
             "notes": "This model also covers the SXT, SXT Plus and SXT Studio",
         },
         {
-            "manufacturer": manufacturers.get("Arri")
-            or CameraManufacturer.objects.get("Arri"),
+            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
             "model": "Alexa Mini",
             "sensor_type": "Super 35 format ARRI ALEV III CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 28.25,
@@ -128,8 +122,7 @@ def seed_cameras(manufacturers):
             "discontinued": True,
         },
         {
-            "manufacturer": manufacturers.get("RED")
-            or CameraManufacturer.objects.get("RED"),
+            "manufacturer": manufacturers.get("RED") or Make.objects.get("RED"),
             "model": "KOMODO",
             "sensor_type": "KOMODO® 19.9 MP Super 35mm Global Shutter CMOS",
             "max_filmback_width": 27.03,
@@ -140,8 +133,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 120,
         },
         {
-            "manufacturer": manufacturers.get("RED")
-            or CameraManufacturer.objects.get("RED"),
+            "manufacturer": manufacturers.get("RED") or Make.objects.get("RED"),
             "model": "KOMODO-X",
             "sensor_type": "KOMODO-X™ 19.9MP Super 35mm Global Shutter CMOS",
             "max_filmback_width": 27.03,

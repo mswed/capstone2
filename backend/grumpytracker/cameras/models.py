@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 
 
-class CameraManufacturer(models.Model):
+class Make(models.Model):
     name = models.CharField(max_length=100)
     website = models.URLField(blank=True)
 
@@ -13,11 +13,14 @@ class CameraManufacturer(models.Model):
     def __str__(self):
         return str(self.name)
 
+    def as_dict(self):
+        return {"name": self.name, "website": self.website}
+
 
 class Camera(models.Model):
     # Define the relationship
     manufacturer = models.ForeignKey(
-        CameraManufacturer, on_delete=models.CASCADE, related_name="cameras"
+        Make, on_delete=models.CASCADE, related_name="cameras"
     )
 
     # Camera info

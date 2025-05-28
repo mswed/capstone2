@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import CameraManufacturer, Camera, Format, Source
+from .models import Make, Camera, Format, Source
 
 
-@admin.register(CameraManufacturer)
+@admin.register(Make)
 class CameraManufacturerAdmin(admin.ModelAdmin):
     list_display = ["name", "website"]
     search_fields = ["name"]
