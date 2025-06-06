@@ -11,7 +11,7 @@ class CameraManufacturerAdmin(admin.ModelAdmin):
 @admin.register(Camera)
 class CameraAdmin(admin.ModelAdmin):
     list_display = [
-        "manufacturer",
+        "make",
         "model",
         "sensor_type",
         "max_filmback_width",
@@ -21,8 +21,8 @@ class CameraAdmin(admin.ModelAdmin):
         "min_frame_rate",
         "max_frame_rate",
     ]
-    list_filter = ["manufacturer", "sensor_type"]
-    search_fields = ["model", "manufacturer"]
+    list_filter = ["make", "sensor_type"]
+    search_fields = ["model", "make"]
 
 
 @admin.register(Format)

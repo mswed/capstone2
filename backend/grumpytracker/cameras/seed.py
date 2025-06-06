@@ -9,23 +9,21 @@ def clear_database():
     formats_deleted = Format.objects.all().delete()[0]
     sources_deleted = Source.objects.all().delete()[0]
     cameras_deleted = Camera.objects.all().delete()[0]
-    manufacturers_deleted = Make.objects.all().delete()[0]
+    makes_deleted = Make.objects.all().delete()[0]
 
     with connection.cursor() as cursor:
         cursor.execute("ALTER SEQUENCE cameras_format_id_seq RESTART WITH 1;")
         cursor.execute("ALTER SEQUENCE cameras_source_id_seq RESTART WITH 1;")
         cursor.execute("ALTER SEQUENCE cameras_camera_id_seq RESTART WITH 1;")
-        cursor.execute(
-            "ALTER SEQUENCE cameras_cameramanufacturer_id_seq RESTART WITH 1;"
-        )
+        cursor.execute("ALTER SEQUENCE cameras_make_id_seq RESTART WITH 1;")
 
-    logger.info(f"Deleted {manufacturers_deleted} manufacturers")
+    logger.info(f"Deleted {makes_deleted} makes")
     logger.info(f"Deleted {cameras_deleted} cameras")
     logger.info(f"Deleted {sources_deleted} sources")
     logger.info(f"Deleted {formats_deleted} formats")
 
     return {
-        "manufacturers": manufacturers_deleted,
+        "makes": makes_deleted,
         "cameras": cameras_deleted,
         "sources": sources_deleted,
         "formats": formats_deleted,
@@ -33,28 +31,26 @@ def clear_database():
 
 
 @transaction.atomic
-def seed_manufacturers():
-    manufacturers = [
-        {"name": "Arri", "website": "https://www.arri.com/en"},
+def seed_makes():
+    makes = [
+        {"name": "ARRI", "website": "https://www.arri.com/en"},
         {"name": "RED", "website": "https://www.red.com"},
     ]
 
-    created_manufacturers = {}
-    for mfg in manufacturers:
-        manufacturer, new = Make.objects.get_or_create(**mfg)
-        created_manufacturers[mfg["name"]] = manufacturer
-        logger.info(
-            f"{'Created' if new else 'Found'} manufacturer: {manufacturer.name}"
-        )
+    created_makes = {}
+    for m in makes:
+        make, new = Make.objects.get_or_create(**m)
+        created_makes[m["name"]] = make
+        logger.info(f"{'Created' if new else 'Found'} make: {make.name}")
 
-    return created_manufacturers
+    return created_makes
 
 
 @transaction.atomic
-def seed_cameras(manufacturers):
+def seed_cameras(makes):
     cameras = [
         {
-            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
+            "make": makes.get("ARRI") or Make.objects.get("ARRI"),
             "model": "Alexa 35",
             "sensor_type": "Super 35 format ARRI ALEV 4 CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 27.99,
@@ -65,7 +61,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 120,
         },
         {
-            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
+            "make": makes.get("ARRI") or Make.objects.get("ARRI"),
             "model": "Alexa Mini LF",
             "sensor_type": "Large Format ARRI ALEV III (A2X) CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 36.70,
@@ -76,7 +72,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 90,
         },
         {
-            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
+            "make": makes.get("ARRI") or Make.objects.get("ARRI"),
             "model": "Alexa LF",
             "sensor_type": "Large Format ARRI ALEV III (A2X) CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 36.70,
@@ -87,7 +83,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 150,
         },
         {
-            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
+            "make": makes.get("ARRI") or Make.objects.get("ARRI"),
             "model": "Alexa Amira",
             "sensor_type": "Super 35 format ARRI ALEV III CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 26.40,
@@ -98,7 +94,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 200,
         },
         {
-            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
+            "make": makes.get("ARRI") or Make.objects.get("ARRI"),
             "model": "Alexa SXT W",
             "sensor_type": "Super 35 format ARRI ALEV III CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 28.25,
@@ -110,7 +106,7 @@ def seed_cameras(manufacturers):
             "notes": "This model also covers the SXT, SXT Plus and SXT Studio",
         },
         {
-            "manufacturer": manufacturers.get("Arri") or Make.objects.get("Arri"),
+            "make": makes.get("ARRI") or Make.objects.get("ARRI"),
             "model": "Alexa Mini",
             "sensor_type": "Super 35 format ARRI ALEV III CMOS sensor with Bayer pattern color filter array",
             "max_filmback_width": 28.25,
@@ -122,7 +118,7 @@ def seed_cameras(manufacturers):
             "discontinued": True,
         },
         {
-            "manufacturer": manufacturers.get("RED") or Make.objects.get("RED"),
+            "make": makes.get("RED") or Make.objects.get("RED"),
             "model": "KOMODO",
             "sensor_type": "KOMODO® 19.9 MP Super 35mm Global Shutter CMOS",
             "max_filmback_width": 27.03,
@@ -133,7 +129,7 @@ def seed_cameras(manufacturers):
             "max_frame_rate": 120,
         },
         {
-            "manufacturer": manufacturers.get("RED") or Make.objects.get("RED"),
+            "make": makes.get("RED") or Make.objects.get("RED"),
             "model": "KOMODO-X",
             "sensor_type": "KOMODO-X™ 19.9MP Super 35mm Global Shutter CMOS",
             "max_filmback_width": 27.03,
@@ -225,7 +221,7 @@ def seed_formats(cameras, sources):
             "image_height": 3164,
             "codec": "ARRIRAW",
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "4.6K 3:2 Open Gate provides maximum image quality, resolution, and flexibility in post for many spherical and anamorphic lenses in an image area slightly larger than traditional Super 35 film specifications.",
+            "make_notes": "4.6K 3:2 Open Gate provides maximum image quality, resolution, and flexibility in post for many spherical and anamorphic lenses in an image area slightly larger than traditional Super 35 film specifications.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -238,7 +234,7 @@ def seed_formats(cameras, sources):
             "image_height": 3164,
             "codec": "ProRes",
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "4.6K 3:2 Open Gate provides maximum image quality, resolution, and flexibility in post for many spherical and anamorphic lenses in an image area slightly larger than traditional Super 35 film specifications.",
+            "make_notes": "4.6K 3:2 Open Gate provides maximum image quality, resolution, and flexibility in post for many spherical and anamorphic lenses in an image area slightly larger than traditional Super 35 film specifications.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -250,7 +246,7 @@ def seed_formats(cameras, sources):
             "image_height": 2592,
             "codec": "ARRIRAW",
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "Full sensor width recording in a 16:9 format that suits many spherical Super 35 and all large format lenses, with room for flexibility in post. Lower data rate than 4.6K 3.2 Open Gate.",
+            "make_notes": "Full sensor width recording in a 16:9 format that suits many spherical Super 35 and all large format lenses, with room for flexibility in post. Lower data rate than 4.6K 3.2 Open Gate.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -275,7 +271,7 @@ def seed_formats(cameras, sources):
             "image_height": 2304,
             "codec": "ARRIRAW",
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "4K 16:9 mimics the traditional spherical Super 35 film format for maximum lens compatibility. Multiple in-camera downsampling options provide lower data rates.",
+            "make_notes": "4K 16:9 mimics the traditional spherical Super 35 film format for maximum lens compatibility. Multiple in-camera downsampling options provide lower data rates.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -287,7 +283,7 @@ def seed_formats(cameras, sources):
             "image_height": 2304,
             "codec": "ProRes",
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "4K 16:9 mimics the traditional spherical Super 35 film format for maximum lens compatibility. Multiple in-camera downsampling options provide lower data rates.",
+            "make_notes": "4K 16:9 mimics the traditional spherical Super 35 film format for maximum lens compatibility. Multiple in-camera downsampling options provide lower data rates.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -336,7 +332,7 @@ def seed_formats(cameras, sources):
             "codec": "ARRIRAW",
             "source": sources.get("Alexa 35 User Manual"),
             "notes": "Downsampled from 4K 16:9",
-            "manufacturer_notes": "4K 2:1 was designed for shooting with all spherical Super 35 and large format lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
+            "make_notes": "4K 2:1 was designed for shooting with all spherical Super 35 and large format lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -348,7 +344,7 @@ def seed_formats(cameras, sources):
             "image_height": 2048,
             "codec": "ProRes",
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "4K 2:1 was designed for shooting with all spherical Super 35 and large format lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
+            "make_notes": "4K 2:1 was designed for shooting with all spherical Super 35 and large format lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -360,7 +356,7 @@ def seed_formats(cameras, sources):
             "image_height": 2160,
             "codec": "ARRIRAW",
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "For projects using spherical lenses for a 16:9 UHD deliverable. Smaller sensor area than sensor mode `4.6K 16:9` ennsures that most S35 format lenses cover. Lower data rate and higher fps than sensor modes ‘4.6K 3:2 Open Gate’ and ‘4.6K 16:9’.",
+            "make_notes": "For projects using spherical lenses for a 16:9 UHD deliverable. Smaller sensor area than sensor mode `4.6K 16:9` ennsures that most S35 format lenses cover. Lower data rate and higher fps than sensor modes ‘4.6K 3:2 Open Gate’ and ‘4.6K 16:9’.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -372,7 +368,7 @@ def seed_formats(cameras, sources):
             "image_height": 2160,
             "codec": "ProRes",
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "For projects using spherical lenses for a 16:9 UHD deliverable. Smaller sensor area than sensor mode `4.6K 16:9` ennsures that most S35 format lenses cover. Lower data rate and higher fps than sensor modes ‘4.6K 3:2 Open Gate’ and ‘4.6K 16:9’.",
+            "make_notes": "For projects using spherical lenses for a 16:9 UHD deliverable. Smaller sensor area than sensor mode `4.6K 16:9` ennsures that most S35 format lenses cover. Lower data rate and higher fps than sensor modes ‘4.6K 3:2 Open Gate’ and ‘4.6K 16:9’.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -386,7 +382,7 @@ def seed_formats(cameras, sources):
             "is_anamorphic": True,
             "pixel_aspect": 2.0,
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "For projects using 2x anamorphic Super 35 lenses for a target deliverable of 2.39:1. Negates necessity of cropping 4:3 footage and fulfills 4K mandates.",
+            "make_notes": "For projects using 2x anamorphic Super 35 lenses for a target deliverable of 2.39:1. Negates necessity of cropping 4:3 footage and fulfills 4K mandates.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -400,7 +396,7 @@ def seed_formats(cameras, sources):
             "is_anamorphic": True,
             "pixel_aspect": 2.0,
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "For projects using 2x anamorphic Super 35 lenses for a target deliverable of 2.39:1. Negates necessity of cropping 4:3 footage and fulfills 4K mandates.",
+            "make_notes": "For projects using 2x anamorphic Super 35 lenses for a target deliverable of 2.39:1. Negates necessity of cropping 4:3 footage and fulfills 4K mandates.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -417,7 +413,7 @@ def seed_formats(cameras, sources):
             "pixel_aspect": 2.0,
             "source": sources.get("Alexa 35 User Manual"),
             "notes": "Dezqueezed from 3.3K 6:5",
-            "manufacturer_notes": "For projects using 2x anamorphic Super 35 lenses for a target deliverable of 2.39:1. Negates necessity of cropping 4:3 footage and fulfills 4K mandates.",
+            "make_notes": "For projects using 2x anamorphic Super 35 lenses for a target deliverable of 2.39:1. Negates necessity of cropping 4:3 footage and fulfills 4K mandates.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -431,7 +427,7 @@ def seed_formats(cameras, sources):
             "is_anamorphic": True,
             "pixel_aspect": 2.0,
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "3K 1:1 was designed for shooting with 2x anamorphic lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
+            "make_notes": "3K 1:1 was designed for shooting with 2x anamorphic lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -444,7 +440,7 @@ def seed_formats(cameras, sources):
             "codec": "ProRes",
             "is_anamorphic": True,
             "pixel_aspect": 2.0,
-            "manufacturer_notes": "3K 1:1 was designed for shooting with 2x anamorphic lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
+            "make_notes": "3K 1:1 was designed for shooting with 2x anamorphic lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
             "source": sources.get("Alexa 35 User Manual"),
         },
         {
@@ -462,7 +458,7 @@ def seed_formats(cameras, sources):
             "pixel_aspect": 2.0,
             "source": sources.get("Alexa 35 User Manual"),
             "notes": "Dezqueezed from 3K 1:1",
-            "manufacturer_notes": "3K 1:1 was designed for shooting with 2x anamorphic lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
+            "make_notes": "3K 1:1 was designed for shooting with 2x anamorphic lenses for a target deliverable of 2:1, fulfilling 4K mandates.",
         },
         {
             "camera": cameras.get("Alexa 35") or Camera.objects.get("Alexa 35"),
@@ -476,7 +472,7 @@ def seed_formats(cameras, sources):
             "is_anamorphic": True,
             "pixel_aspect": 2.0,
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "For projects shooting with 2x anamorphic lenses for a target deliverable of 16:9, fulfilling 4K mandates. Desqueeze applied in-camera.",
+            "make_notes": "For projects shooting with 2x anamorphic lenses for a target deliverable of 16:9, fulfilling 4K mandates. Desqueeze applied in-camera.",
             "raw_recording_available": False,  # This is a rare case where the ARRI does not keep the raw data
         },
         {
@@ -494,7 +490,7 @@ def seed_formats(cameras, sources):
             "pixel_aspect": 2.0,
             "source": sources.get("Alexa 35 User Manual"),
             "notes": "Dezqueezed from 2.7K 8:9 | This is a rare case where the raw data is not kept, all processing happens in-camera",
-            "manufacturer_notes": "For projects shooting with 2x anamorphic lenses for a target deliverable of 16:9, fulfilling 4K mandates. Desqueeze applied in-camera.",
+            "make_notes": "For projects shooting with 2x anamorphic lenses for a target deliverable of 16:9, fulfilling 4K mandates. Desqueeze applied in-camera.",
             "raw_recording_available": False,  # This is a rare case where the ARRI does not keep the raw data
         },
         {
@@ -508,7 +504,7 @@ def seed_formats(cameras, sources):
             "image_height": 1152,
             "codec": "ProRes",
             "source": sources.get("Alexa 35 User Manual"),
-            "manufacturer_notes": "2K 16:9 S16 mimics the traditional Super 16 format for use with Super 16 lenses or as an in-camera center crop.",
+            "make_notes": "2K 16:9 S16 mimics the traditional Super 16 format for use with Super 16 lenses or as an in-camera center crop.",
         },
         {
             "camera": cameras.get("Alexa Mini LF")
@@ -586,7 +582,7 @@ def seed_formats(cameras, sources):
             "image_height": 3096,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini User Manual"),
-            "manufacturer_notes": "This format adds 16px clip padding on left and right sides of frames. Sensor resolution is 4448x3096",
+            "make_notes": "This format adds 16px clip padding on left and right sides of frames. Sensor resolution is 4448x3096",
         },
         {
             "camera": cameras.get("Alexa Mini LF")
@@ -599,7 +595,7 @@ def seed_formats(cameras, sources):
             "image_height": 1856,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini User Manual"),
-            "manufacturer_notes": "This format adds 16px clip padding on left and right sides of frames. Sensor resolution is 4448x1856",
+            "make_notes": "This format adds 16px clip padding on left and right sides of frames. Sensor resolution is 4448x1856",
         },
         {
             "camera": cameras.get("Alexa Mini LF")
@@ -685,7 +681,7 @@ def seed_formats(cameras, sources):
             "image_height": 3024,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini User Manual"),
-            "manufacturer_notes": "This format adds 96 px clip padding on left and right sides of frames and 72px padding on top and bottom. Sensor resolution is 2880x2880",
+            "make_notes": "This format adds 96 px clip padding on left and right sides of frames and 72px padding on top and bottom. Sensor resolution is 2880x2880",
         },
         {
             "camera": cameras.get("Alexa Mini LF")
@@ -821,7 +817,7 @@ def seed_formats(cameras, sources):
             "image_height": 1856,
             "codec": "ProRes",
             "source": sources.get("Alexa LF Webpage"),
-            "manufacturer_notes": "This format adds 16px clip padding on left and right sides of frames. Sensor resolution is 4448x1856",
+            "make_notes": "This format adds 16px clip padding on left and right sides of frames. Sensor resolution is 4448x1856",
         },
         {
             "camera": cameras.get("Alexa Amira") or Camera.objects.get("Alexa Amira"),
@@ -1096,7 +1092,7 @@ def seed_formats(cameras, sources):
             "is_downsampled": True,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Downscaled from 2880x1620",
+            "make_notes": "Downscaled from 2880x1620",
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1109,7 +1105,7 @@ def seed_formats(cameras, sources):
             "is_downsampled": True,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Downscaled from 2868x1612",
+            "make_notes": "Downscaled from 2868x1612",
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1134,7 +1130,7 @@ def seed_formats(cameras, sources):
             "codec": "ProRes",
             "is_upscaled": True,
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Upscaled from the 3.2K format which is 3200x1800",
+            "make_notes": "Upscaled from the 3.2K format which is 3200x1800",
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1150,7 +1146,7 @@ def seed_formats(cameras, sources):
             "pixel_aspect": 2.0,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 1920x1080 resolution from 1920x2160",
+            "make_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 1920x1080 resolution from 1920x2160",
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1166,7 +1162,7 @@ def seed_formats(cameras, sources):
             "is_desqueezed": True,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 2048x858 resolution from 2560x2145",
+            "make_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 2048x858 resolution from 2560x2145",
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1179,7 +1175,7 @@ def seed_formats(cameras, sources):
             "is_upscaled": True,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Upscaled from 2880x2160",
+            "make_notes": "Upscaled from 2880x2160",
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1195,7 +1191,7 @@ def seed_formats(cameras, sources):
             "is_desqueezed": True,
             "codec": "ARRIRAW",
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 1920x1080 resolution from 1920x2160",
+            "make_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 1920x1080 resolution from 1920x2160",
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1211,7 +1207,7 @@ def seed_formats(cameras, sources):
             "pixel_aspect": 2.0,
             "codec": "ARRIRAW",
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 2048x858 resolution from 2560x2145",
+            "make_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 2048x858 resolution from 2560x2145",
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1235,7 +1231,7 @@ def seed_formats(cameras, sources):
             "is_downsampled": True,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Downsampled from Open Gate",
+            "make_notes": "Downsampled from Open Gate",
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1298,7 +1294,7 @@ def seed_formats(cameras, sources):
             "image_height": 1080,
             "codec": "ProRes",
             "source": sources.get("Alexa Mini Recording Area Document"),
-            "manufacturer_notes": "Records images in 1920x1080 resolution. Uses a 1600x900 sensor center crop and scales it to 1920x1080.",
+            "make_notes": "Records images in 1920x1080 resolution. Uses a 1600x900 sensor center crop and scales it to 1920x1080.",
         },
         {
             "camera": cameras.get("KOMODO") or Camera.objects.get("KOMODO"),
@@ -1757,7 +1753,7 @@ def seed_formats(cameras, sources):
 
 
 def seed_db():
-    manufacturers = seed_manufacturers()
-    cameras = seed_cameras(manufacturers)
+    makes = seed_makes()
+    cameras = seed_cameras(makes)
     sources = seed_sources()
     formats = seed_formats(cameras, sources)

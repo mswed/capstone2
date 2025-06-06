@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from typing import Dict, Any
 
 
 class Make(models.Model):
@@ -19,9 +20,7 @@ class Make(models.Model):
 
 class Camera(models.Model):
     # Define the relationship
-    manufacturer = models.ForeignKey(
-        Make, on_delete=models.CASCADE, related_name="cameras"
-    )
+    make = models.ForeignKey(Make, on_delete=models.CASCADE, related_name="cameras")
 
     # Camera info
     model = models.CharField(max_length=200)
@@ -51,7 +50,7 @@ class Camera(models.Model):
 
     notes = models.CharField(max_length=500, blank=True)
     discontinued = models.BooleanField(
-        default=False, help_text="Was this model discontinued by the manufacturer?"
+        default=False, help_text="Was this model discontinued by the make?"
     )
 
     # Audit fields
@@ -59,10 +58,29 @@ class Camera(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.manufacturer.name} {self.model}"
+        return f"{self.make.name} {self.model}"
+
+    def as_dict(self) -> Dict[str, Any]:
+        """
+        Return the model as a dictionary
+        """
+
+        return {
+            "id": self.make.id,
+            "model": self.model,
+            "sensor_type": self.sensor_type,
+            "max_filmback_width": self.max_filmback_width,
+            "max_filmback_height": self.max_filmback_height,
+            "max_image_width": self.max_image_width,
+            "max_image_height": self.max_image_height,
+            "min_frame_rate": self.min_frame_rate,
+            "max_frame_rate": self.max_frame_rate,
+            "notes": self.notes,
+            "discontinued": self.discontinued,
+        }
 
     class Meta:
-        unique_together = ["manufacturer", "model"]
+        unique_together = ["make", "model"]
 
 
 class Source(models.Model):
@@ -160,7 +178,7 @@ class Format(models.Model):
 
     # Different types of notes
     notes = models.CharField(max_length=500, blank=True, null=True)
-    manufacturer_notes = models.CharField(max_length=500, blank=True, null=True)
+    make_notes = models.CharField(max_length=500, blank=True, null=True)
     tracking_workflow = models.TextField(
         blank=True,
         null=True,
@@ -284,7 +302,7 @@ class Format(models.Model):
             adjusted = self.ensure_sperical_filmback()
             if adjusted:
                 self.tracking_workflow = (
-                    "Note: The filmback height has been adjusted from the manufacturer's "
+                    "Note: The filmback height has been adjusted from the make's "
                     f"specification ({self.sensor_height} mm) to {self.filmback_height_3de:.2f} mm "
                     "to ensure a pixel aspect ratio of exactly 1.0 in 3DE.\n\n"
                     "This adjustment compensates for slight differences between the sensor's "
