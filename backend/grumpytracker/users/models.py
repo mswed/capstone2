@@ -11,7 +11,7 @@ class User(AbstractUser):
     studio = models.CharField(max_length=100, blank=True)
 
     favorite_formats = models.ManyToManyField(
-        "cameras.Format",  # The name of the target table
+        "formats.Format",  # The name of the target table
         blank=True,
         related_name="favorited_by",  # The backref name
     )

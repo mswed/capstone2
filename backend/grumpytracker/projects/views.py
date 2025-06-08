@@ -8,7 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from .models import Project
 from .services import get_or_create_project_from_tmdb, refresh_project_from_tmdb
-from cameras.models import Format, Camera
+from cameras.models import Camera
+from formats.models import Format
 
 BASE_URL = "https://api.themoviedb.org/3"
 TMDB_POSTER_BASE = "https://image.tmdb.org/t/p/w500"

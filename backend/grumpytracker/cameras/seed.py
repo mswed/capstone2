@@ -1,4 +1,7 @@
-from cameras.models import Make, Camera, Format, Source
+from makes.models import Make
+from cameras.models import Camera
+from formats.models import Format
+from sources.models import Source
 from django.db import transaction, connection
 from loguru import logger
 
@@ -12,10 +15,10 @@ def clear_database():
     makes_deleted = Make.objects.all().delete()[0]
 
     with connection.cursor() as cursor:
-        cursor.execute("ALTER SEQUENCE cameras_format_id_seq RESTART WITH 1;")
-        cursor.execute("ALTER SEQUENCE cameras_source_id_seq RESTART WITH 1;")
+        cursor.execute("ALTER SEQUENCE formats_format_id_seq RESTART WITH 1;")
+        cursor.execute("ALTER SEQUENCE sources_source_id_seq RESTART WITH 1;")
         cursor.execute("ALTER SEQUENCE cameras_camera_id_seq RESTART WITH 1;")
-        cursor.execute("ALTER SEQUENCE cameras_make_id_seq RESTART WITH 1;")
+        cursor.execute("ALTER SEQUENCE makes_make_id_seq RESTART WITH 1;")
 
     logger.info(f"Deleted {makes_deleted} makes")
     logger.info(f"Deleted {cameras_deleted} cameras")
@@ -182,7 +185,7 @@ def seed_sources():
             "note": "Printing the webpage reveals the full technical data. Or you can expand the technical data section manually",
         },
         {
-            "name": "Alexa Mini Recoding Areas Document",
+            "name": "Alexa Mini Recording Areas Document",
             "url": "https://www.arri.com/resource/blob/178064/d84031615b6bf09446aeb7972066b129/alexa-mini-recording-areas-surround-views-and-framelines-sup-4-0-data.pdf",
             "file_name": "ALEXAMini_RecordingAreaSurroundViewsandFramelines_SUP_4.0_v1.1.pdf",
         },
@@ -1078,7 +1081,7 @@ def seed_formats(cameras, sources):
             "image_width": 2880,
             "image_height": 1620,
             "codec": "ARRIRAW",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1091,7 +1094,7 @@ def seed_formats(cameras, sources):
             "image_height": 1080,
             "is_downsampled": True,
             "codec": "ProRes",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Downscaled from 2880x1620",
         },
         {
@@ -1104,7 +1107,7 @@ def seed_formats(cameras, sources):
             "image_height": 1152,
             "is_downsampled": True,
             "codec": "ProRes",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Downscaled from 2868x1612",
         },
         {
@@ -1116,7 +1119,7 @@ def seed_formats(cameras, sources):
             "image_width": 3200,
             "image_height": 1800,
             "codec": "ProRes",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1129,7 +1132,7 @@ def seed_formats(cameras, sources):
             "image_height": 2160,
             "codec": "ProRes",
             "is_upscaled": True,
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Upscaled from the 3.2K format which is 3200x1800",
         },
         {
@@ -1145,7 +1148,7 @@ def seed_formats(cameras, sources):
             "is_desqueezed": True,
             "pixel_aspect": 2.0,
             "codec": "ProRes",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 1920x1080 resolution from 1920x2160",
         },
         {
@@ -1161,7 +1164,7 @@ def seed_formats(cameras, sources):
             "pixel_aspect": 2.0,
             "is_desqueezed": True,
             "codec": "ProRes",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 2048x858 resolution from 2560x2145",
         },
         {
@@ -1174,7 +1177,7 @@ def seed_formats(cameras, sources):
             "image_height": 2160,
             "is_upscaled": True,
             "codec": "ProRes",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Upscaled from 2880x2160",
         },
         {
@@ -1190,7 +1193,7 @@ def seed_formats(cameras, sources):
             "pixel_aspect": 2.0,
             "is_desqueezed": True,
             "codec": "ARRIRAW",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 1920x1080 resolution from 1920x2160",
         },
         {
@@ -1206,7 +1209,7 @@ def seed_formats(cameras, sources):
             "is_desqueezed": True,
             "pixel_aspect": 2.0,
             "codec": "ARRIRAW",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Applies a 2.0 anamorphic desqueeze to the image and records images in 2048x858 resolution from 2560x2145",
         },
         {
@@ -1218,7 +1221,7 @@ def seed_formats(cameras, sources):
             "image_width": 2880,
             "image_height": 2160,
             "codec": "ARRIRAW",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1230,7 +1233,7 @@ def seed_formats(cameras, sources):
             "image_height": 2160,
             "is_downsampled": True,
             "codec": "ProRes",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Downsampled from Open Gate",
         },
         {
@@ -1243,7 +1246,7 @@ def seed_formats(cameras, sources):
             "image_width": 3424,
             "image_height": 2202,
             "codec": "ARRIRAW",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1255,7 +1258,7 @@ def seed_formats(cameras, sources):
             "image_width": 3424,
             "image_height": 2202,
             "codec": "ARRIRAW",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1268,7 +1271,7 @@ def seed_formats(cameras, sources):
             "image_height": 2202,
             "is_anamorphic": True,
             "codec": "ARRIRAW",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1281,7 +1284,7 @@ def seed_formats(cameras, sources):
             "image_height": 2202,
             "is_anamorphic": True,
             "codec": "ARRIRAW",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
         },
         {
             "camera": cameras.get("Alexa Mini") or Camera.objects.get("Alexa Mini"),
@@ -1293,7 +1296,7 @@ def seed_formats(cameras, sources):
             "image_width": 1920,
             "image_height": 1080,
             "codec": "ProRes",
-            "source": sources.get("Alexa Mini Recording Area Document"),
+            "source": sources.get("Alexa Mini Recording Areas Document"),
             "make_notes": "Records images in 1920x1080 resolution. Uses a 1600x900 sensor center crop and scales it to 1920x1080.",
         },
         {
