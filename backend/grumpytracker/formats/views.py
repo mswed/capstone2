@@ -1,6 +1,3 @@
-from pprint import pprint
-from typing import List, Optional, Dict, Any
-from django.db.models import Q
 from django.http import JsonResponse
 from django.views import View
 from django.utils.decorators import method_decorator
@@ -10,7 +7,8 @@ from grumpytracker.utils import validate_required_fields
 import json
 from loguru import logger
 
-from .models import Format, Source
+from .models import Format
+from sources.models import Source
 from cameras.models import Camera
 
 
@@ -82,7 +80,7 @@ class FormatsListView(View):
                 make_notes=data.get("make_notes", ""),
             )
 
-            if not camera:
+            if not fmt:
                 return JsonResponse({"error": "Failed to create format"})
 
             return JsonResponse(
@@ -128,12 +126,12 @@ class FormatDetailsView(View):
                 if hasattr(fmt, field):
                     if field == "camera":
                         # We need to get the camera record for the update
-                        make = get_object_or_404(Camera, id=value)
-                        value = make
+                        camera = get_object_or_404(Camera, id=value)
+                        value = camera
                     if field == "source":
                         # We need to get the source record for the update
-                        make = get_object_or_404(Source, id=value)
-                        value = make
+                        source = get_object_or_404(Source, id=value)
+                        value = source
                     setattr(fmt, field, value)
 
             fmt.save()

@@ -1,4 +1,5 @@
 from django.db import models
+from typing import Dict, Any
 
 
 class Source(models.Model):
@@ -13,3 +14,12 @@ class Source(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+    def as_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "url": self.url,
+            "file_name": self.file_name,
+            "note": self.note,
+        }

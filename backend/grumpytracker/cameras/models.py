@@ -52,7 +52,8 @@ class Camera(models.Model):
         """
 
         return {
-            "id": self.make.id,
+            "id": self.id,
+            "make": self.make.id,
             "model": self.model,
             "sensor_type": self.sensor_type,
             "max_filmback_width": self.max_filmback_width,

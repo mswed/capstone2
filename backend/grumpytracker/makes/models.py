@@ -13,4 +13,4 @@ class Make(models.Model):
         return str(self.name)
 
     def as_dict(self):
-        return {"name": self.name, "website": self.website}
+        return {"id": self.id, "name": self.name, "website": self.website}

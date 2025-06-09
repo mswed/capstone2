@@ -118,6 +118,7 @@ class Format(models.Model):
 
     def as_dict(self) -> Dict[str, Any]:
         return {
+            "id": self.id,
             "camera": self.camera.id,
             "source": self.source.id,
             "image_format": self.image_format,
