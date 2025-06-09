@@ -11,6 +11,7 @@ from grumpytracker.utils import (
     validate_required_fields,
     login_required,
     require_owner_or_admin,
+    require_admin,
 )
 from loguru import logger
 
@@ -79,16 +80,11 @@ class UsersListView(View):
     POST - Creates a new user
     """
 
+    @method_decorator(require_admin)
     def get(self, request) -> JsonResponse:
         """
         Return all existing users. This is a protected route only availabe for admin
         """
-
-        current_user = request.user
-        if not request.user.is_authenticated:
-            return JsonResponse({"error": "Authentication required!"}, status=401)
-        if not current_user.is_superuser:
-            return JsonResponse({"error": "Permission denied!"}, status=403)
 
         users = User.objects.all()
         data = []
@@ -163,63 +159,35 @@ class UserDetailsView(LoginRequiredMixin, View):
 
         return JsonResponse(user.as_dict(), safe=False)
 
-    def patch(self, request, source_id):
+    @method_decorator(require_owner_or_admin)
+    def patch(self, request, user_id):
         """
-        Do a partial update on a source
+        Do a partial update on a user
         """
 
-        source = get_object_or_404(Source, id=source_id)
+        user = get_object_or_404(User, id=user_id)
         try:
             # Grab the project and the updated data
             data = json.loads(request.body)
 
             # Only update provided fields
             for field, value in data.items():
-                if hasattr(source, field):
-                    setattr(source, field, value)
+                if hasattr(user, field):
+                    if field == "password":
+                        # Passwords need to be hashed
+                        user.set_password(value)
+                    else:
+                        setattr(user, field, value)
 
-            source.save()
-            return JsonResponse({"success": f"Partialy updated format {source}"})
+            user.save()
+            return JsonResponse({"success": f"Partialy updated format {user}"})
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    def delete(self, request, source_id):
-        """Handle DELETE /formats/123/"""
-        source = get_object_or_404(Source, id=source_id)
-        source.delete()
-        return JsonResponse({"success": "Source deleted"})
-
-
-class UsersSearchView(View):
-    """
-    Handle sources/search endpoint
-    GET - Returns the a list of sources based on a search query
-    """
-
-    def get(self, request) -> JsonResponse:
-        """
-        Search the database for a source based on name, url, filename and note
-        """
-        query = request.GET.get("q", "").strip()
-        if not query:
-            return JsonResponse({"error": "No query provided"})
-
-        terms = query.split()
-
-        # Start building the query by getting all cameras with JOIN on makes
-        sources = Source.objects.all()
-
-        # Build the WHERE clause for each term
-        for term in terms:
-            sources = sources.filter(
-                Q(name__icontains=term)
-                | Q(url__icontains=term)
-                | Q(file_name__icontains=term)
-                | Q(note__icontains=term)
-            )
-
-        # Execute the query
-        found_sources = [source.as_dict() for source in sources]
-
-        return JsonResponse(found_sources, safe=False)
+    @method_decorator(require_owner_or_admin)
+    def delete(self, request, user_id):
+        """Handle DELETE /users/123/"""
+        user = get_object_or_404(User, id=user_id)
+        user.delete()
+        return JsonResponse({"success": "User deleted"})
