@@ -1,4 +1,7 @@
 from django.db import models
+from cameras.models import Camera
+from formats.models import Format
+from users.models import User
 
 
 class Project(models.Model):
@@ -47,6 +50,45 @@ class Project(models.Model):
             "tmdb_original_name": self.tmdb_original_name,
             "genres": self.genres,
             "rating": self.rating,
-            "camera_ids": list(self.cameras.values_list("id", flat=True)),
-            "format_ids": list(self.formats.values_list("id", flat=True)),
+            "cameras": models.ManyToManyField(Camera, related_name="projects"),
+            "formats": models.ManyToManyField(
+                Format, through="ProjectFormat", related_name="projects"
+            ),
         }
+
+
+class ProjectFormat(models.Model):
+    """
+    Projects have formats attached to them that users can up and down vote
+    this sets up a through table for that
+    """
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    fmt = models.ForeignKey(Format, on_delete=models.CASCADE)
+
+    # Audit fields
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ["project", "fmt"]
+
+
+class Vote(models.Model):
+    """
+    A model for a single format vote on a project
+    """
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    fmt = models.ForeignKey(Format, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    vote_type = models.CharField(choices=[("up", "upVote"), ("down", "downVote")])
+
+    # Audit fields
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ["project", "fmt", "user"]

@@ -27,7 +27,7 @@ class AuthView(View):
 
     def post(self, request):
         """
-        This is our loging function
+        This is our login function
         """
         try:
             data = json.loads(request.body)
