@@ -5,7 +5,12 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
-from grumpytracker.utils import validate_required_fields
+from grumpytracker.utils import (
+    validate_required_fields,
+    login_required,
+    require_owner_or_admin,
+    require_admin,
+)
 import json
 from loguru import logger
 
@@ -33,6 +38,7 @@ class CamerasListView(View):
 
         return JsonResponse(data, safe=False)
 
+    @method_decorator(require_admin)
     def post(self, request) -> JsonResponse:
         try:
             data = json.loads(request.body)
@@ -104,6 +110,7 @@ class CameraDetailsView(View):
         camera = get_object_or_404(Camera, id=camera_id)
         return JsonResponse(camera.as_dict(), safe=False)
 
+    @method_decorator(require_admin)
     def patch(self, request, camera_id):
         """
         Do a partial update on a camera
@@ -130,6 +137,7 @@ class CameraDetailsView(View):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
+    @method_decorator(require_admin)
     def delete(self, request, camera_id):
         """Handle DELETE /cameras/123/"""
         camera = get_object_or_404(Camera, id=camera_id)

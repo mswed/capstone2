@@ -45,7 +45,9 @@ class ProjectsListView(View):
 
         return JsonResponse(data, safe=False)
 
+    @method_decorator(login_required)
     def post(self, request) -> JsonResponse:
+        # TODO: Users need to be able to create projects BEFORE they show up on TMDB
         try:
             data = json.loads(request.body)
             tmdb_id = data.get("tmdb_id")
@@ -109,6 +111,7 @@ class ProjectDetailsView(View):
     @method_decorator(require_owner_or_admin)
     def delete(self, request, project_id):
         """Handle DELETE /projects/123/"""
+        # TODO: Do not allow to delete if formats have votes?
         project = get_object_or_404(Project, id=project_id)
         project.delete()
         return JsonResponse({"success": "Project deleted"})
@@ -164,6 +167,7 @@ class ProjectsRestoreView(View):
     PATCH - Update a project to it matches its original TMDB data
     """
 
+    @method_decorator(require_admin)
     def patch(self, request):
         """
         Restore multiple projects from TMDB
@@ -301,7 +305,7 @@ class ProjectFormatDetailsView(View):
     @method_decorator(login_required)
     def patch(self, request, project_id, format_id):
         """
-        Handle GET and return all project's formats
+        Vote on a format
         """
 
         project = get_object_or_404(Project, id=project_id)

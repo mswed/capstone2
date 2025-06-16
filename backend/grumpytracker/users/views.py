@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404
 import json
 from grumpytracker.utils import (
     validate_required_fields,
-    login_required,
     require_owner_or_admin,
     require_admin,
 )
@@ -95,6 +94,9 @@ class UsersListView(View):
         return JsonResponse(data, safe=False)
 
     def post(self, request) -> JsonResponse:
+        """
+        This is our register function
+        """
         try:
             data = json.loads(request.body)
 
@@ -188,6 +190,7 @@ class UserDetailsView(LoginRequiredMixin, View):
     @method_decorator(require_owner_or_admin)
     def delete(self, request, user_id):
         """Handle DELETE /users/123/"""
+        # TODO: This should probably also logout the user?
         user = get_object_or_404(User, id=user_id)
         user.delete()
         return JsonResponse({"success": "User deleted"})
