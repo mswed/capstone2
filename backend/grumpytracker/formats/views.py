@@ -3,7 +3,7 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
-from grumpytracker.utils import validate_required_fields
+from grumpytracker.utils import validate_required_fields, require_admin
 import json
 from loguru import logger
 
@@ -33,6 +33,7 @@ class FormatsListView(View):
 
         return JsonResponse(data, safe=False)
 
+    @method_decorator(require_admin)
     def post(self, request) -> JsonResponse:
         try:
             data = json.loads(request.body)
@@ -111,6 +112,7 @@ class FormatDetailsView(View):
         fmt = get_object_or_404(Format, id=format_id)
         return JsonResponse(fmt.as_dict(), safe=False)
 
+    @method_decorator(require_admin)
     def patch(self, request, format_id):
         """
         Do a partial update on a format
@@ -140,6 +142,7 @@ class FormatDetailsView(View):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
+    @method_decorator(require_admin)
     def delete(self, request, format_id):
         """Handle DELETE /formats/123/"""
         fmt = get_object_or_404(Format, id=format_id)

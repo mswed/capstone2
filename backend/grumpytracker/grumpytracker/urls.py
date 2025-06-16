@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from .views import StatsView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -26,4 +27,5 @@ urlpatterns = [
     path("api/v1/sources/", include("sources.urls")),
     path("api/v1/projects/", include("projects.urls")),
     path("api/v1/users/", include("users.urls")),
+    path("api/v1/stats/", StatsView.as_view(), name="stats"),
 ]
