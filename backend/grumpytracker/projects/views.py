@@ -1,3 +1,4 @@
+from django.db.models import F, Q, Count, OrderBy
 import requests
 import json
 from decouple import config
@@ -7,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.db import IntegrityError
-from .models import Project, ProjectFormat
+from .models import Project, ProjectFormat, Vote
 from .services import get_or_create_project_from_tmdb, refresh_project_from_tmdb
 from grumpytracker.utils import (
     login_required,
@@ -220,21 +221,39 @@ class ProjectFormatsListView(View):
         # Grab the project
         project = get_object_or_404(Project, id=project_id)
 
-        # Query the through table this will get us all of the formats and their votes total
+        # Query the ProjectFormat table. This will get us all of the formats and their votes total
         # We sort it by decending order
-        project_formats = ProjectFormat.objects.filter(project=project).select_related(
-            "fmt__camera__make"
+        project_formats = (
+            ProjectFormat.objects.filter(project=project)
+            .select_related("fmt__camera__make")
+            .annotate(
+                upvotes=Count(
+                    "fmt__vote", filter=Q(fmt__vote__vote_type="upVote")
+                ),  # This is how django deals with aggragation
+                downvotes=Count("fmt__vote", filter=Q(fmt__vote__vote_type="downVote")),
+                total_votes=F("upvotes") - F("downvotes"),
+            )
+            .order_by("-total_votes")
         )
-        data = []
+
+        cameras = {}
+        formats = []
 
         # Build a list of formats and their votes from our data
         for pfmt in project_formats:
-            # Extract the format from the vote list
             format_info = pfmt.fmt.as_dict()
-            format_info["added_by"] = pfmt.created_by.as_dict()
-            data.append(format_info)
+            format_info.update(
+                {
+                    "upvotes": pfmt.upvotes,
+                    "downvotes": pfmt.downvotes,
+                    "total_votes": pfmt.total_votes,
+                    "added_by": pfmt.added_by.username,
+                }
+            )
+            formats.append(format_info)
+            cameras[pfmt.fmt.camera.id] = pfmt.fmt.camera.as_dict()
 
-        return JsonResponse(data, safe=False)
+        return JsonResponse({"formats": formats, "cameras": cameras}, safe=False)
 
     @method_decorator(login_required)
     def post(self, request, project_id) -> JsonResponse:
@@ -279,49 +298,73 @@ class ProjectFormatDetailsView(View):
     Delete - Remove a format
     """
 
-    def patch(self, request, project_id, format__vote_id):
+    @method_decorator(login_required)
+    def patch(self, request, project_id, format_id):
         """
         Handle GET and return all project's formats
         """
 
-        # Grab the project
-        format_vote = get_object_or_404(ProjectFormatVote, id=format__vote_id)
+        project = get_object_or_404(Project, id=project_id)
+        fmt = get_object_or_404(Format, id=format_id)
+
+        # Check if the user already voted
+        # TODO: What if the user wants to cancel their vote?
+        existing_vote = Vote.objects.filter(
+            project=project, fmt=fmt, user=request.user
+        ).first()
+        if existing_vote:
+            return JsonResponse(
+                {"error": "You already voted on this format"}, status=400
+            )
 
         try:
             data = json.loads(request.body)
             validate_required_fields(data, ["vote"])
-            format_vote.votes += int(data.get("vote"))
-            format_vote.save
+            vote = Vote.objects.create(
+                project=project,
+                fmt=fmt,
+                user=request.user,
+                vote_type=data.get("vote"),
+            )
 
             return JsonResponse({"success": "Updated vote count!"}, status=400)
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    def post(self, request, project_id) -> JsonResponse:
+    @method_decorator(require_owner_or_admin)
+    def delete(self, request, project_id, format_id) -> JsonResponse:
         """
-        Add a format to the project
+        Remove a format from the project. A user can only remove a format they added
+        and only if it does not have any upvotes
         """
+
+        project = get_object_or_404(Project, id=project_id)
+        fmt = get_object_or_404(Format, id=format_id)
+
         try:
-            data = json.loads(request.body)
-            validate_required_fields(data, ["format_id"])
-
-            # Grab the project
-            project = get_object_or_404(Project, id=project_id)
-            fmt = get_object_or_404(Format, id=data.get("format_id"))
-
-            try:
-                format_vote = ProjectFormatVote.objects.create(project=project, fmt=fmt)
-                if not format_vote:
-                    return JsonResponse({"error": "Failed to attach format"})
-            except IntegrityError as e:
-                return JsonResponse(
-                    {"error": "Format already added to this project"}, status=400
+            selected_format = (
+                ProjectFormat.objects.filter(project=project, fmt=fmt)
+                .select_related("fmt__camera__make")
+                .annotate(
+                    upvotes=Count("fmt__vote", filter=Q(fmt__vote__vote_type="upVote")),
+                    downvotes=Count(
+                        "fmt__vote", filter=Q(fmt__vote__vote_type="downVote")
+                    ),
+                    total_votes=F("upvotes") - F("downvotes"),
                 )
+                .order_by("-total_votes")
+            ).first()
 
-            return JsonResponse(
-                {"success": "Added format to project", "format_vote_id": format_vote.id}
-            )
+            if selected_format.upvotes == 0 or request.user.is_superuser:
+                # TODO: A user should be able to remove their own formats if they are the only ones who voted on them
+                selected_format.delete()
+                return JsonResponse({"success": "Removed format from project"})
+            else:
+                return JsonResponse(
+                    {"error": "You can not delete a format that has been upvoted!"},
+                    status=403,
+                )
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)

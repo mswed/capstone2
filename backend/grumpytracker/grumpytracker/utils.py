@@ -45,12 +45,7 @@ def require_owner_or_admin(view):
             # First authenticate
             return JsonResponse({"error": "Login required"}, status=401)
 
-        user_id = kwargs.get("user_id")
-        if not user_id:
-            # Make sure we passed a user_id
-            return JsonResponse({"error": "Route requires a user_id"}, status=401)
-
-        owner = get_object_or_404(User, id=user_id)
+        owner = get_object_or_404(User, id=request.user.id)
         if request.user != owner and not request.user.is_superuser:
             # The user is not allowed to access this route
             return JsonResponse({"error": "Permission denied!"}, status=403)
