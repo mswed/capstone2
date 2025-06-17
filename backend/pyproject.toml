@@ -13,6 +13,7 @@ dependencies = [
     "parse>=1.20.2",
     "pdfplumber>=0.11.6",
     "psycopg[binary]>=3.2.9",
+    "pyjwt>=2.10.1",
     "pymupdf>=1.25.5",
     "python-decouple>=3.8",
     "requests>=2.32.3",

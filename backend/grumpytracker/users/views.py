@@ -1,12 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 from django.http import JsonResponse
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+from django.conf import settings
+from django.utils import timezone
+import jwt
 import json
+from datetime import timedelta
 from grumpytracker.utils import (
     validate_required_fields,
     require_owner_or_admin,
@@ -47,9 +50,21 @@ class AuthView(View):
                 if user.is_active:
                     # Django keeps record of active users, we'll use it cause it's built in
                     # but honestly it might be overkill at this point
-                    login(request, user)
+                    now = timezone.now()
+                    payload = {
+                        "user_id": user.id,
+                        "username": user.username,
+                        "exp": now + timedelta(days=7),
+                        "iat": now,
+                    }
+
+                    token = jwt.encode(payload, settings.JWT_SECRET, algorithm="HS256")
                     return JsonResponse(
-                        {"success": "Log in successful", "user": user.as_dict()}
+                        {
+                            "success": "Log in successful",
+                            "user": user.as_dict(),
+                            "token": token,
+                        }
                     )
                 else:
                     return JsonResponse({"error": "Account is disabled"}, status=403)
