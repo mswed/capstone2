@@ -19,6 +19,7 @@ class Make(models.Model):
             "name": self.name,
             "website": self.website,
             "logo": self.logo.url if self.logo else None,
+            "cameras_count": self.cameras.count(),
         }
 
     def with_cameras(self):

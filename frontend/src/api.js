@@ -58,7 +58,6 @@ class GrumpyApi {
 
   static async getMakes() {
     let res = await this.apiCall(`api/v1/makes/`);
-    console.log(res);
     return res;
   }
 }

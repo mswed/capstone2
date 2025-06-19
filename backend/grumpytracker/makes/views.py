@@ -26,7 +26,7 @@ class MakesListView(View):
         data = []
 
         for make in makes:
-            data.append({"id": make.id, "name": make.name})
+            data.append(make.as_dict())
 
         return JsonResponse(data, safe=False)
 

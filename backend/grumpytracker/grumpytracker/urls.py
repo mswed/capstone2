@@ -17,7 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from .views import StatsView
+from pprint import pprint
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,3 +32,8 @@ urlpatterns = [
     path("api/v1/users/", include("users.urls")),
     path("api/v1/stats/", StatsView.as_view(), name="stats"),
 ]
+
+if settings.DEBUG:
+    # When in development mode Django loads the images
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    pprint(urlpatterns)
