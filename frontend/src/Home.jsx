@@ -14,7 +14,7 @@ const Home = () => {
       }
     }
     getStats();
-  }, [stats]);
+  }, []);
 
   return (
     <div>

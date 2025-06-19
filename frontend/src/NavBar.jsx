@@ -1,13 +1,14 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { AuthContext } from './AuthProvider';
-import { MessageContext } from './MessageContext';
+// import { AuthContext } from './AuthProvider';
+// import { MessageContext } from './MessageContext';
 
 const NavBar = () => {
-  const { token, currentUser, logout } = useContext(AuthContext);
-  const { showMessage } = useContext(MessageContext);
+  // const { token, currentUser, logout } = useContext(AuthContext);
+  // const { showMessage } = useContext(MessageContext);
 
+  const token = '';
   const navigate = useNavigate();
   return (
     <Navbar bg="light" variant="light" expand="lg" className="w-100">

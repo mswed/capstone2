@@ -1,13 +1,28 @@
+import os
 from makes.models import Make
 from cameras.models import Camera
 from formats.models import Format
 from sources.models import Source
 from django.db import transaction, connection
+from django.conf import settings
+from django.core.files import File
 from loguru import logger
+
+
+SEED_IMAGES_PATH = os.path.join(settings.BASE_DIR, "static", "seed_images")
 
 
 @transaction.atomic
 def clear_database():
+    # We first delete all seeded images
+    for make in Make.objects.all():
+        if make.logo:
+            make.logo.delete(save=False)
+
+    for camera in Camera.objects.all():
+        if camera.image:
+            camera.image.delete(save=False)
+
     # Format.objects.delete() returns a tuple (count_deleted, dict_with_details)
     formats_deleted = Format.objects.all().delete()[0]
     sources_deleted = Source.objects.all().delete()[0]
@@ -36,13 +51,29 @@ def clear_database():
 @transaction.atomic
 def seed_makes():
     makes = [
-        {"name": "ARRI", "website": "https://www.arri.com/en"},
-        {"name": "RED", "website": "https://www.red.com"},
+        {
+            "name": "ARRI",
+            "website": "https://www.arri.com/en",
+            "logo": "arri_logo.png",
+        },
+        {
+            "name": "RED",
+            "website": "https://www.red.com",
+            "logo": "red_logo.png",
+        },
     ]
 
     created_makes = {}
     for m in makes:
+        logo = os.path.join(SEED_IMAGES_PATH, m["logo"])
+        logger.warning(f"Loading image from {logo}")
+        del m["logo"]
         make, new = Make.objects.get_or_create(**m)
+        if os.path.exists(logo):
+            logger.warning("Logo file was found!")
+            with open(logo, "rb") as f:
+                make.logo.save(os.path.basename(logo), File(f), save=True)
+                logger.warning(f"Saved logo to {make.logo.path}")
         created_makes[m["name"]] = make
         logger.info(f"{'Created' if new else 'Found'} make: {make.name}")
 
@@ -73,6 +104,7 @@ def seed_cameras(makes):
             "max_image_height": 3096,
             "min_frame_rate": 0.75,
             "max_frame_rate": 90,
+            "image": "arri_alexa_mini.png",
         },
         {
             "make": makes.get("ARRI") or Make.objects.get("ARRI"),
@@ -95,6 +127,7 @@ def seed_cameras(makes):
             "max_image_height": 1800,
             "min_frame_rate": 0.75,
             "max_frame_rate": 200,
+            "image": "arri_amira.png",
         },
         {
             "make": makes.get("ARRI") or Make.objects.get("ARRI"),
@@ -107,6 +140,7 @@ def seed_cameras(makes):
             "min_frame_rate": 0.75,
             "max_frame_rate": 120,
             "notes": "This model also covers the SXT, SXT Plus and SXT Studio",
+            "image": "arri_alexa_xt.png",
         },
         {
             "make": makes.get("ARRI") or Make.objects.get("ARRI"),
@@ -119,6 +153,7 @@ def seed_cameras(makes):
             "min_frame_rate": 0.75,
             "max_frame_rate": 120,
             "discontinued": True,
+            "image": "arri_alexa_mini.png",
         },
         {
             "make": makes.get("RED") or Make.objects.get("RED"),
@@ -146,7 +181,12 @@ def seed_cameras(makes):
 
     created_cameras = {}
     for cam in cameras:
+        image = os.path.join(SEED_IMAGES_PATH, cam.get("image", "unknown"))
+        logger.warning(f"Trying to load image {image}")
         camera, new = Camera.objects.get_or_create(**cam)
+        if os.path.exists(image):
+            with open(image, "rb") as f:
+                camera.image.save(os.path.basename(image), File(f), save=True)
         created_cameras[cam["model"]] = camera
         logger.info(f"{'Created' if new else 'Found'} camera: {camera.model}")
 

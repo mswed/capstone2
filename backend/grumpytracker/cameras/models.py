@@ -39,6 +39,8 @@ class Camera(models.Model):
         default=False, help_text="Was this model discontinued by the make?"
     )
 
+    image = models.ImageField(upload_to="camera_images/", blank=True, null=True)
+
     # Audit fields
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -64,6 +66,13 @@ class Camera(models.Model):
             "max_frame_rate": self.max_frame_rate,
             "notes": self.notes,
             "discontinued": self.discontinued,
+            "image": self.image.url if self.image else None,
+        }
+
+    def with_formats(self):
+        return {
+            **self.as_dict(),
+            "formats": [fmt.as_dict() for fmt in self.formats.all()],
         }
 
     class Meta:

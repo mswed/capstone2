@@ -108,7 +108,7 @@ class CameraDetailsView(View):
         :param make_id: ID of camera in the database
         """
         camera = get_object_or_404(Camera, id=camera_id)
-        return JsonResponse(camera.as_dict(), safe=False)
+        return JsonResponse(camera.with_formats(), safe=False)
 
     @method_decorator(require_admin)
     def patch(self, request, camera_id):

@@ -45,6 +45,22 @@ class GrumpyApi {
     console.log(res);
     return res;
   }
+
+  /*
+   ****************************** Makes Routes **************************************************
+   * */
+
+  /**
+   * Get all makes
+   *
+   * @returns {Object} All makes in the database
+   */
+
+  static async getMakes() {
+    let res = await this.apiCall(`api/v1/makes/`);
+    console.log(res);
+    return res;
+  }
 }
 
 export default GrumpyApi;

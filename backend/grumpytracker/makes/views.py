@@ -72,7 +72,7 @@ class MakeDetailsView(View):
         :param make_id: ID of camera maker in the database
         """
         make = get_object_or_404(Make, id=make_id)
-        return JsonResponse(make.as_dict(), safe=False)
+        return JsonResponse(make.with_cameras(), safe=False)
 
     @method_decorator(require_admin)
     def patch(self, request, make_id):
