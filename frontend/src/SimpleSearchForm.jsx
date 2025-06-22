@@ -4,28 +4,38 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 const SimpleSearchFrom = ({ fields, targetArray, setTargetArray, originalArray }) => {
   const INITIAL_STATE = '';
   const [searchTerm, setSearchTerm] = useState(INITIAL_STATE);
-  const handleChange = (evt) => {
-    setSearchTerm(evt.target.value);
-  };
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    if (!searchTerm) {
+  const handleChange = (evt) => {
+    // Grab the new value
+    const value = evt.target.value;
+    // Set the state
+    setSearchTerm(value);
+
+    // Filter
+    if (value.trim() === '') {
+      // We did not search for anything show original data
       setTargetArray(originalArray);
     } else {
-      // For each of our fields check if the search term was found and filter our main array based
-      // on that
-      const results = targetArray.filter((item) => fields.some((field) => item[field].toLowerCase().includes(searchTerm.toLowerCase())));
+      // Filter the list
+      const results = targetArray.filter((item) => fields.some((field) => item[field]?.toLowerCase().includes(searchTerm.toLowerCase())));
       setTargetArray([...results]);
     }
   };
+
+  const handleClear = () => {
+    setSearchTerm('');
+    setTargetArray(originalArray);
+  };
+
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form>
       <InputGroup className="my-3">
-        <Form.Control placeholder="Enter search term..." onChange={handleChange} value={searchTerm} />
-        <Button variant="primary" type="submit">
-          Search!
-        </Button>
+        <Form.Control placeholder="Search formats" onChange={handleChange} value={searchTerm} />
+        {searchTerm && (
+          <Button variant="outline-secondary" onClick={handleClear}>
+            X
+          </Button>
+        )}
       </InputGroup>
     </Form>
   );

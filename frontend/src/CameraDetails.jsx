@@ -72,11 +72,20 @@ const CameraDetails = () => {
           )}
         </Col>
       </Row>
-      <Row>
-        <SimpleSearchFrom fields={['image_format', 'image_aspect', 'format_name']} targetArray={formatsData} setTargetArray={setFormatsData} originalArray={cameraData.formats} />
-      </Row>
       <Row className="mt-3">
-        <FormatList formats={formatsData} />
+        <Col>
+          <Row>
+            <SimpleSearchFrom
+              fields={['image_format', 'image_aspect', 'format_name']}
+              targetArray={formatsData}
+              setTargetArray={setFormatsData}
+              originalArray={cameraData.formats}
+            />
+          </Row>
+          <Row>
+            <FormatList formats={formatsData} />
+          </Row>
+        </Col>
       </Row>
     </Container>
   );
