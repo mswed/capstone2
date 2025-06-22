@@ -53,11 +53,22 @@ class GrumpyApi {
   /**
    * Get all makes
    *
-   * @returns {Object} All makes in the database
+   * @returns {Array} All makes in the database
    */
 
   static async getMakes() {
     let res = await this.apiCall(`api/v1/makes/`);
+    return res;
+  }
+
+  /**
+   * Get make details
+   *
+   * @returns {Object} Full make details including related cameras
+   */
+
+  static async getMakeDetails(makeId) {
+    let res = await this.apiCall(`api/v1/makes/${makeId}`);
     return res;
   }
 }

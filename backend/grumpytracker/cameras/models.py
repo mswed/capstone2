@@ -11,6 +11,7 @@ class Camera(models.Model):
     # Camera info
     model = models.CharField(max_length=200)
     sensor_type = models.CharField(max_length=100)
+    sensor_size = models.CharField(max_length=100, blank=True, null=True)
     max_filmback_width = models.DecimalField(
         max_digits=5,
         decimal_places=2,
@@ -58,6 +59,7 @@ class Camera(models.Model):
             "make": self.make.id,
             "model": self.model,
             "sensor_type": self.sensor_type,
+            "sensor_size": self.sensor_size,
             "max_filmback_width": self.max_filmback_width,
             "max_filmback_height": self.max_filmback_height,
             "max_image_width": self.max_image_width,
