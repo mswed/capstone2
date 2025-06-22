@@ -71,6 +71,23 @@ class GrumpyApi {
     let res = await this.apiCall(`api/v1/makes/${makeId}`);
     return res;
   }
+
+  /*
+   ****************************** Makes Routes **************************************************
+   * */
+
+  /**
+   * Get camer details
+   *
+   * @param {Integer} cameraId - The camera id to search for
+   * @returns {Object} Full camera details including formats
+   */
+
+  static async getCameraDetails(cameraId) {
+    let res = await this.apiCall(`api/v1/cameras/${cameraId}`);
+    console.log('API RESPONDED WITH', res);
+    return res;
+  }
 }
 
 export default GrumpyApi;

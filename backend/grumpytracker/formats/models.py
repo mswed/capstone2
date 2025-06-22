@@ -120,6 +120,8 @@ class Format(models.Model):
         return {
             "id": self.id,
             "camera": self.camera.id,
+            "camera_model": self.camera.model,
+            "make_name": self.camera.make.name,
             "source": self.source.id,
             "image_format": self.image_format,
             "image_aspect": self.image_aspect,

@@ -1,9 +1,6 @@
-import { Card, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const CameraRow = ({ camera, showMake = true }) => {
-  console.log('Camera is', camera);
-  console.log('Camera sensor is', camera.sensor_type);
   return (
     <tr>
       <td>

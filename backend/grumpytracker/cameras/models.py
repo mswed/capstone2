@@ -57,6 +57,7 @@ class Camera(models.Model):
         return {
             "id": self.id,
             "make": self.make.id,
+            "make_name": self.make.name,
             "model": self.model,
             "sensor_type": self.sensor_type,
             "sensor_size": self.sensor_size,
