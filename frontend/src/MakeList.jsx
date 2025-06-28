@@ -16,9 +16,9 @@ const MakeList = () => {
   }, []);
   return (
     <Container>
-      <Row className="g-3">
+      <Row className="mt-3">
         {makes.map((make) => (
-          <Col key={make.id} xs={12} sm={6} md={4}>
+          <Col key={make.id} xs={12} sm={6} md={4} className="p-3">
             <Link to={`/makes/${make.id}`} className="text-decoration-none">
               <MakeCard name={make.name} logo={make.logo} camCount={make.cameras_count} />
             </Link>

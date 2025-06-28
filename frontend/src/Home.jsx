@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Container } from 'react-bootstrap';
 import GrumpyApi from './api';
 
 const Home = () => {
@@ -17,14 +18,13 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Welcome to the Grumpy Tracker!</h1>
+    <Container className="mt-3">
       <h3>{stats.projects} Projects</h3>
       <h3>{stats.makes} Makes</h3>
       <h3>{stats.cameras} Cameras</h3>
       <h3>{stats.formats} Formats</h3>
       <h3>Endless complaints... </h3>
-    </div>
+    </Container>
   );
 };
 

@@ -3,8 +3,6 @@ import FormatRow from './FormatRow.jsx';
 import { Table } from 'react-bootstrap';
 
 const FormatList = ({ formats = [], showModel = false }) => {
-  console.log('GOT FORMATS', formats);
-
   return (
     <Table striped hover responsive>
       <thead>
@@ -14,8 +12,8 @@ const FormatList = ({ formats = [], showModel = false }) => {
           <th>Format</th>
           <th>Resolution</th>
           <th>Filmback</th>
-          <th>Anamorphic?</th>
           <th>Pixel Aspect</th>
+          <th>Anamorphic?</th>
           <th>Desqueezed?</th>
           <th>Action</th>
         </tr>

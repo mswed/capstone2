@@ -2,10 +2,7 @@ import { useState } from 'react';
 import CameraRow from './CameraRow';
 import { Table } from 'react-bootstrap';
 
-const CameraList = ({ cams = null, showMake = false }) => {
-  console.log('cameras are', cams);
-  const [cameras, setCameras] = useState(cams);
-
+const CameraList = ({ cameras = [], showMake = false }) => {
   return (
     <Table striped hover responsive>
       <thead>
@@ -21,7 +18,6 @@ const CameraList = ({ cams = null, showMake = false }) => {
       </thead>
       <tbody>
         {cameras.map((cam) => {
-          console.log('strange', cam);
           return <CameraRow camera={cam} showMake={showMake} key={cam.id} />;
         })}
       </tbody>

@@ -1,7 +1,19 @@
 import { useState } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 
-const SimpleSearchFrom = ({ fields, targetArray, setTargetArray, originalArray }) => {
+/**
+ * A search form component that filters the results provided by the parent
+ * copmonent. The compoennt shows the UI AND filters the results, using the parent's
+ * setState function to apply the search
+ *
+ * @param {Array} fields - The fields to search
+ * @param {Array} targetArray - The array to filter
+ * @param {Array} setTargetArray - The parents setState function used to apply the search in the parent
+ * @param {Array} originalArray - A copy of the targetArray's initial state used to restore the results when needed
+ * @returns {Component} - A search field and a clear button
+ */
+
+const LocalSearchForm = ({ fields, targetArray, setTargetArray, originalArray }) => {
   const INITIAL_STATE = '';
   const [searchTerm, setSearchTerm] = useState(INITIAL_STATE);
 
@@ -41,4 +53,4 @@ const SimpleSearchFrom = ({ fields, targetArray, setTargetArray, originalArray }
   );
 };
 
-export default SimpleSearchFrom;
+export default LocalSearchForm;

@@ -4,7 +4,7 @@ import { Container, Card, Row, Col } from 'react-bootstrap';
 import GrumpyApi from './api';
 import Loading from './Loading';
 import FormatList from './FormatList.jsx';
-import SimpleSearchFrom from './SimpleSearchForm.jsx';
+import LocalSearchForm from './LocalSearchForm.jsx';
 
 const CameraDetails = () => {
   // Set up state
@@ -29,53 +29,68 @@ const CameraDetails = () => {
     getCameraDetails();
   }, [cameraId]);
 
-  console.log('formatsData length', formatsData?.length);
   if (isLoading) {
     return <Loading />;
   }
 
   return (
     <Container>
-      <Row className="g-4 shadow-lg">
-        <Col md={4}>
-          <Card.Img
-            src={cameraData.image ? cameraData.image : '/media/camera_images/missing_image.png'}
-            alt={`Logo for ${cameraData.model}`}
-            className="h-100 py-3"
-            style={{ objectFit: 'cover' }}
-          />
-        </Col>
-        <Col md={4}>
-          <Card.Title>{cameraData.model}</Card.Title>
-          <Card.Body className="mt-3">
-            <ul>
-              <li>Make: {cameraData.make_name}</li>
-              <li>Sensor Type: {cameraData.sensor_type}</li>
-              <li>
-                Max Filmback: {cameraData.max_filmback_width}mm x {cameraData.max_filmback_height}mm
-              </li>
-              <li>
-                Max Resolution: {cameraData.max_image_width} x {cameraData.max_image_height}
-              </li>
-              <li>
-                Frame Rate: {cameraData.min_frame_rate}fps - {cameraData.max_frame_rate}fps
-              </li>
-            </ul>
-          </Card.Body>
-        </Col>
-        <Col md={4}>
-          {cameraData.notes && (
-            <div>
-              <h6>Notes</h6>
-              <p>{cameraData.notes}</p>
-            </div>
-          )}
-        </Col>
-      </Row>
+      <Card className="shadow-lg rounded-0 rounded-bottom">
+        <Row className="g-0">
+          <Col md={4}>
+            <Card.Img
+              src={cameraData.image ? cameraData.image : '/media/camera_images/missing_image.png'}
+              alt={`Logo for ${cameraData.model}`}
+              className="p-3"
+              style={{
+                objectFit: 'contain',
+                maxHeight: '250px',
+                maxWidth: '100%',
+              }}
+            />
+          </Col>
+          <Col md={5}>
+            <Card.Body className="text-start">
+              <Card.Title>{cameraData.model}</Card.Title>
+              <dl className="row">
+                <dt className="col-sm-4">Make:</dt>
+                <dd className="col-sm-8">{cameraData.make_name}</dd>
+
+                <dt className="col-sm-4">Sensor Type:</dt>
+                <dd className="col-sm-8">{cameraData.sensor_type}</dd>
+
+                <dt className="col-sm-4">Max Filmback:</dt>
+                <dd className="col-sm-8">
+                  {cameraData.max_filmback_width}mm x {cameraData.max_filmback_height}mm
+                </dd>
+
+                <dt className="col-sm-4">Max Resolution:</dt>
+                <dd className="col-sm-8">
+                  {cameraData.max_image_width} x {cameraData.max_image_height}
+                </dd>
+
+                <dt className="col-sm-4">Frame Rate:</dt>
+                <dd className="col-sm-8">
+                  {cameraData.min_frame_rate}fps - {cameraData.max_frame_rate}
+                  fps
+                </dd>
+              </dl>
+            </Card.Body>
+          </Col>
+          <Col md={3} className="text-start p-3">
+            {cameraData.notes && (
+              <div>
+                <h6>Notes</h6>
+                <p>{cameraData.notes}</p>
+              </div>
+            )}
+          </Col>
+        </Row>
+      </Card>
       <Row className="mt-3">
         <Col>
           <Row>
-            <SimpleSearchFrom
+            <LocalSearchForm
               fields={['image_format', 'image_aspect', 'format_name']}
               targetArray={formatsData}
               setTargetArray={setFormatsData}

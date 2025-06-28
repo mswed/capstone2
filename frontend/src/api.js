@@ -73,11 +73,41 @@ class GrumpyApi {
   }
 
   /*
-   ****************************** Makes Routes **************************************************
+   ****************************** Camera Routes **************************************************
    * */
 
   /**
-   * Get camer details
+   * Get all cameras
+   *
+   * @returns {Array} All cameras in the database
+   */
+
+  static async getCameras() {
+    let res = await this.apiCall(`api/v1/cameras/`);
+    return res;
+  }
+
+  /**
+   * Search cameras
+   *
+   * @returns {Array} Found cameras in the database or an empty list
+   */
+
+  static async findCameras(query = '') {
+    console.log('query is', query);
+    if (!query) {
+      // No search was provided
+      return [];
+    }
+    const q = query;
+    console.log('q is set to ', q);
+    let res = await this.apiCall(`api/v1/cameras/search`, { q });
+
+    return res;
+  }
+
+  /**
+   * Get camera details
    *
    * @param {Integer} cameraId - The camera id to search for
    * @returns {Object} Full camera details including formats
@@ -85,6 +115,23 @@ class GrumpyApi {
 
   static async getCameraDetails(cameraId) {
     let res = await this.apiCall(`api/v1/cameras/${cameraId}`);
+    console.log('API RESPONDED WITH', res);
+    return res;
+  }
+
+  /*
+   ****************************** Format Routes **************************************************
+   * */
+
+  /**
+   * Get format details
+   *
+   * @param {Integer} formatId - The format id to search for
+   * @returns {Object} Full forat details
+   */
+
+  static async getFormatDetails(formatId) {
+    let res = await this.apiCall(`api/v1/formats/${formatId}`);
     console.log('API RESPONDED WITH', res);
     return res;
   }

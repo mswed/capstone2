@@ -33,17 +33,21 @@ const MakeDetails = () => {
   }
   return (
     <Container>
-      <Row className="g-3 shadow-lg">
-        <Col md={4}>
-          <Card.Img src={makeData.logo} alt={`Logo for ${makeData.name}`} className="h-100 py-3" style={{ objectFit: 'cover' }} />
-        </Col>
-        <Col md={8}>
-          <Card.Title>{makeData.name}</Card.Title>
-          <Card.Text>{makeData.website}</Card.Text>
-        </Col>
-      </Row>
+      <Card className="shadow-lg rounded-0 rounded-bottom">
+        <Row className="g-0">
+          <Col md={4}>
+            <Card.Img src={makeData.logo} alt={`Logo for ${makeData.name}`} className="h-100 p-3" style={{ objectFit: 'cover' }} />
+          </Col>
+          <Col md={8}>
+            <Card.Body className="text-start">
+              <Card.Title>{makeData.name}</Card.Title>
+              <Card.Text>{makeData.website}</Card.Text>
+            </Card.Body>
+          </Col>
+        </Row>
+      </Card>
       <Row className="mt-3">
-        <CameraList cams={makeData.cameras} />
+        <CameraList cameras={makeData.cameras} />
       </Row>
     </Container>
   );

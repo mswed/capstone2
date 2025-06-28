@@ -34,7 +34,7 @@ class CamerasListView(View):
         data = []
 
         for cam in cameras:
-            data.append({"id": cam.id, "name": cam.model})
+            data.append(cam.as_dict())
 
         return JsonResponse(data, safe=False)
 

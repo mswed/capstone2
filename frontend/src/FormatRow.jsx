@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Checkmark from './Checkmark';
 
 const FormatRow = ({ format, showModel = true }) => {
   return (
@@ -16,13 +17,13 @@ const FormatRow = ({ format, showModel = true }) => {
       </td>
       <td>{format.pixel_aspect}</td>
       <td className="text-center">
-        <span className={format.is_anamorphic ? 'text-success' : 'text-danger'}>{format.is_anamorphic ? '✓' : '✗'}</span>
+        <Checkmark checked={format.is_anamorphic} title="anamorphic?" />
       </td>
       <td className="text-center">
-        <span className={format.is_desqueezed ? 'text-success' : 'text-danger'}>{format.is_desqueezed ? '✓' : '✗'}</span>
+        <Checkmark checked={format.is_desqueezed} title="desqueezed?" />
       </td>
       <td>
-        <Link to={`/cameras/${format.id}`} className="btn btn-outline-primary btn-sm">
+        <Link to={`/formats/${format.id}`} className="btn btn-outline-primary btn-sm">
           View
         </Link>
       </td>

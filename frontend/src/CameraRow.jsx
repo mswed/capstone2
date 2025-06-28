@@ -6,7 +6,7 @@ const CameraRow = ({ camera, showMake = true }) => {
       <td>
         <img src={camera.image ? camera.image : '/media/camera_images/missing_image.png'} alt={`Image of ${camera.model}`} style={{ width: '60px' }} />
       </td>
-      {showMake && <td>{camera.make}</td>}
+      {showMake && <td>{camera.make_name}</td>}
       <td>{camera.model}</td>
       <td>{camera.sensor_size}</td>
       <td>
