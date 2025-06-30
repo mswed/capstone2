@@ -135,6 +135,36 @@ class GrumpyApi {
     console.log('API RESPONDED WITH', res);
     return res;
   }
+
+  /**
+   * Get all formats
+   *
+   * @returns {Array} All of the formats in the database
+   */
+
+  static async getFormats() {
+    let res = await this.apiCall(`api/v1/formats/`);
+    return res;
+  }
+
+  /**
+   * Search formats
+   *
+   * @returns {Array} Found formats in the database or an empty list
+   */
+
+  static async findFormats(query = {}) {
+    console.log('query is', query);
+    if (!query) {
+      // No search was provided
+      return [];
+    }
+
+    console.log(query);
+    let res = await this.apiCall(`api/v1/formats/search`, { ...query });
+
+    return res;
+  }
 }
 
 export default GrumpyApi;

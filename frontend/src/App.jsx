@@ -8,6 +8,7 @@ import MakeList from './MakeList';
 import MakeDetails from './MakeDetails';
 import Cameras from './Cameras';
 import CameraDetails from './CameraDetails';
+import Formats from './Formats';
 import FormatDetails from './FormatDetails';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/makes/:makeId" element={<MakeDetails />} />
         <Route path="/cameras/" element={<Cameras />} />
         <Route path="/cameras/:cameraId" element={<CameraDetails />} />
+        <Route path="/formats/" element={<Formats />} />
         <Route path="/formats/:formatId" element={<FormatDetails />} />
       </Routes>
     </>

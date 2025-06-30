@@ -26,6 +26,9 @@ const NavBar = () => {
               <Nav.Link as={Link} to={'/cameras'}>
                 Cameras
               </Nav.Link>
+              <Nav.Link as={Link} to={'/formats'}>
+                Formats
+              </Nav.Link>
               {token ? (
                 <>
                   <Nav.Link as={Link} to={'/profile'}>

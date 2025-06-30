@@ -21,6 +21,9 @@ class Format(models.Model):
     image_aspect = models.CharField(max_length=10, blank=True)
     format_name = models.CharField(max_length=100, blank=True)
 
+    # The above fields should usually be searched together
+    format_search = models.CharField(max_length=500, blank=True)
+
     # Physical sensor info
     sensor_width = models.DecimalField(
         max_digits=6, decimal_places=2, validators=[MinValueValidator(0)]
@@ -215,8 +218,17 @@ class Format(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Overrides the model's save function. Used at the moment to update 3de values
+        Overrides the model's save function.
         """
+        # Set the format search field
+        format_parts = [
+            self.image_format or "",
+            self.image_aspect or "",
+            self.format_name or "",
+        ]
+
+        self.format_search = " ".join(filter(None, format_parts))
+
         if self.is_anamorphic:
             # This is an anamorphic format update the 3de filmabck
             desqueezed = self.ensure_anamorphic_filmaback()

@@ -29,7 +29,7 @@ class FormatsListView(View):
         data = []
 
         for fmt in formats:
-            data.append({"id": fmt.id, "name": fmt.name})
+            data.append(fmt.as_dict())
 
         return JsonResponse(data, safe=False)
 
@@ -161,11 +161,11 @@ class FormatsSearchView(View):
         Search the database for a format based on model and sensor type
         """
         filter_map = {
+            "make": "camera__make__name__icontains",
             "camera": "camera__model__icontains",
             "source": "source__name__icontains",
-            "image_format": "image_format__icontains",
+            "format": "format_search__icontains",
             "image_aspect": "image_aspect__icontains",
-            "format_name": "format_name__icontains",
             "sensor_width": "sensor_width__icontains",
             "image_width": "image_width__icontains",
             "image_height": "image_height__icontains",
@@ -203,7 +203,8 @@ class FormatsSearchView(View):
         formats = Format.objects.select_related("camera", "source")
 
         # Build the WHERE clause for each term
-        formats = formats.filter(**filters)
+        if filters:
+            formats = formats.filter(**filters)
 
         # Execute the query
         found_formats = [fmt.as_dict() for fmt in formats]

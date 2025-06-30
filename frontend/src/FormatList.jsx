@@ -1,10 +1,9 @@
-import { useState } from 'react';
 import FormatRow from './FormatRow.jsx';
 import { Table } from 'react-bootstrap';
 
-const FormatList = ({ formats = [], showModel = false }) => {
+const FormatList = ({ formats, showModel = false }) => {
   return (
-    <Table striped hover responsive>
+    <Table striped hover responsive size="sm" className="small">
       <thead>
         <tr>
           {showModel && <th>Make</th>}
