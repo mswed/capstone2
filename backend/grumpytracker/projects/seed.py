@@ -25,6 +25,7 @@ def seed_projects():
             "description": "Lawyer-by-day Matt Murdock uses his heightened senses from being blinded as a young boy to fight crime at night on the streets of Hell’s Kitchen as Daredevil.",
             "poster_path": "https://image.tmdb.org/t/p/w500/QWbPaDxiB6LW2LjASknzYBvjMj.jpg",
             "release_date": "2015-04-10",
+            "tmdb_id": 61889,
         },
     ]
 

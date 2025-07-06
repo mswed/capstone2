@@ -119,7 +119,7 @@ def process_rating(data: Dict) -> List[Dict[str, Any]]:
             {"region": rd.get("iso_3166_1"), "rating": rd.get("rating")}
             for rd in rating_data
         ]
-    else:
+    elif "release_dates" in data:
         rating_data = data.get("release_dates", {}).get("results")
         return [
             {
@@ -128,6 +128,8 @@ def process_rating(data: Dict) -> List[Dict[str, Any]]:
             }
             for rd in rating_data
         ]
+    else:
+        return []
 
 
 def normalize_tmdb_data(data: Dict[str, Any], project_type: str) -> NormalizedTMDBData:
@@ -148,7 +150,9 @@ def normalize_tmdb_data(data: Dict[str, Any], project_type: str) -> NormalizedTM
         "tmdb_id": data.get("id"),
         "adult": data.get("adult"),
         "tmdb_original_name": data.get("original_name", data.get("original_title")),
-        "genres": [g["name"] for g in data.get("genres", [{}])],
+        "genres": [g["name"] for g in data.get("genres", [{}])]
+        if data.get("geners")
+        else [],
         "rating": process_rating(data),
     }
 

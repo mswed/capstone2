@@ -1,4 +1,5 @@
-from django.db.models import F, Q, Count, OrderBy
+from pprint import pprint
+from django.db.models import F, Q, Count
 import requests
 import json
 from decouple import config
@@ -9,7 +10,11 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.db import IntegrityError
 from .models import Project, ProjectFormat, Vote
-from .services import get_or_create_project_from_tmdb, refresh_project_from_tmdb
+from .services import (
+    get_or_create_project_from_tmdb,
+    refresh_project_from_tmdb,
+    normalize_tmdb_data,
+)
 from grumpytracker.utils import (
     login_required,
     validate_required_fields,
@@ -20,7 +25,6 @@ from cameras.models import Camera
 from formats.models import Format
 
 BASE_URL = "https://api.themoviedb.org/3"
-TMDB_POSTER_BASE = "https://image.tmdb.org/t/p/w500"
 
 
 # We need to disable csrf at the class level
@@ -41,7 +45,7 @@ class ProjectsListView(View):
         data = []
 
         for project in projects:
-            data.append({"id": project.id, "name": project.name, "url": project.url})
+            data.append(project.as_dict())
 
         return JsonResponse(data, safe=False)
 
@@ -84,7 +88,7 @@ class ProjectDetailsView(View):
         Get a project by its interanl ID
         """
         project = get_object_or_404(Project, id=project_id)
-        return JsonResponse(project.as_dict(), safe=False)
+        return JsonResponse(project.with_formats(), safe=False)
 
     @method_decorator(require_admin)
     def patch(self, request, project_id):
@@ -120,17 +124,20 @@ class ProjectDetailsView(View):
 def search(request):
     query = request.GET.get("q", "")
     if query:
+        # We first get all of the TMDB ID's in the database so we can filter results. Notice that
+        # we are getting a list of values instead of objects and using a set for performence
+        existing_tmdb_ids = set(
+            Project.objects.filter(tmdb_id__isnull=False).values_list(
+                "tmdb_id", flat=True
+            )
+        )
+
         # Search local db first
         local_projects = Project.objects.filter(name__icontains=query)
         found_local_projects = []
         for project in local_projects:
-            found_local_projects.append(
-                {
-                    "name": project.name,
-                    "project_type": project.project_type,
-                    "tmdb_id": project.tmdb_id,
-                }
-            )
+            found_local_projects.append(project.as_dict())
+
         # Search TMDB second
         url = f"{BASE_URL}/search/multi?query={query}&include_adult=false&language=en-US&page=1"
 
@@ -145,15 +152,18 @@ def search(request):
         if results:
             for project in results:
                 if project.get("media_type") in ["movie", "tv"]:
-                    found_remote_projects.append(
-                        {
-                            "name": project.get("title", project.get("name")),
-                            "project_type": "episodic"
+                    # We only care about tv shows and movies
+                    tmdb_id = project.get("id")
+                    if tmdb_id not in existing_tmdb_ids:
+                        # We only care about projects we don't already have
+                        project_type = (
+                            "episodic"
                             if project.get("media_type") == "tv"
-                            else "feature",
-                            "tmdb_id": project.get("id"),
-                        }
-                    )
+                            else "feature"
+                        )
+                        found_remote_projects.append(
+                            normalize_tmdb_data(project, project_type)
+                        )
         full_result = {
             "projects": {"local": found_local_projects, "remote": found_remote_projects}
         }
@@ -273,11 +283,16 @@ class ProjectFormatsListView(View):
             fmt = get_object_or_404(Format, id=data.get("format_id"))
 
             try:
+                # Add the format to the project
                 project_format = ProjectFormat.objects.create(
-                    project=project, fmt=fmt, created_by=request.user
+                    project=project, fmt=fmt, added_by=request.user
                 )
                 if not project_format:
                     return JsonResponse({"error": "Failed to attach format"})
+
+                # Add the camera to the project
+                if fmt.camera:
+                    project.cameras.add(fmt.camera)
             except IntegrityError as e:
                 return JsonResponse(
                     {"error": "Format already added to this project"}, status=400

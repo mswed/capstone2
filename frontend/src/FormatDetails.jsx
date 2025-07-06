@@ -17,7 +17,6 @@ const FormatDetails = () => {
     } catch (error) {
       consoel.error('Failed to copy:', error);
     }
-    console.log('copy!');
   };
   // Fetch format data
   useEffect(() => {

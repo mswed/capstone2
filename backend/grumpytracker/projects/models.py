@@ -33,6 +33,7 @@ class Project(models.Model):
 
     formats = models.ManyToManyField(
         "formats.Format",  # The name of the target table
+        through="ProjectFormat",
         blank=True,
         related_name="used_in_projects",  # The backref name
     )
@@ -50,10 +51,13 @@ class Project(models.Model):
             "tmdb_original_name": self.tmdb_original_name,
             "genres": self.genres,
             "rating": self.rating,
-            "cameras": models.ManyToManyField(Camera, related_name="projects"),
-            "formats": models.ManyToManyField(
-                Format, through="ProjectFormat", related_name="projects"
-            ),
+        }
+
+    def with_formats(self):
+        return {
+            **self.as_dict(),
+            "cameras": [cam.as_dict() for cam in self.cameras.all()],
+            "formats": [fmt.as_dict() for fmt in self.formats.all()],
         }
 
 

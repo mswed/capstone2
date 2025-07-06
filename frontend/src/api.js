@@ -165,6 +165,79 @@ class GrumpyApi {
 
     return res;
   }
+  /*
+   ****************************** Project Routes **************************************************
+   * */
+
+  /**
+   * Get project details
+   *
+   * @param {Integer} projectId - The format id to search for
+   * @returns {Object} Full forat details
+   */
+
+  static async getProjectDetails(projectId) {
+    let res = await this.apiCall(`api/v1/projects/${projectId}`);
+    console.log('API RESPONDED WITH', res);
+    return res;
+  }
+
+  /**
+   * Get all projects
+   *
+   * @returns {Array} All of the formats in the database
+   */
+
+  static async getProjects() {
+    let res = await this.apiCall(`api/v1/projects/`);
+    return res;
+  }
+
+  /**
+   * Search projects
+   *
+   * @returns {Array} Found projects in the database or an empty list
+   */
+
+  static async findProjects(query = {}) {
+    if (!query) {
+      // No search was provided
+      return [];
+    }
+    const q = query;
+    let res = await this.apiCall(`api/v1/projects/search`, { q });
+    if (res) {
+      return res.projects;
+    } else {
+      return [];
+    }
+  }
+
+  /*
+   ****************************** Authorization Routes **************************************************
+   * */
+
+  /**
+   * Login a user
+   *
+   * @param {String} username - username of user
+   * @param {String} password - password of user
+   */
+  static async login(username, password) {
+    let res = await this.apiCall(`api/v1/users/auth`, { username, password }, 'post');
+    GrumpyApi.token = res.token;
+    return res.token;
+  }
+
+  /**
+   * Logout a user
+   *
+   */
+  static async logout() {
+    let res = await this.apiCall(`api/v1/users/auth`, 'delete');
+    GrumpyApi.token = res.token;
+    return res.token;
+  }
 }
 
 export default GrumpyApi;

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import CameraRow from './CameraRow';
 import { Table } from 'react-bootstrap';
 

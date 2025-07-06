@@ -1,14 +1,13 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-// import { AuthContext } from './AuthProvider';
+import { AuthContext } from './AuthContext';
 // import { MessageContext } from './MessageContext';
 
 const NavBar = () => {
-  // const { token, currentUser, logout } = useContext(AuthContext);
+  const { token, currentUser, logout } = useContext(AuthContext);
   // const { showMessage } = useContext(MessageContext);
 
-  const token = '';
   const navigate = useNavigate();
   return (
     <Container>
@@ -29,6 +28,9 @@ const NavBar = () => {
               <Nav.Link as={Link} to={'/formats'}>
                 Formats
               </Nav.Link>
+              <Nav.Link as={Link} to={'/projects'}>
+                Projects
+              </Nav.Link>
               {token ? (
                 <>
                   <Nav.Link as={Link} to={'/profile'}>
@@ -39,7 +41,7 @@ const NavBar = () => {
                     onClick={() => {
                       navigate('/');
                       logout();
-                      showMessage('You have successfully logged out!', 'success');
+                      // showMessage('You have successfully logged out!', 'success');
                     }}
                   >
                     Logout ({currentUser})
