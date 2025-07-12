@@ -1,6 +1,6 @@
 import { Form, Button } from 'react-bootstrap';
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 
 const LoginForm = () => {
@@ -27,14 +27,13 @@ const LoginForm = () => {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     const res = await login(loginForm.username, loginForm.password);
-    console.log(res);
-    // if (res.success) {
-    //   navigate('/');
-    //   showMessage('Login Successfull', 'success');
-    // } else {
-    //   navigate('/');
-    //   showMessage('Login Failed! Incorrect username or password!', 'danger');
-    // }
+    if (res.success) {
+      navigate('/');
+      // showMessage('Login Successfull', 'success');
+    } else {
+      navigate('/');
+      // showMessage('Login Failed! Incorrect username or password!', 'danger');
+    }
   };
 
   return (
@@ -50,6 +49,12 @@ const LoginForm = () => {
       <Button type="submit" className="w-100">
         Login
       </Button>
+      <div className="mt-3 text-muted">
+        Don't have an account?{' '}
+        <span>
+          <Link to={'/register'}>Register</Link>
+        </span>
+      </div>
     </Form>
   );
 };

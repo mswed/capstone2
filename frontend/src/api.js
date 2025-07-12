@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { data } from 'react-router-dom';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000/';
 
@@ -213,6 +214,26 @@ class GrumpyApi {
     }
   }
 
+  /**
+   * Add project to the database from TMDB
+   *
+   * @param {Integer} tmdb_id - The TMDB id of the project
+   * @param {String} projectType - The project type 'feature' or 'episodic'
+   * @returns {Object} success and project id if success else error
+   */
+
+  static async addTMDBProject(tmdbId, projectType) {
+    let res = await this.apiCall(
+      `api/v1/projects/`,
+      { tmdb_id: tmdbId, project_type: projectType },
+      'post'
+    );
+    if (res) {
+      return res;
+    } else {
+      return [];
+    }
+  }
   /*
    ****************************** Authorization Routes **************************************************
    * */
@@ -224,7 +245,11 @@ class GrumpyApi {
    * @param {String} password - password of user
    */
   static async login(username, password) {
-    let res = await this.apiCall(`api/v1/users/auth`, { username, password }, 'post');
+    let res = await this.apiCall(
+      `api/v1/users/auth`,
+      { username, password },
+      'post'
+    );
     GrumpyApi.token = res.token;
     return res.token;
   }

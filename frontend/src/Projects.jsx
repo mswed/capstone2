@@ -80,7 +80,8 @@ const Projects = () => {
       </div>
       {hasSearch && (
         <div>
-          <h3 className="text-start">Browse TMDB</h3> {hasRemoteResults ? <ProjectList projects={projects.remote} /> : <NoResults message="No results found on TMDB" />}
+          <h3 className="text-start">Browse TMDB</h3>{' '}
+          {hasRemoteResults ? <ProjectList projects={projects.remote} projectsType="remote" /> : <NoResults message="No results found on TMDB" />}
         </div>
       )}
     </Container>
