@@ -5,12 +5,21 @@ import GrumpyApi from './api';
 import Loading from './Loading';
 import CameraGrid from './CamerasGrid.jsx';
 import FormatList from './FormatList.jsx';
+import ActionBar from './ActionBar.jsx';
 
 const ProjectDetails = () => {
   // Set up state
   const { projectId } = useParams();
   const [projectData, setProjectData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const actionButtons = [
+    {
+      text: 'Add Format',
+      variant: 'outline-primary',
+      onClick: () => console.log('Add format clicked'),
+    },
+  ];
 
   // Fetch camera data
   useEffect(() => {
@@ -72,12 +81,15 @@ const ProjectDetails = () => {
           </Col>
         </Row>
       </Card>
-      <Row className="mt-3">
-        <div className="text-start">
-          <h3>Formats</h3>
-        </div>
-        <FormatList formats={projectData.formats} showModel={true} />
-      </Row>
+      <ActionBar buttons={actionButtons} className="mt-3" />
+      {projectData.formats?.length > 0 && (
+        <Row className="mt-3">
+          <div className="text-start">
+            <h3>Formats</h3>
+          </div>
+          <FormatList formats={projectData.formats} showModel={true} />
+        </Row>
+      )}
     </Container>
   );
 };
