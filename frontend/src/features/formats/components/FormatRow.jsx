@@ -1,7 +1,14 @@
+import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Checkmark from '../../../components/ui/Checkmark';
+import VoteWidget from './VoteWidget';
 
-const FormatRow = ({ format, showModel = true }) => {
+const FormatRow = ({ format, showModel = true, showAddButton = false, onFormatAdd }) => {
+  const handleAdd = () => {
+    if (onFormatAdd) {
+      onFormatAdd(format.id);
+    }
+  };
   return (
     <tr>
       {showModel && <td>{format.make_name}</td>}
@@ -23,9 +30,18 @@ const FormatRow = ({ format, showModel = true }) => {
         <Checkmark checked={format.is_desqueezed} title="desqueezed?" />
       </td>
       <td>
-        <Link to={`/formats/${format.id}`} className="btn btn-outline-primary btn-sm">
-          View
-        </Link>
+        <VoteWidget />
+      </td>
+      <td>
+        {showAddButton ? (
+          <Button variant="outline-danger" size="sm" onClick={handleAdd}>
+            Add
+          </Button>
+        ) : (
+          <Link to={`/formats/${format.id}`} className="btn btn-outline-primary btn-sm">
+            View
+          </Link>
+        )}
       </td>
     </tr>
   );

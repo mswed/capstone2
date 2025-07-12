@@ -1,7 +1,7 @@
 import FormatRow from './FormatRow.jsx';
 import { Table } from 'react-bootstrap';
 
-const FormatList = ({ formats, showModel = false }) => {
+const FormatList = ({ formats, showModel = false, showAddButton = false, onFormatAdd }) => {
   return (
     <Table striped hover responsive size="sm" className="small">
       <thead>
@@ -11,15 +11,16 @@ const FormatList = ({ formats, showModel = false }) => {
           <th>Format</th>
           <th>Resolution</th>
           <th>Filmback</th>
-          <th>Pixel Aspect</th>
+          <th>PAR</th>
           <th>Anamorphic?</th>
           <th>Desqueezed?</th>
+          <th></th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {formats.map((format) => {
-          return <FormatRow format={format} showModel={showModel} key={format.id} />;
+          return <FormatRow format={format} showModel={showModel} showAddButton={showAddButton} onFormatAdd={onFormatAdd} key={format.id} />;
         })}
       </tbody>
     </Table>

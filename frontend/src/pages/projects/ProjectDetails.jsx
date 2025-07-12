@@ -6,22 +6,33 @@ import Loading from '../../components/ui/Loading.jsx';
 import CameraGrid from '../../features/cameras/components/CamerasGrid.jsx';
 import FormatList from '../../features/formats/components/FormatList.jsx';
 import ActionBar from '../../components/ui/ActionBar.jsx';
+import FormatSearchModal from '../../features/formats/components/FormatSearchModal.jsx';
 
 const ProjectDetails = () => {
   // Set up state
   const { projectId } = useParams();
   const [projectData, setProjectData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showFormatsModal, setShowFormatsModal] = useState(false);
 
   const actionButtons = [
     {
       text: 'Add Format',
       variant: 'outline-primary',
-      onClick: () => console.log('Add format clicked'),
+      onClick: () => setShowFormatsModal(true),
     },
   ];
 
-  // Fetch camera data
+  const handleAddFormat = async (formatId) => {
+    try {
+      await GrumpyApi.addFormatToProject(projectId, formatId);
+      // Refresh the project
+      const response = await GrumpyApi.getProjectDetails(projectId);
+      setProjectData(response);
+    } catch (error) {}
+  };
+
+  // Fetch projectData data
   useEffect(() => {
     const getProjectDetails = async () => {
       try {
@@ -82,6 +93,7 @@ const ProjectDetails = () => {
         </Row>
       </Card>
       <ActionBar buttons={actionButtons} className="mt-3" />
+      <FormatSearchModal show={showFormatsModal} onHide={() => setShowFormatsModal(false)} onFormatSelect={handleAddFormat} projectId={projectId} />
       {projectData.formats?.length > 0 && (
         <Row className="mt-3">
           <div className="text-start">
