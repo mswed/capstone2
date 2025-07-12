@@ -54,6 +54,21 @@ const Projects = () => {
     }
   };
 
+  /**
+   * Add a project from TMDB to the local database
+   *
+   * @param {integer} projectId - Project id from TMDB
+   * @param {string} projectType - Project type (episodic or feature)
+   */
+
+  const addProject = async (projectId, projectType) => {
+    const newProject = await GrumpyApi.addTMDBProject(projectId, projectType);
+    setProjects((prev) => ({
+      ...prev,
+      local: [...prev.local, newProject.project],
+    }));
+  };
+
   useEffect(() => {
     if (searchTerm.trim() !== '') {
       findProjects();
@@ -81,7 +96,7 @@ const Projects = () => {
       {hasSearch && (
         <div>
           <h3 className="text-start">Browse TMDB</h3>{' '}
-          {hasRemoteResults ? <ProjectList projects={projects.remote} projectsType="remote" /> : <NoResults message="No results found on TMDB" />}
+          {hasRemoteResults ? <ProjectList projects={projects.remote} projectsType="remote" onProjectAdd={addProject} /> : <NoResults message="No results found on TMDB" />}
         </div>
       )}
     </Container>

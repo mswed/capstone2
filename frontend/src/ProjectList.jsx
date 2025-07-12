@@ -1,7 +1,7 @@
 import ProjectRow from './ProjectRow';
 import { Table } from 'react-bootstrap';
 
-const ProjectList = ({ projects, projectsType = 'local' }) => {
+const ProjectList = ({ projects, projectsType = 'local', onProjectAdd }) => {
   return (
     <Table striped hover responsive>
       <thead>
@@ -16,7 +16,7 @@ const ProjectList = ({ projects, projectsType = 'local' }) => {
       </thead>
       <tbody>
         {projects.map((project) => {
-          return <ProjectRow project={project} rowType={projectsType} key={project.id || project.tmdb_id} />;
+          return <ProjectRow project={project} rowType={projectsType} onProjectAdd={onProjectAdd} key={project.id || project.tmdb_id} />;
         })}
       </tbody>
     </Table>

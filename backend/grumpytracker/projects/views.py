@@ -66,9 +66,7 @@ class ProjectsListView(View):
                 return JsonResponse({"error": "Failed to get or create a project"})
 
             message = "Created new project" if created else "Project already exists"
-            return JsonResponse(
-                {"success": f"{message} {project.id}", "project_id": project.id}
-            )
+            return JsonResponse({"success": f"{message}", "project": project.as_dict()})
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
