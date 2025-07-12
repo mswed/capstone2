@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Container, Card, Row, Col, Button } from 'react-bootstrap';
-import GrumpyApi from './api';
-import Loading from './Loading';
-import AdvanceSearchForm from './AdvanceSearchForm';
-import FormatList from './FormatList';
+import GrumpyApi from '../../services/api';
+import Loading from '../../components/ui/Loading';
+import AdvanceSearchForm from '../../components/forms/AdvanceSearchForm';
+import FormatList from '../../features/formats/components/FormatList';
 
 const Formats = () => {
   const [formats, setFormats] = useState([]);

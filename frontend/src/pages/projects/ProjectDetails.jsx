@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
-import GrumpyApi from './api';
-import Loading from './Loading';
-import CameraGrid from './CamerasGrid.jsx';
-import FormatList from './FormatList.jsx';
-import ActionBar from './ActionBar.jsx';
+import GrumpyApi from '../../services/api.js';
+import Loading from '../../components/ui/Loading.jsx';
+import CameraGrid from '../../features/cameras/components/CamerasGrid.jsx';
+import FormatList from '../../features/formats/components/FormatList.jsx';
+import ActionBar from '../../components/ui/ActionBar.jsx';
 
 const ProjectDetails = () => {
   // Set up state

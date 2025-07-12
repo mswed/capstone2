@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
-import GrumpyApi from './api.js';
-import MakeCard from './MakeCard.jsx';
+import GrumpyApi from '../../services/api.js';
+import MakeCard from '../../features/makes/components/MakeCard';
 
 const MakeList = () => {
   const [makes, setMakes] = useState([]);

@@ -1,20 +1,19 @@
-import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import './App.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { AuthProvider } from './AuthContext';
-import NavBar from './NavBar';
-import Home from './Home';
-import MakeList from './MakeList';
-import MakeDetails from './MakeDetails';
-import Cameras from './Cameras';
-import CameraDetails from './CameraDetails';
-import Formats from './Formats';
-import FormatDetails from './FormatDetails';
-import Projects from './Projects';
-import ProjectDetails from './ProjectDetails';
-import FormContainer from './FormContainer';
-import LoginForm from './LoginForm';
+import './styles/App.css';
+import { AuthProvider } from './context/AuthContext';
+import NavBar from './components/layout/NavBar';
+import Home from './pages/Home';
+import Makes from './pages/makes/Makes';
+import MakeDetails from './pages/makes/MakeDetails';
+import Cameras from './pages/cameras/Cameras';
+import CameraDetails from './pages/cameras/CameraDetails';
+import Formats from './pages/formats/Formats';
+import FormatDetails from './pages/formats/FormatDetails';
+import Projects from './pages/projects/Projects';
+import ProjectDetails from './pages/projects/ProjectDetails';
+import FormContainer from './components/ui/FormContainer';
+import LoginForm from './components/forms/LoginForm';
 
 function App() {
   return (
@@ -23,7 +22,7 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/makes" element={<MakeList />} />
+          <Route path="/makes" element={<Makes />} />
           <Route path="/makes/:makeId" element={<MakeDetails />} />
           <Route path="/cameras/" element={<Cameras />} />
           <Route path="/cameras/:cameraId" element={<CameraDetails />} />

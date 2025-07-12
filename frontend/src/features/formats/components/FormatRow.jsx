@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Checkmark from './Checkmark';
+import Checkmark from '../../../components/ui/Checkmark';
 
 const FormatRow = ({ format, showModel = true }) => {
   return (

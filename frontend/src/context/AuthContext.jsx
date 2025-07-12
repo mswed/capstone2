@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import GrumpuyApi from './api';
+import GrumpyApi from '../services/api';
 
 // We create the context
 const AuthContext = React.createContext();
@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
   const storedUser = localStorage.getItem('grumpy-user');
 
   // We set the token right away so we don't run in to authorization issues
-  GrumpuyApi.token = storedToken || null;
+  GrumpyApi.token = storedToken || null;
 
   // Initialize state
   const [token, setToken] = useState(storedToken);
@@ -31,11 +31,11 @@ const AuthProvider = ({ children }) => {
     if (token && token.trim !== '') {
       // We only set the token if it's not empty
 
-      GrumpuyApi.token = token;
+      GrumpyApi.token = token;
       localStorage.setItem('grumpy-token', token || '');
       localStorage.setItem('grumpy-user', currentUser || '');
     } else {
-      GrumpuyApi.token = null;
+      GrumpyApi.token = null;
       localStorage.removeItem('grumpy-token');
       localStorage.removeItem('grumpy-user');
     }
@@ -54,7 +54,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const authToken = await GrumpuyApi.login(username, password);
+      const authToken = await GrumpyApi.login(username, password);
       setToken(authToken);
       const decoded = jwtDecode(authToken);
       setCurrentuser(decoded.username);
@@ -66,7 +66,7 @@ const AuthProvider = ({ children }) => {
 
   const register = async (username, password, firstName, lastName, email) => {
     try {
-      const token = await GrumpuyApi.register(username, password, firstName, lastName, email);
+      const token = await GrumpyApi.register(username, password, firstName, lastName, email);
       logout();
       return { success: true };
     } catch (error) {

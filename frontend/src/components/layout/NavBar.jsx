@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { AuthContext } from './AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 // import { MessageContext } from './MessageContext';
 
 const NavBar = () => {

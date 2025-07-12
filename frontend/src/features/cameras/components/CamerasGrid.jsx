@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
-import GrumpyApi from './api.js';
-import MakeCard from './MakeCard.jsx';
-import CameraCard from './CameraCard.jsx';
+import { Row, Col } from 'react-bootstrap';
+import CameraCard from './CameraCard';
 
 const CameraGrid = ({ cameras }) => {
   return (

@@ -1,8 +1,7 @@
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from './AuthContext';
+import { AuthContext } from '../../../context/AuthContext';
 import { Button } from 'react-bootstrap';
-import GrumpyApi from './api';
 
 const ProjectRow = ({ project, rowType = 'local', onProjectAdd }) => {
   const { token } = useContext(AuthContext);

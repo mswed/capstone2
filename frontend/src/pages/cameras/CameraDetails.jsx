@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
-import GrumpyApi from './api';
-import Loading from './Loading';
-import FormatList from './FormatList.jsx';
-import LocalSearchForm from './LocalSearchForm.jsx';
+import GrumpyApi from '../../services/api.js';
+import Loading from '../../components/ui/Loading';
+import FormatList from '../../features/formats/components/FormatList';
+import LocalSearchForm from '../../components/forms/LocalSearchForm';
 
 const CameraDetails = () => {
   // Set up state

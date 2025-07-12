@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Container, Card, Row, Col } from 'react-bootstrap';
-import GrumpyApi from './api';
-import Loading from './Loading';
-import RemoteSearchForm from './RemoteSearchForm';
-import CameraList from './CameraList';
+import GrumpyApi from '../../services/api';
+import Loading from '../../components/ui/Loading';
+import RemoteSearchForm from '../../components/forms/RemoteSearchForm';
+import CameraList from '../../features/cameras/components/CameraList';
 
 const Cameras = () => {
   const [cameras, setCameras] = useState([]);

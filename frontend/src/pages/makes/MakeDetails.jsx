@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
-import GrumpyApi from './api';
-import Loading from './Loading';
-import CameraList from './CameraList';
+import GrumpyApi from '../../services/api';
+import Loading from '../../components/ui/Loading';
+import CameraList from '../../features/cameras/components/CameraList';
 
 const MakeDetails = () => {
   const { makeId } = useParams();

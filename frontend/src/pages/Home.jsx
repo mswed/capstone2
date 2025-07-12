@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
-import GrumpyApi from './api';
+import GrumpyApi from '../services/api';
 
 const Home = () => {
   const [stats, setStats] = useState({});
