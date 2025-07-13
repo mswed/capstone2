@@ -1,4 +1,4 @@
-from pprint import pprint
+from loguru import logger
 from django.db.models import F, Q, Count
 import requests
 import json
@@ -86,7 +86,7 @@ class ProjectDetailsView(View):
         Get a project by its interanl ID
         """
         project = get_object_or_404(Project, id=project_id)
-        return JsonResponse(project.with_formats(), safe=False)
+        return JsonResponse(project.with_formats(user=request.user), safe=False)
 
     @method_decorator(require_admin)
     def patch(self, request, project_id):
@@ -272,9 +272,12 @@ class ProjectFormatsListView(View):
         """
         Add a format to the project
         """
+        logger.warning(f"add format to project accessed with {project_id}")
+
         try:
             data = json.loads(request.body)
             validate_required_fields(data, ["format_id"])
+            logger.warning(f"and format {data.get('format_id')}")
 
             # Grab the project
             project = get_object_or_404(Project, id=project_id)
@@ -324,19 +327,25 @@ class ProjectFormatDetailsView(View):
         project = get_object_or_404(Project, id=project_id)
         fmt = get_object_or_404(Format, id=format_id)
 
-        # Check if the user already voted
-        # TODO: What if the user wants to cancel their vote?
-        existing_vote = Vote.objects.filter(
-            project=project, fmt=fmt, user=request.user
-        ).first()
-        if existing_vote:
-            return JsonResponse(
-                {"error": "You already voted on this format"}, status=400
-            )
-
         try:
             data = json.loads(request.body)
             validate_required_fields(data, ["vote"])
+
+            # Check if the user already voted
+            existing_vote = Vote.objects.filter(
+                project=project, fmt=fmt, user=request.user
+            ).first()
+            if existing_vote:
+                if existing_vote == data.get("vote"):
+                    # The user is trying to cast the same vote they did before, stop them
+                    logger.warning(f"Found existing vote {existing_vote}")
+                    return JsonResponse(
+                        {"error": "You already voted on this format"}, status=400
+                    )
+                else:
+                    # This vote should cancel the users previous vote delete the original
+                    existing_vote.delete()
+
             vote = Vote.objects.create(
                 project=project,
                 fmt=fmt,
@@ -344,7 +353,7 @@ class ProjectFormatDetailsView(View):
                 vote_type=data.get("vote"),
             )
 
-            return JsonResponse({"success": "Updated vote count!"}, status=400)
+            return JsonResponse({"success": "Updated vote count!"}, status=200)
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)

@@ -1,5 +1,5 @@
 from django.db import models
-from cameras.models import Camera
+from loguru import logger
 from formats.models import Format
 from users.models import User
 
@@ -53,11 +53,41 @@ class Project(models.Model):
             "rating": self.rating,
         }
 
-    def with_formats(self):
+    def with_formats(self, user=None):
+        """
+        Returns the project with its cameras and formats AND the votes on each format
+        """
+        formats_with_votes = []
+
+        for fmt in self.formats.all():
+            # Get vote counts for each format
+            votes = Vote.objects.filter(project=self, fmt=fmt)
+            up_votes = votes.filter(vote_type="up").count()
+            down_votes = votes.filter(vote_type="down").count()
+
+            # If we have a user check how they voted
+            user_vote = None
+            if user:
+                try:
+                    user_vote_obj = Vote.objects.get(project=self, fmt=fmt, user=user)
+                    user_vote = user_vote_obj.vote_type
+                except Vote.DoesNotExist:
+                    user_vote = None
+            format_data = {
+                **fmt.as_dict(),
+                "up_votes": up_votes,
+                "down_votes": down_votes,
+                "total_votes": up_votes + down_votes,
+                "score": up_votes - down_votes,
+                "user_vote": user_vote,
+            }
+
+            formats_with_votes.append(format_data)
+
         return {
             **self.as_dict(),
             "cameras": [cam.as_dict() for cam in self.cameras.all()],
-            "formats": [fmt.as_dict() for fmt in self.formats.all()],
+            "formats": formats_with_votes,
         }
 
 
@@ -94,3 +124,6 @@ class Vote(models.Model):
 
     class Meta:
         unique_together = ["project", "fmt", "user"]
+
+    def __str__(self):
+        return f"<Vote Project: {self.project} Format: {self.fmt} User: {self.user} Vote: {self.vote_type}>"
