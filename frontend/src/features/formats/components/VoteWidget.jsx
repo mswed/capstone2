@@ -10,7 +10,7 @@ const VoteWidget = ({ formatId, upVotes, downVotes, userVote, onVote }) => {
           lineHeight: 1,
         }}
       >
-        {userVote === 'up' ? '▲' : '△'} {/* Filled vs outline */}
+        {userVote === 'up' ? '▲' : '△'}
       </button>
       <small className="text-muted my-1">{upVotes - downVotes}</small>
       <button
@@ -22,7 +22,7 @@ const VoteWidget = ({ formatId, upVotes, downVotes, userVote, onVote }) => {
           lineHeight: 1,
         }}
       >
-        {userVote === 'down' ? '▼' : '▽'} {/* Filled vs outline */}
+        {userVote === 'down' ? '▼' : '▽'}
       </button>
     </div>
   );

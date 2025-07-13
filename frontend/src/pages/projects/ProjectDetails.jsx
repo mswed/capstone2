@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
+import { AuthContext } from '../../context/AuthContext.jsx';
 import GrumpyApi from '../../services/api.js';
 import Loading from '../../components/ui/Loading.jsx';
 import CameraGrid from '../../features/cameras/components/CamerasGrid.jsx';
@@ -14,6 +15,7 @@ const ProjectDetails = () => {
   const [projectData, setProjectData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showFormatsModal, setShowFormatsModal] = useState(false);
+  const { currentUser } = useContext(AuthContext);
 
   const actionButtons = [
     {
@@ -32,7 +34,18 @@ const ProjectDetails = () => {
     } catch (error) {}
   };
 
-  // Fetch projectData data
+  const handleVote = async (formatId, vote) => {
+    try {
+      await GrumpyApi.voteOnProjectFormat(projectId, formatId, vote, currentUser);
+      // Refresh the project
+      const response = await GrumpyApi.getProjectDetails(projectId);
+      setProjectData(response);
+    } catch (error) {
+      console.error('Error failed to vote on format', error);
+    }
+  };
+
+  // Fetch project data
   useEffect(() => {
     const getProjectDetails = async () => {
       try {
@@ -99,7 +112,7 @@ const ProjectDetails = () => {
           <div className="text-start">
             <h3>Formats</h3>
           </div>
-          <FormatList formats={projectData.formats} showModel={true} />
+          <FormatList formats={projectData.formats} showModel={true} onVote={handleVote} />
         </Row>
       )}
     </Container>

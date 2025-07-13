@@ -239,8 +239,24 @@ class GrumpyApi {
    */
 
   static async addFormatToProject(projectId, formatId) {
-    console.log('trying to add project');
     let res = await this.apiCall(`api/v1/projects/${projectId}/formats/`, { format_id: formatId }, 'post');
+    if (res) {
+      return res;
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * Vote on a format attached to a project
+   *
+   * @param {Integer} formatId - The format id
+   * @param {Integer} projectId - The project id
+   * @param {String} vote - Vote type (up or down)
+   */
+
+  static async voteOnProjectFormat(projectId, formatId, vote) {
+    let res = await this.apiCall(`api/v1/projects/${projectId}/formats/${formatId}`, { vote }, 'patch');
     if (res) {
       return res;
     } else {

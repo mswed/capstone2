@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import Checkmark from '../../../components/ui/Checkmark';
 import VoteWidget from './VoteWidget';
 
-const FormatRow = ({ format, showModel = true, showAddButton = false, onFormatAdd }) => {
+const FormatRow = ({ format, showModel = true, showAddButton = false, onFormatAdd, onVote }) => {
   const handleAdd = () => {
     if (onFormatAdd) {
       onFormatAdd(format.id);
     }
   };
+
   return (
     <tr>
       {showModel && <td>{format.make_name}</td>}
@@ -29,9 +30,11 @@ const FormatRow = ({ format, showModel = true, showAddButton = false, onFormatAd
       <td className="text-center">
         <Checkmark checked={format.is_desqueezed} title="desqueezed?" />
       </td>
-      <td>
-        <VoteWidget />
-      </td>
+      {onVote && (
+        <td>
+          <VoteWidget formatId={format.id} upVotes={format.up_votes} downVotes={format.down_votes} userVote={format.user_vote} onVote={onVote} />
+        </td>
+      )}
       <td>
         {showAddButton ? (
           <Button variant="outline-danger" size="sm" onClick={handleAdd}>
