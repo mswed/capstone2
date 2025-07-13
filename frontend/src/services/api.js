@@ -106,6 +106,18 @@ class GrumpyApi {
     let res = await this.apiCall(`api/v1/makes/${makeId}`, formData, 'patch');
     return res.make;
   }
+
+  /**
+   * Delete make
+   *
+   * @param {Integer} makeId - The ID of the make we are deleting
+   * @returns {Object}  Delete status
+   */
+
+  static async deleteMake(makeId) {
+    let res = await this.apiCall(`api/v1/makes/${makeId}`, {}, 'delete');
+    return res;
+  }
   /*
    ****************************** Camera Routes **************************************************
    * */
@@ -256,11 +268,7 @@ class GrumpyApi {
    */
 
   static async addTMDBProject(tmdbId, projectType) {
-    let res = await this.apiCall(
-      `api/v1/projects/`,
-      { tmdb_id: tmdbId, project_type: projectType },
-      'post'
-    );
+    let res = await this.apiCall(`api/v1/projects/`, { tmdb_id: tmdbId, project_type: projectType }, 'post');
     if (res) {
       return res;
     } else {
@@ -276,11 +284,7 @@ class GrumpyApi {
    */
 
   static async addFormatToProject(projectId, formatId) {
-    let res = await this.apiCall(
-      `api/v1/projects/${projectId}/formats/`,
-      { format_id: formatId },
-      'post'
-    );
+    let res = await this.apiCall(`api/v1/projects/${projectId}/formats/`, { format_id: formatId }, 'post');
     if (res) {
       return res;
     } else {
@@ -297,11 +301,7 @@ class GrumpyApi {
    */
 
   static async voteOnProjectFormat(projectId, formatId, vote) {
-    let res = await this.apiCall(
-      `api/v1/projects/${projectId}/formats/${formatId}`,
-      { vote },
-      'patch'
-    );
+    let res = await this.apiCall(`api/v1/projects/${projectId}/formats/${formatId}`, { vote }, 'patch');
     if (res) {
       return res;
     } else {
@@ -319,11 +319,7 @@ class GrumpyApi {
    * @param {String} password - password of user
    */
   static async login(username, password) {
-    let res = await this.apiCall(
-      `api/v1/users/auth`,
-      { username, password },
-      'post'
-    );
+    let res = await this.apiCall(`api/v1/users/auth`, { username, password }, 'post');
     GrumpyApi.token = res.token;
     return res.token;
   }

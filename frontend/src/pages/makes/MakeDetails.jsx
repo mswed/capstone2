@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import GrumpyApi from '../../services/api';
 import Loading from '../../components/ui/Loading';
@@ -7,17 +7,23 @@ import CameraList from '../../features/cameras/components/CameraList';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import MakeForm from '../../components/forms/MakeForm.jsx';
+import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 
 const MakeDetails = () => {
+  const navigate = useNavigate();
+
   const { makeId } = useParams();
   const [makeData, setMakeData] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-
-  // We need to check if we're still loading so we won't run into trying to
-  // render a null state
+  const [showConfirmDelete, setConfirmDelete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const actionButtons = [
+    {
+      text: 'Delete Make',
+      variant: 'outline-danger',
+      onClick: () => setConfirmDelete(true),
+    },
     {
       text: 'Edit Make',
       variant: 'outline-warning',
@@ -34,7 +40,6 @@ const MakeDetails = () => {
     try {
       // Makes take an image as one of their fields so we have to
       // use FormData instead of json
-      console.log('updated make is', updatedMake);
       const formData = new FormData();
       formData.append('name', updatedMake.name);
       formData.append('website', updatedMake.website);
@@ -50,6 +55,13 @@ const MakeDetails = () => {
       setShowEditModal(false);
     } catch (error) {
       console.error('Failed to update make:', error);
+    }
+  };
+
+  const handleDeleteMake = async () => {
+    const response = await GrumpyApi.deleteMake(makeId);
+    if (response.success) {
+      navigate('/makes');
     }
   };
   useEffect(() => {
@@ -85,6 +97,14 @@ const MakeDetails = () => {
         </Row>
       </Card>
       <ActionBar buttons={actionButtons} className="mt-3" />
+      <ConfirmDialog
+        show={showConfirmDelete}
+        title="Are you sure?"
+        message={`Delete make ${makeData.name}?`}
+        confirmText="Delete"
+        onConfirm={handleDeleteMake}
+        onCancel={() => setConfirmDelete(false)}
+      />
       <ModalWindow
         show={showEditModal}
         onHide={() => setShowEditModal(false)}
