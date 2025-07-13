@@ -20,6 +20,15 @@ class GrumpyApi {
 
     const url = `${BASE_URL}/${endpoint}`;
     const headers = { Authorization: `Bearer ${GrumpyApi.token}` };
+
+    if ((!data) instanceof FormData) {
+      console.log('sending json');
+      // If we are not sending FormData (i.e. uploading an image) set the type to json
+      headers['Content-Type'] = 'application/json';
+    } else {
+      console.log('sending form data');
+    }
+
     const params = method === 'get' ? data : {};
 
     try {
@@ -73,6 +82,30 @@ class GrumpyApi {
     return res;
   }
 
+  /**
+   * Add make. This uses FormData to submit the logo
+   *
+   * @param {Object} formData - The make details (name, website and logo)
+   * @returns {Object}  New make details
+   */
+
+  static async addMake(formData) {
+    let res = await this.apiCall(`api/v1/makes/`, formData, 'post');
+    return res;
+  }
+
+  /**
+   * Update make. This uses FormData to update the logo
+   *
+   * @param {Integer} makeId - The ID of the make we are editing
+   * @param {Object} formData - The make details (name, website and logo)
+   * @returns {Object}  Updated make details
+   */
+
+  static async updateMake(makeId, formData) {
+    let res = await this.apiCall(`api/v1/makes/${makeId}`, formData, 'patch');
+    return res.make;
+  }
   /*
    ****************************** Camera Routes **************************************************
    * */
@@ -223,7 +256,11 @@ class GrumpyApi {
    */
 
   static async addTMDBProject(tmdbId, projectType) {
-    let res = await this.apiCall(`api/v1/projects/`, { tmdb_id: tmdbId, project_type: projectType }, 'post');
+    let res = await this.apiCall(
+      `api/v1/projects/`,
+      { tmdb_id: tmdbId, project_type: projectType },
+      'post'
+    );
     if (res) {
       return res;
     } else {
@@ -239,7 +276,11 @@ class GrumpyApi {
    */
 
   static async addFormatToProject(projectId, formatId) {
-    let res = await this.apiCall(`api/v1/projects/${projectId}/formats/`, { format_id: formatId }, 'post');
+    let res = await this.apiCall(
+      `api/v1/projects/${projectId}/formats/`,
+      { format_id: formatId },
+      'post'
+    );
     if (res) {
       return res;
     } else {
@@ -256,7 +297,11 @@ class GrumpyApi {
    */
 
   static async voteOnProjectFormat(projectId, formatId, vote) {
-    let res = await this.apiCall(`api/v1/projects/${projectId}/formats/${formatId}`, { vote }, 'patch');
+    let res = await this.apiCall(
+      `api/v1/projects/${projectId}/formats/${formatId}`,
+      { vote },
+      'patch'
+    );
     if (res) {
       return res;
     } else {
@@ -274,7 +319,11 @@ class GrumpyApi {
    * @param {String} password - password of user
    */
   static async login(username, password) {
-    let res = await this.apiCall(`api/v1/users/auth`, { username, password }, 'post');
+    let res = await this.apiCall(
+      `api/v1/users/auth`,
+      { username, password },
+      'post'
+    );
     GrumpyApi.token = res.token;
     return res.token;
   }

@@ -1,10 +1,13 @@
 from django.http import JsonResponse
+from django.utils.http import MAX_URL_LENGTH
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+from django.http.multipartparser import MultiPartParser
 from grumpytracker.utils import validate_required_fields, require_admin
 import json
+from loguru import logger
 
 from .models import Make
 
@@ -33,15 +36,20 @@ class MakesListView(View):
     @method_decorator(require_admin)
     def post(self, request) -> JsonResponse:
         try:
-            data = json.loads(request.body)
+            # Because we are loading the logo we can not use
+            # json we need to look at the POST data
+
+            data = request.POST
 
             # Validate our input
             error = validate_required_fields(data, ["name", "website"])
             if error:
                 return JsonResponse({"error": error}, status=400)
 
-            make = Make.objects.create(
-                name=data.get("name"), website=data.get("website")
+            make = Make.create_with_logo(
+                name=data.get("name"),
+                website=data.get("website"),
+                logo_file=request.FILES.get("logo"),
             )
             if not make:
                 return JsonResponse({"error": "Failed to create make"})
@@ -80,19 +88,35 @@ class MakeDetailsView(View):
         Do a partial update on a make
         """
 
+        # Django only deals automatically with multi part forms (which are needed for the images)
+        # in POST requests so we need to manually parse the data
+
+        if request.content_type.startswith("multipart/form-data"):
+            parser = MultiPartParser(request.META, request, request.upload_handlers)
+            data, files = parser.parse()
+
+        else:
+            data = json.loads(request.body)
+            files = {}
+
         # Grab the project and the updated data
         make = get_object_or_404(Make, id=make_id)
 
         try:
-            data = json.loads(request.body)
-
             # Only update provided fields
             for field, value in data.items():
                 if hasattr(make, field):
                     setattr(make, field, value)
 
             make.save()
-            return JsonResponse({"success": f"Partialy updated make {make}"})
+
+            # Update the logo
+            if files.get("logo"):
+                make.update_logo(files.get("logo"))
+
+            return JsonResponse(
+                {"success": f"Partialy updated make {make}", "make": make.as_dict()}
+            )
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
