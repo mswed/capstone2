@@ -7,6 +7,7 @@ import CameraList from '../../features/cameras/components/CameraList';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import MakeForm from '../../components/forms/MakeForm.jsx';
+import CameraForm from '../../components/forms/CameraForm.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 
 const MakeDetails = () => {
@@ -16,6 +17,7 @@ const MakeDetails = () => {
   const [makeData, setMakeData] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showConfirmDelete, setConfirmDelete] = useState(false);
+  const [showNewCameraModal, setShowNewCameraModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const actionButtons = [
@@ -32,7 +34,7 @@ const MakeDetails = () => {
     {
       text: 'Add Camera',
       variant: 'outline-success',
-      onClick: () => console.log('adding a camera'),
+      onClick: () => setShowNewCameraModal(true),
     },
   ];
 
@@ -62,6 +64,39 @@ const MakeDetails = () => {
     const response = await GrumpyApi.deleteMake(makeId);
     if (response.success) {
       navigate('/makes');
+    }
+  };
+
+  const handleNewCamera = async (newCamera) => {
+    try {
+      // Cameras also take an image as one of their fields so we have to
+      // use FormData instead of json
+      const formData = new FormData();
+      formData.append('make', makeId);
+      formData.append('model', newCamera.model);
+      formData.append('sensor_type', newCamera.sensorType);
+      formData.append('max_filmback_width', newCamera.maxFilmbackWidth);
+      formData.append('max_filmback_height', newCamera.maxFilmbackHeight);
+      formData.append('max_image_width', newCamera.maxImageWidth);
+      formData.append('max_image_height', newCamera.maxImageHeight);
+      formData.append('min_frame_rate', newCamera.minFrameRate);
+      formData.append('max_frame_rate', newCamera.maxFrameRate);
+      formData.append('notes', newCamera.notes);
+      formData.append('discontinued', newCamera.discontinued);
+      if (newCamera.image) {
+        formData.append('image', newCamera.image);
+      }
+
+      await GrumpyApi.addCamera(formData);
+
+      // Refresh the make
+      const response = await GrumpyApi.getMakeDetails(makeId);
+      setMakeData(response);
+
+      // Close the modal
+      setShowNewCameraModal(false);
+    } catch (error) {
+      console.error('Failed to update make:', error);
     }
   };
   useEffect(() => {
@@ -99,8 +134,8 @@ const MakeDetails = () => {
       <ActionBar buttons={actionButtons} className="mt-3" />
       <ConfirmDialog
         show={showConfirmDelete}
-        title="Are you sure?"
-        message={`Delete make ${makeData.name}?`}
+        title={`Delete make "${makeData.name}"`}
+        message={'Are you sure?'}
         confirmText="Delete"
         onConfirm={handleDeleteMake}
         onCancel={() => setConfirmDelete(false)}
@@ -112,9 +147,18 @@ const MakeDetails = () => {
         form={<MakeForm onSubmit={handleEditMake} makeData={makeData} />}
         onFormSubmit={handleEditMake}
       />
-      <Row className="mt-3">
-        <CameraList cameras={makeData.cameras} />
-      </Row>
+      <ModalWindow
+        show={showNewCameraModal}
+        onHide={() => setShowNewCameraModal(false)}
+        title={`New Camera By ${makeData.name}`}
+        form={<CameraForm onSubmit={handleNewCamera} makeData={makeData} />}
+        onFormSubmit={handleEditMake}
+      />
+      {makeData.cameras.length > 0 && (
+        <Row className="mt-3">
+          <CameraList cameras={makeData.cameras} />
+        </Row>
+      )}
     </Container>
   );
 };

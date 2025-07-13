@@ -9,7 +9,7 @@ const CameraList = ({ cameras = [], showMake = false }) => {
           <th>Image</th>
           {showMake && <th>Make</th>}
           <th>Model</th>
-          <th>Sensor Size</th>
+          <th>Sensor Type</th>
           <th>Max Filmback Size</th>
           <th>Max Resolution</th>
           <th>Action</th>

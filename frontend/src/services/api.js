@@ -98,12 +98,12 @@ class GrumpyApi {
    * Update make. This uses FormData to update the logo
    *
    * @param {Integer} makeId - The ID of the make we are editing
-   * @param {Object} formData - The make details (name, website and logo)
+   * @param {Object} updatedData - The make details (name, website and logo)
    * @returns {Object}  Updated make details
    */
 
-  static async updateMake(makeId, formData) {
-    let res = await this.apiCall(`api/v1/makes/${makeId}`, formData, 'patch');
+  static async updateMake(makeId, updatedData) {
+    let res = await this.apiCall(`api/v1/makes/${makeId}`, updatedData, 'patch');
     return res.make;
   }
 
@@ -140,13 +140,11 @@ class GrumpyApi {
    */
 
   static async findCameras(query = '') {
-    console.log('query is', query);
     if (!query) {
       // No search was provided
       return [];
     }
     const q = query;
-    console.log('q is set to ', q);
     let res = await this.apiCall(`api/v1/cameras/search`, { q });
 
     return res;
@@ -161,10 +159,21 @@ class GrumpyApi {
 
   static async getCameraDetails(cameraId) {
     let res = await this.apiCall(`api/v1/cameras/${cameraId}`);
-    console.log('API RESPONDED WITH', res);
     return res;
   }
 
+  /**
+   * Create a new camera
+   *
+   * @param {Integer} cameraData - The new camera data
+   * @returns {Object} Full camera details
+   */
+
+  static async addCamera(cameraData) {
+    let res = await this.apiCall(`api/v1/cameras/`, cameraData, 'post');
+    console.log('API RESPONDED WITH', res);
+    return res;
+  }
   /*
    ****************************** Format Routes **************************************************
    * */
@@ -200,7 +209,6 @@ class GrumpyApi {
    */
 
   static async findFormats(query = {}) {
-    console.log('query is', query);
     if (!query) {
       // No search was provided
       return [];

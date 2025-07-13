@@ -8,7 +8,7 @@ const CameraRow = ({ camera, showMake = true }) => {
       </td>
       {showMake && <td>{camera.make_name}</td>}
       <td>{camera.model}</td>
-      <td>{camera.sensor_size}</td>
+      <td>{camera.sensor_type}</td>
       <td>
         {camera.max_filmback_width}mm x {camera.max_filmback_height}mm
       </td>

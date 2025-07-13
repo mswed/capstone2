@@ -20,7 +20,7 @@ from cameras.models import Make, Camera
 @method_decorator(csrf_exempt, name="dispatch")
 class CamerasListView(View):
     """
-    Handle cameras/manufacturers endpoint
+    Handle cameras/ endpoint
     GET - Returns all of the cameras in the DB
     POST - Creates a new camera
     """
@@ -41,7 +41,10 @@ class CamerasListView(View):
     @method_decorator(require_admin)
     def post(self, request) -> JsonResponse:
         try:
-            data = json.loads(request.body)
+            # Because we are loading the image we can not use
+            # json we need to look at the POST data
+
+            data = request.POST
 
             # Validate our input
             error = validate_required_fields(
@@ -76,7 +79,8 @@ class CamerasListView(View):
                 min_frame_rate=data.get("min_frame_rate"),
                 max_frame_rate=data.get("max_frame_rate"),
                 notes=data.get("notes", ""),
-                discontinued=data.get("discontinued", False),
+                discontinued=bool(data.get("discontinued", False)),
+                image=request.FILES.get("image"),
             )
 
             if not camera:
