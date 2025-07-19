@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.core.validators import MinValueValidator
 from makes.models import Make
@@ -48,6 +49,26 @@ class Camera(models.Model):
 
     def __str__(self):
         return f"{self.make.name} {self.model}"
+
+    @classmethod
+    def create_with_image(cls, image_file=None, image_path=None, **kwargs):
+        """
+        Makes should have a logo, this function creates a record with a logo either
+        form disk (for seeding) or from an API call (for the actual site)
+        """
+
+        camera = cls.objects.create(**kwargs)
+
+        if image_path and os.path.exists(image_path):
+            # This is a local file used during seeding
+            with open(image_path, "rb") as f:
+                camera.logo.save(os.path.basename(image_path), File(f), save=True)
+        elif image_file:
+            # This is a file added via the API
+            camera.logo.save(image_file.name, image_file, save=True)
+
+    def update_image(self, image_file):
+        self.image.save(image_file.name, image_file, save=True)
 
     def as_dict(self) -> Dict[str, Any]:
         """

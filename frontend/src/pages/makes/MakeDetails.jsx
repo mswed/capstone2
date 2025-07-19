@@ -99,6 +99,7 @@ const MakeDetails = () => {
       console.error('Failed to update make:', error);
     }
   };
+
   useEffect(() => {
     const getMakeDetails = async () => {
       try {
@@ -140,19 +141,12 @@ const MakeDetails = () => {
         onConfirm={handleDeleteMake}
         onCancel={() => setConfirmDelete(false)}
       />
-      <ModalWindow
-        show={showEditModal}
-        onHide={() => setShowEditModal(false)}
-        title={`Edit ${makeData.name}`}
-        form={<MakeForm onSubmit={handleEditMake} makeData={makeData} />}
-        onFormSubmit={handleEditMake}
-      />
+      <ModalWindow show={showEditModal} onHide={() => setShowEditModal(false)} title={`Edit ${makeData.name}`} form={<MakeForm onSubmit={handleEditMake} makeData={makeData} />} />
       <ModalWindow
         show={showNewCameraModal}
         onHide={() => setShowNewCameraModal(false)}
         title={`New Camera By ${makeData.name}`}
         form={<CameraForm onSubmit={handleNewCamera} makeData={makeData} />}
-        onFormSubmit={handleEditMake}
       />
       {makeData.cameras.length > 0 && (
         <Row className="mt-3">

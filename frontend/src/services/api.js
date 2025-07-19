@@ -165,7 +165,7 @@ class GrumpyApi {
   /**
    * Create a new camera
    *
-   * @param {Integer} cameraData - The new camera data
+   * @param {Object} cameraData - The new camera data
    * @returns {Object} Full camera details
    */
 
@@ -174,6 +174,32 @@ class GrumpyApi {
     console.log('API RESPONDED WITH', res);
     return res;
   }
+
+  /**
+   * Update a camera
+   *
+   * @param {Integer} cameraId - The ID of the camera we are updating
+   * @param {object} cameraData - The updated camera data
+   * @returns {Object} Full camera details
+   */
+
+  static async updateCamera(cameraId, cameraData) {
+    let res = await this.apiCall(`api/v1/cameras/${cameraId}`, cameraData, 'patch');
+    return res.camera;
+  }
+
+  /**
+   * Delete camera
+   *
+   * @param {Integer} cameraId - The ID of the make we are deleting
+   * @returns {Object}  Delete status
+   */
+
+  static async deleteCamera(cameraId) {
+    let res = await this.apiCall(`api/v1/cameras/${cameraId}`, {}, 'delete');
+    return res;
+  }
+
   /*
    ****************************** Format Routes **************************************************
    * */

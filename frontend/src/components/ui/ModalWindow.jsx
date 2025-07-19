@@ -1,6 +1,6 @@
 import { Col, Container, Modal, Row } from 'react-bootstrap';
 
-const ModalWindow = ({ show, onHide, title, onFormSubmit, form }) => {
+const ModalWindow = ({ show, onHide, title, form }) => {
   return (
     <Modal show={show} onHide={onHide} size="xl" centered>
       <Modal.Header closeButton>

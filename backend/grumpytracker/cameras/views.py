@@ -5,6 +5,7 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+from django.http.multipartparser import MultiPartParser
 from grumpytracker.utils import (
     validate_required_fields,
     login_required,
@@ -68,7 +69,8 @@ class CamerasListView(View):
             # We first need to find the make
             make = get_object_or_404(Make, id=data.get("make"))
 
-            camera = Camera.objects.create(
+            camera = Camera.create_with_image(
+                image_file=request.FILES.get("image"),
                 make=make,
                 model=data.get("model"),
                 sensor_type=data.get("sensor_type"),
@@ -119,13 +121,21 @@ class CameraDetailsView(View):
         """
         Do a partial update on a camera
         """
+        # Django only deals automatically with multi part forms (which are needed for the images)
+        # in POST requests so we need to manually parse the data
 
-        # Grab the project and the updated data
+        if request.content_type.startswith("multipart/form-data"):
+            parser = MultiPartParser(request.META, request, request.upload_handlers)
+            data, files = parser.parse()
+
+        else:
+            data = json.loads(request.body)
+            files = {}
+
+        # Grab the camera
         camera = get_object_or_404(Camera, id=camera_id)
 
         try:
-            data = json.loads(request.body)
-
             # Only update provided fields
             for field, value in data.items():
                 if hasattr(camera, field):
@@ -133,10 +143,24 @@ class CameraDetailsView(View):
                         # We need to get the make record for the update
                         make = get_object_or_404(Make, id=value)
                         value = make
+                    if field == "discontinued":
+                        logger.info(f"found discontinued field {value}")
+                        value = value.lower() == "true"
+                        logger.info(f"value is now {value}")
                     setattr(camera, field, value)
 
             camera.save()
-            return JsonResponse({"success": f"Partialy updated camera {camera}"})
+
+            # Update the logo
+            if files.get("image"):
+                camera.update_image(files.get("image"))
+
+            return JsonResponse(
+                {
+                    "success": f"Partialy updated camera {camera}",
+                    "camera": camera.as_dict(),
+                }
+            )
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)

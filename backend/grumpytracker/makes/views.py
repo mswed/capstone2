@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.utils.http import MAX_URL_LENGTH
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -99,7 +98,7 @@ class MakeDetailsView(View):
             data = json.loads(request.body)
             files = {}
 
-        # Grab the project and the updated data
+        # Grab the make
         make = get_object_or_404(Make, id=make_id)
 
         try:

@@ -1,18 +1,80 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import GrumpyApi from '../../services/api.js';
 import Loading from '../../components/ui/Loading';
 import FormatList from '../../features/formats/components/FormatList';
 import LocalSearchForm from '../../components/forms/LocalSearchForm';
+import ActionBar from '../../components/ui/ActionBar.jsx';
+import ModalWindow from '../../components/ui/ModalWindow.jsx';
+import CameraForm from '../../components/forms/CameraForm.jsx';
+import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 
 const CameraDetails = () => {
   // Set up state
   const { cameraId } = useParams();
   const [cameraData, setCameraData] = useState(null);
   const [formatsData, setFormatsData] = useState([]);
+  const [showEditCameraModal, setShowEditCameraModal] = useState(false);
+  const [showConfirmDelete, setConfirmDelete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const navigate = useNavigate();
+
+  const actionButtons = [
+    {
+      text: 'Delete Camera',
+      variant: 'outline-danger',
+      onClick: () => setConfirmDelete(true),
+    },
+    {
+      text: 'Edit Camera',
+      variant: 'outline-warning',
+      onClick: () => setShowEditCameraModal(true),
+    },
+    {
+      text: 'Add Format',
+      variant: 'outline-success',
+      onClick: () => console.log('adding format'),
+    },
+  ];
+
+  const handleEditCamera = async (updatedCamera) => {
+    try {
+      // Cameras also take an image as one of their fields so we have to
+      // use FormData instead of json
+      const formData = new FormData();
+      formData.append('make', cameraData.make);
+      formData.append('model', updatedCamera.model);
+      formData.append('sensor_type', updatedCamera.sensorType);
+      formData.append('max_filmback_width', updatedCamera.maxFilmbackWidth);
+      formData.append('max_filmback_height', updatedCamera.maxFilmbackHeight);
+      formData.append('max_image_width', updatedCamera.maxImageWidth);
+      formData.append('max_image_height', updatedCamera.maxImageHeight);
+      formData.append('min_frame_rate', updatedCamera.minFrameRate);
+      formData.append('max_frame_rate', updatedCamera.maxFrameRate);
+      formData.append('notes', updatedCamera.notes);
+      formData.append('discontinued', updatedCamera.discontinued);
+      if (updatedCamera.image) {
+        formData.append('image', updatedCamera.image);
+      }
+
+      const updatedCameraDetails = await GrumpyApi.updateCamera(cameraData.id, formData);
+      setCameraData((prev) => ({ ...prev, ...updatedCameraDetails }));
+
+      // Close the modal
+      setShowEditCameraModal(false);
+    } catch (error) {
+      console.error('Failed to update make:', error);
+    }
+  };
+
+  const handleDeleteCamera = async () => {
+    const response = await GrumpyApi.deleteCamera(cameraId);
+    if (response.success) {
+      navigate(-1);
+    }
+  };
   // Fetch camera data
   useEffect(() => {
     const getCameraDetails = async () => {
@@ -35,6 +97,14 @@ const CameraDetails = () => {
 
   return (
     <Container>
+      <ConfirmDialog
+        show={showConfirmDelete}
+        title={`Delete camera "${cameraData.model}"`}
+        message={'Are you sure?'}
+        confirmText="Delete"
+        onConfirm={handleDeleteCamera}
+        onCancel={() => setConfirmDelete(false)}
+      />
       <Card className="shadow-lg rounded-0 rounded-bottom">
         <Row className="g-0">
           <Col md={4}>
@@ -87,21 +157,30 @@ const CameraDetails = () => {
           </Col>
         </Row>
       </Card>
-      <Row className="mt-3">
-        <Col>
-          <Row>
-            <LocalSearchForm
-              fields={['image_format', 'image_aspect', 'format_name']}
-              targetArray={formatsData}
-              setTargetArray={setFormatsData}
-              originalArray={cameraData.formats}
-            />
-          </Row>
-          <Row>
-            <FormatList formats={formatsData} />
-          </Row>
-        </Col>
-      </Row>
+      <ActionBar buttons={actionButtons} className="mt-3" />
+      <ModalWindow
+        show={showEditCameraModal}
+        onHide={() => setShowEditCameraModal(false)}
+        title={`Edit ${cameraData.make_name} ${cameraData.model}`}
+        form={<CameraForm onSubmit={handleEditCamera} camData={cameraData} />}
+      />
+      {cameraData.formats.length > 0 && (
+        <Row className="mt-3">
+          <Col>
+            <Row>
+              <LocalSearchForm
+                fields={['image_format', 'image_aspect', 'format_name']}
+                targetArray={formatsData}
+                setTargetArray={setFormatsData}
+                originalArray={cameraData.formats}
+              />
+            </Row>
+            <Row>
+              <FormatList formats={formatsData} />
+            </Row>
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 };
