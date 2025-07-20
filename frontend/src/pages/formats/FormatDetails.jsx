@@ -4,18 +4,65 @@ import { Container, Card, Row, Col } from 'react-bootstrap';
 import GrumpyApi from '../../services/api';
 import Loading from '../../components/ui/Loading';
 import Checkmark from '../../components/ui/Checkmark';
+import FormatForm from '../../components/forms/FormatForm.jsx';
+import ActionBar from '../../components/ui/ActionBar.jsx';
+import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
+import ModalWindow from '../../components/ui/ModalWindow.jsx';
+import useSources from '../../hooks/useSources.js';
 
 const FormatDetails = () => {
   // Set up state
   const { formatId } = useParams();
   const [formatData, setFormatData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showEditFormatModal, setShowEditFormatModal] = useState(false);
+  const [showConfirmDelete, setConfirmDelete] = useState(false);
+  const { sources, setSources } = useSources();
+
+  const actionButtons = [
+    {
+      text: 'Delete Format',
+      variant: 'outline-danger',
+      onClick: () => setConfirmDelete(true),
+    },
+    {
+      text: 'Edit Format',
+      variant: 'outline-warning',
+      onClick: () => setShowEditFormatModal(true),
+    },
+  ];
 
   const handleCopy = async (value) => {
     try {
       await navigator.clipboard.writeText(value);
     } catch (error) {
       consoel.error('Failed to copy:', error);
+    }
+  };
+
+  const handleUpdateFormat = async (formatData) => {
+    try {
+      const updatedFormatDetails = await GrumpyApi.updateFormat(formatId, formatData);
+      setFormatData((prev) => ({ ...prev, ...updatedFormatDetails }));
+
+      // Close the modal
+      setShowEditFormatModal(false);
+    } catch (error) {
+      console.error('Failed to update format:', error);
+    }
+  };
+
+  const handleAddSource = async (sourceData) => {
+    try {
+      const newSource = await GrumpyApi.addSource(sourceData);
+      setSources((prev) => [...prev, newSource]);
+
+      // Retrun the new source so we can update the UI
+      return newSource;
+    } catch (error) {
+      console.error('Failed to add source', error);
+
+      throw error;
     }
   };
   // Fetch format data
@@ -56,23 +103,23 @@ const FormatDetails = () => {
           <Col md={4}>
             <Card.Body className="text-start">
               <Card.Title>
-                {formatData.image_format} {formatData.image_aspect} {formatData.format_name}
+                {formatData.imageFormat} {formatData.imageAspect} {formatData.formatName}
               </Card.Title>
               <div>
                 <dl className="row">
                   <dt className="col-sm-4">Make:</dt>
-                  <dd className="col-sm-8">{formatData.make_name}</dd>
+                  <dd className="col-sm-8">{formatData.makeName}</dd>
 
                   <dt className="col-sm-4">Model:</dt>
-                  <dd className="col-sm-8">{formatData.camera_model}</dd>
+                  <dd className="col-sm-8">{formatData.cameraModel}</dd>
 
                   <dt className="col-sm-4">Resolution:</dt>
                   <dd className="col-sm-8">
-                    {formatData.image_width} x {formatData.image_height}
+                    {formatData.imageWidth} x {formatData.imageHeight}
                   </dd>
                   <dt className="col-sm-4">Filmback:</dt>
                   <dd className="col-sm-8">
-                    {formatData.sensor_width}mm x {formatData.sensor_height}mm
+                    {formatData.sensorWidth}mm x {formatData.sensorHeight}mm
                   </dd>
                 </dl>
               </div>
@@ -83,33 +130,40 @@ const FormatDetails = () => {
               <dl className="row">
                 <dt className="col-sm-4">Anamorphic?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.is_anamorphic} title="anamorphic?" />
+                  <Checkmark checked={formatData.isAnamorphic} title="anamorphic?" />
                 </dd>
                 <dt className="col-sm-4">Desqueezed?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.is_dequeezed} title="desqueezed?" />
+                  <Checkmark checked={formatData.isDesqueezed} title="desqueezed?" />
                 </dd>
                 <dt className="col-sm-4">Pixel Aspect:</dt>
-                <dd className="col-sm-8">{formatData.pixel_aspect}</dd>
+                <dd className="col-sm-8">{formatData.pixelAspect}</dd>
                 <dt className="col-sm-4">Downsampled?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.is_downsampled} title="downsampled?" />
+                  <Checkmark checked={formatData.isDownsampled} title="downsampled?" />
                 </dd>
                 <dt className="col-sm-4">Upscaled?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.is_upscaled} title="upscaled?" />
+                  <Checkmark checked={formatData.isUpscaled} title="upscaled?" />
                 </dd>
                 <dt className="col-sm-4">Codec:</dt>
                 <dd className="col-sm-8">{formatData.codec}</dd>
                 <dt className="col-sm-4">Raw recording available?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.raw_recording_available} title="row recording available?" />
+                  <Checkmark checked={formatData.rawRecordingAvailable} title="row recording available?" />
                 </dd>
               </dl>
             </div>
           </Col>
         </Row>
       </Card>
+      <ModalWindow
+        show={showEditFormatModal}
+        onHide={() => setShowEditFormatModal(false)}
+        title={`Edit format ${formatData.imageFormat} ${formatData.imageAspect} ${formatData.formatName}`}
+        form={<FormatForm onSubmit={handleUpdateFormat} formatData={formatData} sources={sources} onSourceAdded={handleAddSource} buttonLabel="Update" />}
+      />
+      <ActionBar buttons={actionButtons} className="mt-3" />
       <Row className="mt-3">
         <Col>
           <Card className="shadow-lg">
@@ -120,7 +174,7 @@ const FormatDetails = () => {
                   {formatData.notes && <dt className="col-sm-4">Notes:</dt>}
                   {formatData.notes && <dd className="col-sm-8">{formatData.notes}</dd>}
                   {formatData.make_notes && <dt className="col-sm-4">Manufacturer Notes:</dt>}
-                  {formatData.make_notes && <dd className="col-sm-8">{formatData.make_notes}</dd>}
+                  {formatData.make_notes && <dd className="col-sm-8">{formatData.makeNotes}</dd>}
                 </dl>
               </div>
             </Card.Body>
@@ -136,28 +190,28 @@ const FormatDetails = () => {
                 <dl className="row">
                   <dt className="col-sm-4">Filmback Width:</dt>
                   <dd className="col-md-8">
-                    {formatData.filmback_width_3de}mm{' '}
+                    {formatData.filmbackWidth3de}mm{' '}
                     <i
                       className="bi bi-copy text-muted ms-3"
                       role="button"
                       style={{ cursor: 'pointer' }}
                       aria-label="Copy"
-                      onClick={() => handleCopy(formatData.filmback_width_3de)}
+                      onClick={() => handleCopy(formatData.filmbackWidth3de)}
                     ></i>
                   </dd>
                   <dt className="col-sm-4">Filmback Height:</dt>
                   <dd className="col-md-8">
-                    {formatData.filmback_height_3de}mm{' '}
+                    {formatData.filmbackHeight3de}mm{' '}
                     <i
                       className="bi bi-copy text-muted ms-3"
                       role="button"
                       style={{ cursor: 'pointer' }}
                       aria-label="Copy"
-                      onClick={() => handleCopy(formatData.filmback_height_3de)}
+                      onClick={() => handleCopy(formatData.filmbackHeight3de)}
                     ></i>
                   </dd>
                   <dt className="col-sm-4">Distortion Model:</dt>
-                  <dd className="col-sm-8">{formatData.distortion_model_3de}</dd>
+                  <dd className="col-sm-8">{formatData.distortionModel3de}</dd>
                 </dl>
               </div>
             </Card.Body>
@@ -170,7 +224,7 @@ const FormatDetails = () => {
                 <div>
                   <dl className="row">
                     <dt className="col-sm-4">Tracking Workflow:</dt>
-                    <dd className="col-sm-8">{formatData.tracking_workflow}</dd>
+                    <dd className="col-sm-8">{formatData.trackingWorkflow}</dd>
                   </dl>
                 </div>
               </Card.Body>

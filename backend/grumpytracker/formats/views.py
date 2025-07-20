@@ -118,6 +118,23 @@ class FormatDetailsView(View):
         Do a partial update on a format
         """
 
+        # This is a simple temporary mapping, it the future it should
+        # probably be switched to something like Pydantic
+        field_types = {
+            "sensor_width": float,
+            "sensor_height": float,
+            "anamorphic_squeeze": float,
+            "pixel_aspect": float,
+            "image_width": int,
+            "image_height": int,
+            "max_frame_rate": float,
+            "is_anamorphic": bool,
+            "is_desqueezed": bool,
+            "is_downsampled": bool,
+            "is_upscaled": bool,
+            "raw_recording_available": bool,
+        }
+
         fmt = get_object_or_404(Format, id=format_id)
         try:
             # Grab the project and the updated data
@@ -134,10 +151,23 @@ class FormatDetailsView(View):
                         # We need to get the source record for the update
                         source = get_object_or_404(Source, id=value)
                         value = source
+                    elif field in field_types:
+                        try:
+                            if field_types[field] == "bool":
+                                value = value.lower() == "true"
+                            else:
+                                value = field_types[field](value)
+                        except (ValueError, TypeError):
+                            return JsonResponse(
+                                {"error": f"Invalid value for {field}: {value}"},
+                                status=400,
+                            )
                     setattr(fmt, field, value)
 
             fmt.save()
-            return JsonResponse({"success": f"Partialy updated format {fmt}"})
+            return JsonResponse(
+                {"success": f"Partialy updated format {fmt}", "format": fmt.as_dict()}
+            )
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)

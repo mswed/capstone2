@@ -204,7 +204,7 @@ const CameraDetails = () => {
         show={showNewFormatModal}
         onHide={() => setShowNewFormatModal(false)}
         title={`Add format to ${cameraData.make_name} ${cameraData.model}`}
-        form={<FormatForm onSubmit={handleAddFormat} camData={cameraData} sources={sources} onSourceAdded={handleAddSource} />}
+        form={<FormatForm onSubmit={handleAddFormat} sources={sources} onSourceAdded={handleAddSource} />}
       />
       {cameraData.formats.length > 0 && (
         <Row className="mt-3">

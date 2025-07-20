@@ -209,8 +209,21 @@ class GrumpyApi {
 
   static async getFormatDetails(formatId) {
     let res = await this.apiCall(`api/v1/formats/${formatId}`);
-    console.log('API RESPONDED WITH', res);
-    return res;
+    return humps.camelizeKeys(res);
+  }
+
+  /**
+   * Update a format
+   *
+   * @param {Integer} formatId - The ID of the format we are updating
+   * @param {object} formatData - The updated format data
+   * @returns {Object} Full format details
+   */
+
+  static async updateFormat(formatId, formatData) {
+    const snakeCaseData = humps.decamelizeKeys(formatData);
+    let res = await this.apiCall(`api/v1/formats/${formatId}`, snakeCaseData, 'patch');
+    return humps.camelizeKeys(res.format);
   }
 
   /**
