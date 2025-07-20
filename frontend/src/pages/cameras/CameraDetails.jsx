@@ -164,21 +164,21 @@ const CameraDetails = () => {
                 <dd className="col-sm-8">{cameraData.make_name}</dd>
 
                 <dt className="col-sm-4">Sensor Type:</dt>
-                <dd className="col-sm-8">{cameraData.sensor_type}</dd>
+                <dd className="col-sm-8">{cameraData.sensorType}</dd>
 
                 <dt className="col-sm-4">Max Filmback:</dt>
                 <dd className="col-sm-8">
-                  {cameraData.max_filmback_width}mm x {cameraData.max_filmback_height}mm
+                  {cameraData.maxFilmbackWidth}mm x {cameraData.maxFilmbackHeight}mm
                 </dd>
 
                 <dt className="col-sm-4">Max Resolution:</dt>
                 <dd className="col-sm-8">
-                  {cameraData.max_image_width} x {cameraData.max_image_height}
+                  {cameraData.maxImageWidth} x {cameraData.maxImageHeight}
                 </dd>
 
                 <dt className="col-sm-4">Frame Rate:</dt>
                 <dd className="col-sm-8">
-                  {cameraData.min_frame_rate}fps - {cameraData.max_frame_rate}
+                  {cameraData.minFrameRate}fps - {cameraData.maxFrameRate}
                   fps
                 </dd>
               </dl>

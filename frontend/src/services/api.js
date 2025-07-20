@@ -156,7 +156,7 @@ class GrumpyApi {
 
   static async getCameraDetails(cameraId) {
     let res = await this.apiCall(`api/v1/cameras/${cameraId}`);
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -181,7 +181,7 @@ class GrumpyApi {
 
   static async updateCamera(cameraId, cameraData) {
     let res = await this.apiCall(`api/v1/cameras/${cameraId}`, cameraData, 'patch');
-    return res.camera;
+    return humps.camelizeKeys(res.camera);
   }
 
   /**

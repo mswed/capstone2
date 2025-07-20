@@ -14,32 +14,43 @@ const AuthContext = React.createContext();
  */
 
 const AuthProvider = ({ children }) => {
-  // We grab stuff from local storage if available
-  const storedToken = localStorage.getItem('grumpy-token');
-  const storedUser = localStorage.getItem('grumpy-user');
+  // Set up state
+  const [token, setToken] = useState(null);
+  const [currentUser, setCurrentuser] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // We set the token right away so we don't run in to authorization issues
-  GrumpyApi.token = storedToken || null;
+  // We try to get the authentication from local storage once
+  // and confirm we are initialized
+  useEffect(() => {
+    // We grab stuff from local storage if available
+    const storedToken = localStorage.getItem('grumpy-token');
+    const storedUser = localStorage.getItem('grumpy-user');
 
-  // Initialize state
-  const [token, setToken] = useState(storedToken);
-  const [currentUser, setCurrentuser] = useState(storedUser);
+    if (storedToken) {
+      setToken(storedToken);
+      setCurrentuser(storedUser);
+      GrumpyApi.token = storedToken;
+    }
+
+    setIsInitialized(true);
+  }, []);
 
   // Whenever the token changes (login/logout) we need to update
   // both the api module and localStorage
   useEffect(() => {
-    if (token && token.trim !== '') {
-      // We only set the token if it's not empty
+    if (!isInitialized) return;
 
-      GrumpyApi.token = token;
+    if (token) {
+      // We only set the token if it's not empty
       localStorage.setItem('grumpy-token', token || '');
       localStorage.setItem('grumpy-user', currentUser || '');
+      GrumpyApi.token = token;
     } else {
-      GrumpyApi.token = null;
       localStorage.removeItem('grumpy-token');
       localStorage.removeItem('grumpy-user');
+      GrumpyApi.token = null;
     }
-  }, [token]);
+  }, [token, currentUser, isInitialized]);
 
   // TODO:
   // // We also want to get the user favorites here
@@ -100,6 +111,7 @@ const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    isInitialized,
   };
 
   // Wrap everything in the context

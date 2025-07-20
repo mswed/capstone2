@@ -15,24 +15,24 @@ const FormatRow = ({ format, showModel = true, showAddButton = false, onFormatAd
       {showModel && <td>{format.make_name}</td>}
       {showModel && <td>{format.camera_model}</td>}
       <td>
-        {format.image_format} {format.image_aspect} {format.format_name}
+        {format.imageFormat} {format.imageAspect} {format.formatName}
       </td>
       <td>
-        {format.image_width} x {format.image_height}
+        {format.imageWidth} x {format.imageHeight}
       </td>
       <td>
-        {format.sensor_width}mm x {format.sensor_height}mm
+        {format.sensorWidth}mm x {format.sensorHeight}mm
       </td>
-      <td>{format.pixel_aspect}</td>
+      <td>{format.pixelAspect}</td>
       <td className="text-center">
-        <Checkmark checked={format.is_anamorphic} title="anamorphic?" />
+        <Checkmark checked={format.isAnamorphic} title="anamorphic?" />
       </td>
       <td className="text-center">
-        <Checkmark checked={format.is_desqueezed} title="desqueezed?" />
+        <Checkmark checked={format.isDesqueeezed} title="desqueezed?" />
       </td>
       {onVote && (
         <td>
-          <VoteWidget formatId={format.id} upVotes={format.up_votes} downVotes={format.down_votes} userVote={format.user_vote} onVote={onVote} />
+          <VoteWidget formatId={format.id} upVotes={format.upVotes} downVotes={format.downVotes} userVote={format.userVote} onVote={onVote} />
         </td>
       )}
       <td>
