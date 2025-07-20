@@ -63,7 +63,7 @@ class SourcesListView(View):
             return JsonResponse(
                 {
                     "success": f"Created source {source.name}",
-                    "source_id": source.id,
+                    "source": source.as_dict(),
                 }
             )
 

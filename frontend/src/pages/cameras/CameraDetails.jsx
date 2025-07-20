@@ -8,7 +8,9 @@ import LocalSearchForm from '../../components/forms/LocalSearchForm';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import CameraForm from '../../components/forms/CameraForm.jsx';
+import FormatForm from '../../components/forms/FormatForm.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
+import useSources from '../../hooks/useSources.js';
 
 const CameraDetails = () => {
   // Set up state
@@ -16,8 +18,10 @@ const CameraDetails = () => {
   const [cameraData, setCameraData] = useState(null);
   const [formatsData, setFormatsData] = useState([]);
   const [showEditCameraModal, setShowEditCameraModal] = useState(false);
+  const [showNewFormatModal, setShowNewFormatModal] = useState(false);
   const [showConfirmDelete, setConfirmDelete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { sources, setSources } = useSources();
 
   const navigate = useNavigate();
 
@@ -35,7 +39,7 @@ const CameraDetails = () => {
     {
       text: 'Add Format',
       variant: 'outline-success',
-      onClick: () => console.log('adding format'),
+      onClick: () => setShowNewFormatModal(true),
     },
   ];
 
@@ -65,7 +69,7 @@ const CameraDetails = () => {
       // Close the modal
       setShowEditCameraModal(false);
     } catch (error) {
-      console.error('Failed to update make:', error);
+      console.error('Failed to update camera:', error);
     }
   };
 
@@ -75,6 +79,39 @@ const CameraDetails = () => {
       navigate(-1);
     }
   };
+
+  const handleAddFormat = async (newFormat) => {
+    try {
+      newFormat.camera = cameraId;
+      await GrumpyApi.addFormat(newFormat);
+
+      // Refresh the camera
+      const response = await GrumpyApi.getCameraDetails(cameraId);
+      setCameraData(response);
+      setFormatsData(response.formats);
+
+      // Close the modal
+      setShowNewFormatModal(false);
+    } catch (error) {
+      console.error('Failed to create format:', error);
+    }
+  };
+
+  const handleAddSource = async (sourceData) => {
+    try {
+      console.log('trying to add source');
+      const newSource = await GrumpyApi.addSource(sourceData);
+      setSources((prev) => [...prev, newSource]);
+
+      // Retrun the new source so we can update the UI
+      return newSource;
+    } catch (error) {
+      console.error('Failed to add source', error);
+
+      throw error;
+    }
+  };
+
   // Fetch camera data
   useEffect(() => {
     const getCameraDetails = async () => {
@@ -163,6 +200,12 @@ const CameraDetails = () => {
         onHide={() => setShowEditCameraModal(false)}
         title={`Edit ${cameraData.make_name} ${cameraData.model}`}
         form={<CameraForm onSubmit={handleEditCamera} camData={cameraData} />}
+      />
+      <ModalWindow
+        show={showNewFormatModal}
+        onHide={() => setShowNewFormatModal(false)}
+        title={`Add format to ${cameraData.make_name} ${cameraData.model}`}
+        form={<FormatForm onSubmit={handleAddFormat} camData={cameraData} sources={sources} onSourceAdded={handleAddSource} />}
       />
       {cameraData.formats.length > 0 && (
         <Row className="mt-3">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import GrumpyApi from '../../../services/api';
+import GrumpyApi from '../services/api.js';
 
 const useFormatSearch = () => {
   const [formats, setFormats] = useState([]);
@@ -19,7 +19,7 @@ const useFormatSearch = () => {
       const response = await GrumpyApi.getFormats();
       setFormats(response);
     } catch (error) {
-      console.error('Error fetching cameras', error);
+      console.error('Error fetching sources', error);
     } finally {
       setIsLoading(false);
     }

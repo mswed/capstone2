@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { data } from 'react-router-dom';
+import humps from 'humps';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000/';
 
@@ -22,11 +22,9 @@ class GrumpyApi {
     const headers = { Authorization: `Bearer ${GrumpyApi.token}` };
 
     if ((!data) instanceof FormData) {
-      console.log('sending json');
       // If we are not sending FormData (i.e. uploading an image) set the type to json
       headers['Content-Type'] = 'application/json';
     } else {
-      console.log('sending form data');
     }
 
     const params = method === 'get' ? data : {};
@@ -52,7 +50,6 @@ class GrumpyApi {
 
   static async getStats() {
     let res = await this.apiCall(`api/v1/stats/`);
-    console.log(res);
     return res;
   }
 
@@ -171,7 +168,6 @@ class GrumpyApi {
 
   static async addCamera(cameraData) {
     let res = await this.apiCall(`api/v1/cameras/`, cameraData, 'post');
-    console.log('API RESPONDED WITH', res);
     return res;
   }
 
@@ -245,6 +241,20 @@ class GrumpyApi {
 
     return res;
   }
+
+  /**
+   * Create a new format
+   *
+   * @param {Object} foratData - The new format data
+   * @returns {Object} Full format details
+   */
+
+  static async addFormat(formatData) {
+    const snakeCaseData = humps.decamelizeKeys(formatData);
+    let res = await this.apiCall(`api/v1/formats/`, snakeCaseData, 'post');
+    return humps.camelizeKeys(res);
+  }
+
   /*
    ****************************** Project Routes **************************************************
    * */
@@ -258,7 +268,6 @@ class GrumpyApi {
 
   static async getProjectDetails(projectId) {
     let res = await this.apiCall(`api/v1/projects/${projectId}`);
-    console.log('API RESPONDED WITH', res);
     return res;
   }
 
@@ -341,6 +350,33 @@ class GrumpyApi {
     } else {
       return [];
     }
+  }
+
+  /*
+   ****************************** Project Routes **************************************************
+   * */
+
+  /**
+   * Get all sources
+   *
+   * @returns {Array} All sources in the database
+   */
+
+  static async getSources() {
+    let res = await this.apiCall(`api/v1/sources/`);
+    return res;
+  }
+
+  /**
+   * Create a new source
+   *
+   * @param {Object} sourceData - The new source data
+   * @returns {Object} Full source details
+   */
+
+  static async addSource(sourceData) {
+    let res = await this.apiCall(`api/v1/sources/`, sourceData, 'post');
+    return res.source;
   }
   /*
    ****************************** Authorization Routes **************************************************

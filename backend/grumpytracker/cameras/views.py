@@ -151,7 +151,7 @@ class CameraDetailsView(View):
 
             camera.save()
 
-            # Update the logo
+            # Update the image
             if files.get("image"):
                 camera.update_image(files.get("image"))
 

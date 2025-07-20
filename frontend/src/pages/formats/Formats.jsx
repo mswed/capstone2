@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { Container, Card, Row, Col, Button } from 'react-bootstrap';
 import GrumpyApi from '../../services/api';
 import Loading from '../../components/ui/Loading';
-import useFormatSearch from '../../features/formats/hooks/useFormatSearch';
 import AdvanceSearchForm from '../../components/forms/AdvanceSearchForm';
 import FormatList from '../../features/formats/components/FormatList';
+import useFormatSearch from '../../hooks/useFormatSearch.js';
 
 const Formats = () => {
   const { formats, searchParams, setSearchParams, isLoading } = useFormatSearch();

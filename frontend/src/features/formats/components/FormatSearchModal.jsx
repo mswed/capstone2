@@ -2,7 +2,7 @@ import { Col, Container, Modal, Row } from 'react-bootstrap';
 import Loading from '../../../components/ui/Loading';
 import FormatList from './FormatList';
 import AdvanceSearchForm from '../../../components/forms/AdvanceSearchForm';
-import useFormatSearch from '../hooks/useFormatSearch';
+import useFormatSearch from '../../../hooks/useFormatSearch.js';
 
 const FormatSearchModal = ({ show, onHide, onFormatSelect, projectId }) => {
   const { formats, searchParams, setSearchParams, isLoading } = useFormatSearch();
