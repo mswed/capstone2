@@ -99,7 +99,6 @@ const CameraDetails = () => {
 
   const handleAddSource = async (sourceData) => {
     try {
-      console.log('trying to add source');
       const newSource = await GrumpyApi.addSource(sourceData);
       setSources((prev) => [...prev, newSource]);
 
@@ -198,8 +197,8 @@ const CameraDetails = () => {
       <ModalWindow
         show={showEditCameraModal}
         onHide={() => setShowEditCameraModal(false)}
-        title={`Edit ${cameraData.make_name} ${cameraData.model}`}
-        form={<CameraForm onSubmit={handleEditCamera} camData={cameraData} />}
+        title={`Edit ${cameraData.makeName} ${cameraData.model}`}
+        form={<CameraForm onSubmit={handleEditCamera} camData={cameraData} buttonLabel="Update" />}
       />
       <ModalWindow
         show={showNewFormatModal}
@@ -211,12 +210,7 @@ const CameraDetails = () => {
         <Row className="mt-3">
           <Col>
             <Row>
-              <LocalSearchForm
-                fields={['image_format', 'image_aspect', 'format_name']}
-                targetArray={formatsData}
-                setTargetArray={setFormatsData}
-                originalArray={cameraData.formats}
-              />
+              <LocalSearchForm fields={['imageFormat', 'imageAspect', 'formatName']} targetArray={formatsData} setTargetArray={setFormatsData} originalArray={cameraData.formats} />
             </Row>
             <Row>
               <FormatList formats={formatsData} />
