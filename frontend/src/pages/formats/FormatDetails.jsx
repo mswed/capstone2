@@ -8,9 +8,12 @@ import FormatForm from '../../components/forms/FormatForm.jsx';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
+import { useNavigate } from 'react-router-dom';
 import useSources from '../../hooks/useSources.js';
 
 const FormatDetails = () => {
+  const navigate = useNavigate();
+
   // Set up state
   const { formatId } = useParams();
   const [formatData, setFormatData] = useState([]);
@@ -65,6 +68,14 @@ const FormatDetails = () => {
       throw error;
     }
   };
+
+  const handleDeleteFormat = async () => {
+    const response = await GrumpyApi.deleteFormat(formatId);
+    if (response.success) {
+      navigate(-1);
+    }
+  };
+
   // Fetch format data
   useEffect(() => {
     const getFormatDetails = async () => {
@@ -86,6 +97,14 @@ const FormatDetails = () => {
 
   return (
     <Container>
+      <ConfirmDialog
+        show={showConfirmDelete}
+        title={`Delete format "${formatData.imageFormat} ${formatData.imageAspect} ${formatData.formatName}"`}
+        message={'Are you sure?'}
+        confirmText="Delete"
+        onConfirm={handleDeleteFormat}
+        onCancel={() => setConfirmDelete(false)}
+      />
       <Card className="shadow-lg rounded-0 rounded-bottom">
         <Row className="g-0">
           <Col md={3}>

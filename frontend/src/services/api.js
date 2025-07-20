@@ -268,6 +268,16 @@ class GrumpyApi {
     return humps.camelizeKeys(res);
   }
 
+  /**
+   * Delete a format
+   *
+   * @param {Object} formatId - The id of the format to delete
+   * @returns {Object}  Delete status
+   */
+  static async deleteFormat(formatId) {
+    let res = await this.apiCall(`api/v1/formats/${formatId}`, {}, 'delete');
+    return res;
+  }
   /*
    ****************************** Project Routes **************************************************
    * */
