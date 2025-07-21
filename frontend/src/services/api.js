@@ -278,6 +278,7 @@ class GrumpyApi {
     let res = await this.apiCall(`api/v1/formats/${formatId}`, {}, 'delete');
     return res;
   }
+
   /*
    ****************************** Project Routes **************************************************
    * */
@@ -438,6 +439,17 @@ class GrumpyApi {
     const snakeCaseData = humps.decamelizeKeys(sourceData);
     let res = await this.apiCall(`api/v1/sources/${sourceId}`, snakeCaseData, 'patch');
     return humps.camelizeKeys(res.source);
+  }
+
+  /**
+   * Delete a source
+   *
+   * @param {Object} sourceId - The id of the source to delete
+   * @returns {Object}  Delete status
+   */
+  static async deleteSource(sourceId) {
+    let res = await this.apiCall(`api/v1/sources/${sourceId}`, {}, 'delete');
+    return res;
   }
   /*
    ****************************** Authorization Routes **************************************************
