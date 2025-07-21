@@ -28,7 +28,7 @@ class SourcesListView(View):
         data = []
 
         for source in sources:
-            data.append({"id": source.id, "name": source.name})
+            data.append(source.as_dict())
 
         return JsonResponse(data, safe=False)
 
@@ -104,7 +104,12 @@ class SourceDetailsView(View):
                     setattr(source, field, value)
 
             source.save()
-            return JsonResponse({"success": f"Partialy updated format {source}"})
+            return JsonResponse(
+                {
+                    "success": f"Partialy updated format {source}",
+                    "source": source.as_dict(),
+                }
+            )
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)

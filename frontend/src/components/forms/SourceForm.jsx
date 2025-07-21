@@ -7,7 +7,7 @@ const SourceForm = ({ onSubmit, sourceData }) => {
   const INITIAL_STATE = {
     name: sourceData?.name ? sourceData.name : '',
     url: sourceData?.url ? sourceData.url : '',
-    fileName: sourceData?.file_name ? sourceData.file_name : '',
+    fileName: sourceData?.fileName ? sourceData.fileName : '',
     note: sourceData?.note ? sourceData.note : '',
   };
 
@@ -34,9 +34,9 @@ const SourceForm = ({ onSubmit, sourceData }) => {
         <Form.Label>URL</Form.Label>
         <Form.Control placeholder="https://www.webpage.com" name="url" onChange={handleChange} value={sourceFormData.url} />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="file_name">
+      <Form.Group className="mb-3" controlId="fileName">
         <Form.Label>Filename</Form.Label>
-        <Form.Control placeholder="alexa_formats_list.pdf" name="file_name" onChange={handleChange} value={sourceFormData.fileName} />
+        <Form.Control placeholder="alexa_formats_list.pdf" name="fileName" onChange={handleChange} value={sourceFormData.fileName} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="note">
         <Form.Label>Note</Form.Label>

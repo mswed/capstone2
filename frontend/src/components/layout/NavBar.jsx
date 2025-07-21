@@ -28,6 +28,9 @@ const NavBar = () => {
               <Nav.Link as={Link} to={'/formats'}>
                 Formats
               </Nav.Link>
+              <Nav.Link as={Link} to={'/sources'}>
+                Sources
+              </Nav.Link>
               <Nav.Link as={Link} to={'/projects'}>
                 Projects
               </Nav.Link>

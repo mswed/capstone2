@@ -10,6 +10,8 @@ import Cameras from './pages/cameras/Cameras';
 import CameraDetails from './pages/cameras/CameraDetails';
 import Formats from './pages/formats/Formats';
 import FormatDetails from './pages/formats/FormatDetails';
+import Sources from './pages/sources/Sources';
+import SourcesDetails from './pages/sources/SourceDetails.jsx';
 import Projects from './pages/projects/Projects';
 import ProjectDetails from './pages/projects/ProjectDetails';
 import FormContainer from './components/ui/FormContainer';
@@ -28,6 +30,8 @@ function App() {
           <Route path="/cameras/:cameraId" element={<CameraDetails />} />
           <Route path="/formats/" element={<Formats />} />
           <Route path="/formats/:formatId" element={<FormatDetails />} />
+          <Route path="/sources/" element={<Sources />} />
+          <Route path="/sources/:sourceId" element={<SourcesDetails />} />
           <Route path="/projects/" element={<Projects />} />
           <Route path="/projects/:projectId" element={<ProjectDetails />} />
           <Route path="/login" element={<FormContainer FormComponent={LoginForm} />} />

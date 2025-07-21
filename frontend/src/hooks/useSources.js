@@ -29,6 +29,7 @@ const useSources = () => {
   return {
     sources,
     setSources,
+    isLoading,
   };
 };
 

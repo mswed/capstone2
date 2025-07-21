@@ -387,7 +387,7 @@ class GrumpyApi {
 
   static async getSources() {
     let res = await this.apiCall(`api/v1/sources/`);
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -400,6 +400,44 @@ class GrumpyApi {
   static async addSource(sourceData) {
     let res = await this.apiCall(`api/v1/sources/`, sourceData, 'post');
     return res.source;
+  }
+
+  /**
+   * Get source details
+   *
+   * @param {Integer} sourceId - The source id to search for
+   * @returns {Object} Full source details
+   */
+
+  static async getSourceDetails(sourceId) {
+    let res = await this.apiCall(`api/v1/sources/${sourceId}`);
+    return humps.camelizeKeys(res);
+  }
+
+  /**
+   * Get source details
+   *
+   * @param {Integer} formatId - The format id to search for
+   * @returns {Object} Full forat details
+   */
+
+  static async getFormatDetails(formatId) {
+    let res = await this.apiCall(`api/v1/formats/${formatId}`);
+    return humps.camelizeKeys(res);
+  }
+
+  /**
+   * Update a source
+   *
+   * @param {Integer} sourceId - The ID of the source we are updating
+   * @param {object} sourceData - The updated source data
+   * @returns {Object} Full source details
+   */
+
+  static async updateSource(sourceId, sourceData) {
+    const snakeCaseData = humps.decamelizeKeys(sourceData);
+    let res = await this.apiCall(`api/v1/sources/${sourceId}`, snakeCaseData, 'patch');
+    return humps.camelizeKeys(res.source);
   }
   /*
    ****************************** Authorization Routes **************************************************
