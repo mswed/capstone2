@@ -71,13 +71,15 @@ const AuthProvider = ({ children }) => {
       setCurrentuser(decoded.username);
       return { success: true };
     } catch (error) {
+      console.log('returning an error!');
       return { success: false, error };
     }
   };
 
-  const register = async (username, password, firstName, lastName, email) => {
+  const signup = async (newUserData) => {
+    console.log('AuthContext got new user data', newUserData);
     try {
-      const token = await GrumpyApi.register(username, password, firstName, lastName, email);
+      await GrumpyApi.signup(newUserData);
       logout();
       return { success: true };
     } catch (error) {
@@ -109,7 +111,7 @@ const AuthProvider = ({ children }) => {
     token,
     currentUser,
     login,
-    register,
+    signup,
     logout,
     isInitialized,
   };

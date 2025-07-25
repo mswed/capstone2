@@ -234,7 +234,7 @@ class GrumpyApi {
 
   static async getFormats() {
     let res = await this.apiCall(`api/v1/formats/`);
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -416,18 +416,6 @@ class GrumpyApi {
   }
 
   /**
-   * Get source details
-   *
-   * @param {Integer} formatId - The format id to search for
-   * @returns {Object} Full forat details
-   */
-
-  static async getFormatDetails(formatId) {
-    let res = await this.apiCall(`api/v1/formats/${formatId}`);
-    return humps.camelizeKeys(res);
-  }
-
-  /**
    * Update a source
    *
    * @param {Integer} sourceId - The ID of the source we are updating
@@ -467,6 +455,16 @@ class GrumpyApi {
     return res.token;
   }
 
+  /**
+   * Signup a user
+   *
+   * @param {Object} userData - new user data
+   */
+  static async signup(userData) {
+    const snakeCaseData = humps.decamelizeKeys(userData);
+    let res = await this.apiCall(`api/v1/users/`, { ...snakeCaseData }, 'post');
+    return res;
+  }
   /**
    * Logout a user
    *

@@ -32,7 +32,6 @@ class AuthView(View):
         This is our login function
         """
         try:
-            print("AUTH WAS HIT!")
             data = json.loads(request.body)
             username = data.get("username")
             password = data.get("password")
@@ -115,6 +114,7 @@ class UsersListView(View):
         """
         try:
             data = json.loads(request.body)
+            print("register function received", data)
 
             # Validate our input
             error = validate_required_fields(

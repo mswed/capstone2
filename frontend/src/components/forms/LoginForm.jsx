@@ -3,10 +3,7 @@ import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
-const LoginForm = () => {
-  const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
-
+const LoginForm = ({ onSubmit }) => {
   const INITIAL_STATE = {
     username: '',
     password: '',
@@ -26,14 +23,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    const res = await login(loginForm.username, loginForm.password);
-    if (res.success) {
-      navigate('/');
-      // showMessage('Login Successfull', 'success');
-    } else {
-      navigate('/');
-      // showMessage('Login Failed! Incorrect username or password!', 'danger');
-    }
+    onSubmit(loginForm.username, loginForm.password);
   };
 
   return (

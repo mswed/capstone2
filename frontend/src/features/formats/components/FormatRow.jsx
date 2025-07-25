@@ -12,8 +12,8 @@ const FormatRow = ({ format, showModel = true, showAddButton = false, onFormatAd
 
   return (
     <tr>
-      {showModel && <td>{format.make_name}</td>}
-      {showModel && <td>{format.camera_model}</td>}
+      {showModel && <td>{format.makeName}</td>}
+      {showModel && <td>{format.cameraModel}</td>}
       <td>
         {format.imageFormat} {format.imageAspect} {format.formatName}
       </td>

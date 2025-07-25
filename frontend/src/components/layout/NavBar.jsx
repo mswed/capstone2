@@ -1,19 +1,46 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { AuthContext } from '../../context/AuthContext';
+import ModalWindow from '../ui/ModalWindow';
+import LoginForm from '../forms/LoginForm';
+import SignupForm from '../forms/SignupForm';
 // import { MessageContext } from './MessageContext';
 
 const NavBar = () => {
-  const { token, currentUser, logout } = useContext(AuthContext);
+  const { token, currentUser, signup, login, logout } = useContext(AuthContext);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
   // const { showMessage } = useContext(MessageContext);
 
+  const handleLogin = async (username, password) => {
+    const res = await login(username, password);
+    if (res.success) {
+      setShowLoginModal(false);
+      // showMessage('Login Successfull', 'success');
+    } else {
+      console.log('failed to login');
+      // showMessage('Login Failed! Incorrect username or password!', 'danger');
+    }
+  };
+
+  const handleSignup = async (newUserData) => {
+    const res = await signup(newUserData);
+    if (res.success) {
+      setShowSignupModal(false);
+      // showMessage('Login Successfull', 'success');
+    } else {
+      console.log('failed to login');
+      // showMessage('Login Failed! Incorrect username or password!', 'danger');
+    }
+  };
   const navigate = useNavigate();
   return (
     <Container>
       <Navbar style={{ backgroundColor: '#413C58' }} variant="dark" expand="lg" className="w-100">
         <div className="container-fluid">
           <Navbar.Brand as={Link} to="/">
+            {' '}
             <img src="/grumpy-logo.png" height="75" className="d-inline-block align-top" alt="Grumpy Tracker Logo" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -52,12 +79,24 @@ const NavBar = () => {
                 </>
               ) : (
                 <>
-                  <Nav.Link as={Link} to={'/login'}>
+                  <Nav.Link
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setShowLoginModal(true);
+                    }}
+                  >
                     Login
                   </Nav.Link>
-                  <Nav.Link as={Link} to={'/signup'}>
+                  <ModalWindow show={showLoginModal} onHide={() => setShowLoginModal(false)} title={'Login'} form={<LoginForm onSubmit={handleLogin} />} />
+                  <Nav.Link
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setShowSignupModal(true);
+                    }}
+                  >
                     Signup
                   </Nav.Link>
+                  <ModalWindow show={showSignupModal} onHide={() => setShowSignupModal(false)} title={'Signup!'} form={<SignupForm onSubmit={handleSignup} />} />
                 </>
               )}
             </Nav>
