@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Card, Row, Col } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import GrumpyApi from '../../services/api';
 import Loading from '../../components/ui/Loading';
 import RemoteSearchForm from '../../components/forms/RemoteSearchForm';

@@ -15,7 +15,7 @@ const ProjectDetails = () => {
   const [projectData, setProjectData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showFormatsModal, setShowFormatsModal] = useState(false);
-  const { currentUser } = useContext(AuthContext);
+  const { token, currentUser } = useContext(AuthContext);
 
   const actionButtons = [
     {
@@ -105,7 +105,7 @@ const ProjectDetails = () => {
           </Col>
         </Row>
       </Card>
-      <ActionBar buttons={actionButtons} className="mt-3" />
+      {token && <ActionBar buttons={actionButtons} className="mt-3" />}
       <FormatSearchModal show={showFormatsModal} onHide={() => setShowFormatsModal(false)} onFormatSelect={handleAddFormat} projectId={projectId} />
       {projectData.formats?.length > 0 && (
         <Row className="mt-3">

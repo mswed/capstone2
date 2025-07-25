@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import GrumpyApi from '../../services/api';
@@ -7,6 +7,7 @@ import SourceForm from '../../components/forms/SourceForm.jsx';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
+import { AuthContext } from '../../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
 const SourceDetails = () => {
@@ -18,6 +19,8 @@ const SourceDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showEditSourceModal, setShowEditSourceModal] = useState(false);
   const [showConfirmDelete, setConfirmDelete] = useState(false);
+
+  const { token } = useContext(AuthContext);
 
   const actionButtons = [
     {
@@ -117,7 +120,7 @@ const SourceDetails = () => {
         title={`Edit source ${sourceData.name}`}
         form={<SourceForm onSubmit={handleUpdateSource} sourceData={sourceData} />}
       />
-      <ActionBar buttons={actionButtons} className="mt-3" />
+      {token && <ActionBar buttons={actionButtons} className="mt-3" />}
     </Container>
   );
 };

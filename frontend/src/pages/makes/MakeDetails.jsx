@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import GrumpyApi from '../../services/api';
@@ -9,6 +9,7 @@ import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import MakeForm from '../../components/forms/MakeForm.jsx';
 import CameraForm from '../../components/forms/CameraForm.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
+import { AuthContext } from '../../context/AuthContext.jsx';
 
 const MakeDetails = () => {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ const MakeDetails = () => {
   const [showConfirmDelete, setConfirmDelete] = useState(false);
   const [showNewCameraModal, setShowNewCameraModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { token } = useContext(AuthContext);
 
   const actionButtons = [
     {
@@ -132,7 +135,7 @@ const MakeDetails = () => {
           </Col>
         </Row>
       </Card>
-      <ActionBar buttons={actionButtons} className="mt-3" />
+      {token && <ActionBar buttons={actionButtons} className="mt-3" />}
       <ConfirmDialog
         show={showConfirmDelete}
         title={`Delete make "${makeData.name}"`}

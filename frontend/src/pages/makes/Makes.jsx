@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import GrumpyApi from '../../services/api.js';
@@ -6,10 +6,12 @@ import MakeCard from '../../features/makes/components/MakeCard';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import MakeForm from '../../components/forms/MakeForm.jsx';
+import { AuthContext } from '../../context/AuthContext.jsx';
 
 const MakeList = () => {
   const [makes, setMakes] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const { token } = useContext(AuthContext);
 
   const actionButtons = [
     {
@@ -52,7 +54,7 @@ const MakeList = () => {
 
   return (
     <Container>
-      <ActionBar buttons={actionButtons} className="mt-3" />
+      {token && <ActionBar buttons={actionButtons} className="mt-3" />}
       <ModalWindow show={showAddModal} onHide={() => setShowAddModal(false)} title="Add Make" form={<MakeForm onSubmit={handleAddMake} />} onFormSubmit={handleAddMake} />
       <Row className="mt-3">
         {makes.map((make) => (

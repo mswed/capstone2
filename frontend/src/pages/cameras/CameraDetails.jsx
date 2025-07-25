@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import GrumpyApi from '../../services/api.js';
@@ -10,6 +10,7 @@ import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import CameraForm from '../../components/forms/CameraForm.jsx';
 import FormatForm from '../../components/forms/FormatForm.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
+import { AuthContext } from '../../context/AuthContext.jsx';
 import useSources from '../../hooks/useSources.js';
 
 const CameraDetails = () => {
@@ -23,6 +24,8 @@ const CameraDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { sources, setSources } = useSources();
 
+  const { token } = useContext(AuthContext);
+  console.log('TOKEN IS', token);
   const navigate = useNavigate();
 
   const actionButtons = [
@@ -193,7 +196,7 @@ const CameraDetails = () => {
           </Col>
         </Row>
       </Card>
-      <ActionBar buttons={actionButtons} className="mt-3" />
+      {token && <ActionBar buttons={actionButtons} className="mt-3" />}
       <ModalWindow
         show={showEditCameraModal}
         onHide={() => setShowEditCameraModal(false)}

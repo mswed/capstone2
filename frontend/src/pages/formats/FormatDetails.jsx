@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import GrumpyApi from '../../services/api';
@@ -8,6 +8,7 @@ import FormatForm from '../../components/forms/FormatForm.jsx';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
+import { AuthContext } from '../../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import useSources from '../../hooks/useSources.js';
 
@@ -21,6 +22,8 @@ const FormatDetails = () => {
   const [showEditFormatModal, setShowEditFormatModal] = useState(false);
   const [showConfirmDelete, setConfirmDelete] = useState(false);
   const { sources, setSources } = useSources();
+
+  const { token } = useContext(AuthContext);
 
   const actionButtons = [
     {
@@ -182,7 +185,7 @@ const FormatDetails = () => {
         title={`Edit format ${formatData.imageFormat} ${formatData.imageAspect} ${formatData.formatName}`}
         form={<FormatForm onSubmit={handleUpdateFormat} formatData={formatData} sources={sources} onSourceAdded={handleAddSource} buttonLabel="Update" />}
       />
-      <ActionBar buttons={actionButtons} className="mt-3" />
+      {token && <ActionBar buttons={actionButtons} className="mt-3" />}
       <Row className="mt-3">
         <Col>
           <Card className="shadow-lg">
