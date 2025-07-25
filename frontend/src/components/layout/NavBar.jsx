@@ -87,7 +87,20 @@ const NavBar = () => {
                   >
                     Login
                   </Nav.Link>
-                  <ModalWindow show={showLoginModal} onHide={() => setShowLoginModal(false)} title={'Login'} form={<LoginForm onSubmit={handleLogin} />} />
+                  <ModalWindow
+                    show={showLoginModal}
+                    onHide={() => setShowLoginModal(false)}
+                    title={'Login'}
+                    form={
+                      <LoginForm
+                        onSubmit={handleLogin}
+                        onSwitchToRegister={() => {
+                          setShowLoginModal(false);
+                          setShowSignupModal(true);
+                        }}
+                      />
+                    }
+                  />
                   <Nav.Link
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
@@ -96,7 +109,20 @@ const NavBar = () => {
                   >
                     Signup
                   </Nav.Link>
-                  <ModalWindow show={showSignupModal} onHide={() => setShowSignupModal(false)} title={'Signup!'} form={<SignupForm onSubmit={handleSignup} />} />
+                  <ModalWindow
+                    show={showSignupModal}
+                    onHide={() => setShowSignupModal(false)}
+                    title={'Signup!'}
+                    form={
+                      <SignupForm
+                        onSubmit={handleSignup}
+                        onSwitchToLogin={() => {
+                          setShowSignupModal(false);
+                          setShowLoginModal(true);
+                        }}
+                      />
+                    }
+                  />
                 </>
               )}
             </Nav>

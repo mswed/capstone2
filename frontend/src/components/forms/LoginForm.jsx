@@ -3,7 +3,7 @@ import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
-const LoginForm = ({ onSubmit }) => {
+const LoginForm = ({ onSubmit, onSwitchToRegister }) => {
   const INITIAL_STATE = {
     username: '',
     password: '',
@@ -27,25 +27,27 @@ const LoginForm = ({ onSubmit }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group className="mb-3" controlId="username">
-        <Form.Label>Username</Form.Label>
-        <Form.Control placeholder="Username" name="username" onChange={handleChange} value={loginForm.username} />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="password">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" name="password" onChange={handleChange} value={loginForm.password} />
-      </Form.Group>
-      <Button type="submit" className="w-100">
-        Login
-      </Button>
+    <>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3" controlId="username">
+          <Form.Label>Username</Form.Label>
+          <Form.Control placeholder="Username" name="username" onChange={handleChange} value={loginForm.username} />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control type="password" placeholder="Password" name="password" onChange={handleChange} value={loginForm.password} />
+        </Form.Group>
+        <Button type="submit" className="w-100">
+          Login
+        </Button>
+      </Form>
       <div className="mt-3 text-muted">
         Don't have an account?{' '}
         <span>
-          <Link to={'/register'}>Register</Link>
+          <Link onClick={() => onSwitchToRegister()}>Register</Link>
         </span>
       </div>
-    </Form>
+    </>
   );
 };
 
