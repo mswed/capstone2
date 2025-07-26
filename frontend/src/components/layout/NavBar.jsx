@@ -8,7 +8,7 @@ import SignupForm from '../forms/SignupForm';
 // import { MessageContext } from './MessageContext';
 
 const NavBar = () => {
-  const { token, currentUser, signup, login, logout } = useContext(AuthContext);
+  const { token, currentUser, signup, login, logout, isAdmin } = useContext(AuthContext);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   // const { showMessage } = useContext(MessageContext);
@@ -55,9 +55,11 @@ const NavBar = () => {
               <Nav.Link as={Link} to={'/formats'}>
                 Formats
               </Nav.Link>
-              <Nav.Link as={Link} to={'/sources'}>
-                Sources
-              </Nav.Link>
+              {isAdmin && (
+                <Nav.Link as={Link} to={'/sources'}>
+                  Sources
+                </Nav.Link>
+              )}
               <Nav.Link as={Link} to={'/projects'}>
                 Projects
               </Nav.Link>
