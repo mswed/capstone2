@@ -56,6 +56,7 @@ class AuthView(View):
                         "username": user.username,
                         "exp": now + timedelta(days=7),
                         "iat": now,
+                        "is_admin": user.is_staff,
                     }
 
                     token = jwt.encode(payload, settings.JWT_SECRET, algorithm="HS256")
@@ -114,7 +115,6 @@ class UsersListView(View):
         """
         try:
             data = json.loads(request.body)
-            print("register function received", data)
 
             # Validate our input
             error = validate_required_fields(

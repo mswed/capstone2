@@ -18,6 +18,7 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [currentUser, setCurrentuser] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // We try to get the authentication from local storage once
   // and confirm we are initialized
@@ -30,6 +31,15 @@ const AuthProvider = ({ children }) => {
       setToken(storedToken);
       setCurrentuser(storedUser);
       GrumpyApi.token = storedToken;
+
+      // Decode the token to get admin status
+      try {
+        const decoded = jwtDecode(storedToken);
+        setIsAdmin(decoded.is_admin || false);
+      } catch (error) {
+        console.error('Error decoding token', error);
+        setIsAdmin(false);
+      }
     }
 
     setIsInitialized(true);
@@ -66,9 +76,10 @@ const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const authToken = await GrumpyApi.login(username, password);
-      setToken(authToken);
       const decoded = jwtDecode(authToken);
+      setToken(authToken);
       setCurrentuser(decoded.username);
+      setIsAdmin(decoded.is_admin || false);
       return { success: true };
     } catch (error) {
       console.log('returning an error!');
@@ -77,7 +88,6 @@ const AuthProvider = ({ children }) => {
   };
 
   const signup = async (newUserData) => {
-    console.log('AuthContext got new user data', newUserData);
     try {
       await GrumpyApi.signup(newUserData);
       logout();
@@ -90,6 +100,7 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     // TODO: Do I need to logout of the backend here too?
     setToken('');
+    setIsAdmin(false);
   };
 
   // TODO: We want to add favorites here
@@ -110,6 +121,7 @@ const AuthProvider = ({ children }) => {
   const value = {
     token,
     currentUser,
+    isAdmin,
     login,
     signup,
     logout,

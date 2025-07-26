@@ -1,6 +1,10 @@
+import { useContext } from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap';
+import { AuthContext } from '../../context/AuthContext';
 
-const ActionBar = ({ buttons = [], className = '', isAdmin = false }) => {
+const ActionBar = ({ buttons = [], className = '' }) => {
+  const { isAdmin } = useContext(AuthContext);
+  console.log('USER ADMIN STATUS', isAdmin);
   return (
     <Card className={`border-0 shadow-sm ${className}`}>
       <Card.Body className="py-2">
