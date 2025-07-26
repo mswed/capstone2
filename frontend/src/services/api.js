@@ -292,7 +292,8 @@ class GrumpyApi {
 
   static async getProjectDetails(projectId) {
     let res = await this.apiCall(`api/v1/projects/${projectId}`);
-    return res;
+    console.log('API answered with', res);
+    return humps.camelizeKeys(res);
   }
 
   /**

@@ -57,6 +57,9 @@ class Project(models.Model):
         """
         Returns the project with its cameras and formats AND the votes on each format
         """
+        print("**************************************************")
+        print("with formats recieved user", user)
+        print("**************************************************")
         formats_with_votes = []
 
         for fmt in self.formats.all():
@@ -67,7 +70,7 @@ class Project(models.Model):
 
             # If we have a user check how they voted
             user_vote = None
-            if user:
+            if user is not None:
                 try:
                     user_vote_obj = Vote.objects.get(project=self, fmt=fmt, user=user)
                     user_vote = user_vote_obj.vote_type

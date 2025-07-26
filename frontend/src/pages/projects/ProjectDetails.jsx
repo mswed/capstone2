@@ -19,6 +19,12 @@ const ProjectDetails = () => {
 
   const actionButtons = [
     {
+      text: 'Delete Project',
+      variant: 'outline-danger',
+      onClick: () => consoel.log('deleting project'),
+      adminOnly: true,
+    },
+    {
       text: 'Add Format',
       variant: 'outline-primary',
       onClick: () => setShowFormatsModal(true),
@@ -70,7 +76,7 @@ const ProjectDetails = () => {
         <Row className="g-0">
           <Col md={4}>
             <Card.Img
-              src={projectData.poster_path ? projectData.poster_path : '/media/camera_images/missing_image.png'}
+              src={projectData.posterPath ? projectData.posterPath : '/media/camera_images/missing_image.png'}
               alt={`Poster for for ${projectData.name}`}
               className="p-3"
               style={{
@@ -84,7 +90,7 @@ const ProjectDetails = () => {
             <Card.Body className="text-start">
               <Card.Title>
                 <h2>
-                  {projectData.name} ({projectData.release_date.split('-')[0]})
+                  {projectData.name} ({projectData.releaseDate.split('-')[0]})
                 </h2>
               </Card.Title>
 
@@ -99,7 +105,7 @@ const ProjectDetails = () => {
             <div>
               <dl className="row">
                 <dt className="col-sm-4">Type:</dt>
-                <dd className="col-sm-8">{projectData.project_type}</dd>
+                <dd className="col-sm-8">{projectData.projectType}</dd>
               </dl>
             </div>
           </Col>

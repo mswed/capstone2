@@ -1,3 +1,4 @@
+from pprint import pprint
 from loguru import logger
 from django.db.models import F, Q, Count
 import requests
@@ -21,7 +22,6 @@ from grumpytracker.utils import (
     require_admin,
     require_owner_or_admin,
 )
-from cameras.models import Camera
 from formats.models import Format
 
 BASE_URL = "https://api.themoviedb.org/3"
@@ -86,7 +86,18 @@ class ProjectDetailsView(View):
         Get a project by its interanl ID
         """
         project = get_object_or_404(Project, id=project_id)
-        return JsonResponse(project.with_formats(user=request.user), safe=False)
+        current_user = request.user
+        print("-----------------------------------")
+        print(request.user)
+        print(current_user.username)
+        print(current_user.id)
+        if current_user.id is None:
+            current_user = None
+
+        print("Current user is", current_user)
+
+        print("-----------------------------------")
+        return JsonResponse(project.with_formats(user=current_user), safe=False)
 
     @method_decorator(require_admin)
     def patch(self, request, project_id):
