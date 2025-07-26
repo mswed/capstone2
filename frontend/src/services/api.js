@@ -292,7 +292,6 @@ class GrumpyApi {
 
   static async getProjectDetails(projectId) {
     let res = await this.apiCall(`api/v1/projects/${projectId}`);
-    console.log('API answered with', res);
     return humps.camelizeKeys(res);
   }
 
@@ -304,6 +303,18 @@ class GrumpyApi {
 
   static async getProjects() {
     let res = await this.apiCall(`api/v1/projects/`);
+    return res;
+  }
+
+  /**
+   * Delete project
+   *
+   * @param {Integer} projectId - The ID of the project we are deleting
+   * @returns {Object}  Delete status
+   */
+
+  static async deleteProject(projectId) {
+    let res = await this.apiCall(`api/v1/projects/${projectId}`, {}, 'delete');
     return res;
   }
 

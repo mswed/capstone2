@@ -25,7 +25,6 @@ const CameraDetails = () => {
   const { sources, setSources } = useSources();
 
   const { token } = useContext(AuthContext);
-  console.log('TOKEN IS', token);
   const navigate = useNavigate();
 
   const actionButtons = [

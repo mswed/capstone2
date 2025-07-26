@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import GrumpyApi from '../../services/api.js';
@@ -8,6 +8,7 @@ import CameraGrid from '../../features/cameras/components/CamerasGrid.jsx';
 import FormatList from '../../features/formats/components/FormatList.jsx';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import FormatSearchModal from '../../features/formats/components/FormatSearchModal.jsx';
+import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 
 const ProjectDetails = () => {
   // Set up state
@@ -15,13 +16,16 @@ const ProjectDetails = () => {
   const [projectData, setProjectData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showFormatsModal, setShowFormatsModal] = useState(false);
+  const [showConfirmDelete, setConfirmDelete] = useState(false);
   const { token, currentUser } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const actionButtons = [
     {
       text: 'Delete Project',
       variant: 'outline-danger',
-      onClick: () => consoel.log('deleting project'),
+      onClick: () => setConfirmDelete(true),
       adminOnly: true,
     },
     {
@@ -51,6 +55,13 @@ const ProjectDetails = () => {
     }
   };
 
+  const handleDeleteProject = async () => {
+    const response = await GrumpyApi.deleteProject(projectId);
+    if (response.success) {
+      navigate(-1);
+    }
+  };
+
   // Fetch project data
   useEffect(() => {
     const getProjectDetails = async () => {
@@ -72,6 +83,15 @@ const ProjectDetails = () => {
 
   return (
     <Container>
+      <ConfirmDialog
+        show={showConfirmDelete}
+        title={`Delete project "${projectData.name}"`}
+        message={'Are you sure?'}
+        confirmText="Delete"
+        onConfirm={handleDeleteProject}
+        onCancel={() => setConfirmDelete(false)}
+      />
+
       <Card className="shadow-lg rounded-0 rounded-bottom">
         <Row className="g-0">
           <Col md={4}>
