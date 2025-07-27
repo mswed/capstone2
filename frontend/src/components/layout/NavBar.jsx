@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import { AuthContext } from '../../context/AuthContext';
 import ModalWindow from '../ui/ModalWindow';
 import LoginForm from '../forms/LoginForm';
@@ -12,6 +12,8 @@ const NavBar = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   // const { showMessage } = useContext(MessageContext);
+
+  const navigate = useNavigate();
 
   const handleLogin = async (username, password) => {
     const res = await login(username, password);
@@ -34,10 +36,43 @@ const NavBar = () => {
       // showMessage('Login Failed! Incorrect username or password!', 'danger');
     }
   };
-  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <Container>
       <Navbar style={{ backgroundColor: '#413C58' }} variant="dark" expand="lg" className="w-100">
+        <ModalWindow
+          show={showLoginModal}
+          onHide={() => setShowLoginModal(false)}
+          title={'Login'}
+          form={
+            <LoginForm
+              onSubmit={handleLogin}
+              onSwitchToRegister={() => {
+                setShowLoginModal(false);
+                setShowSignupModal(true);
+              }}
+            />
+          }
+        />
+        <ModalWindow
+          show={showSignupModal}
+          onHide={() => setShowSignupModal(false)}
+          title={'Signup!'}
+          form={
+            <SignupForm
+              onSubmit={handleSignup}
+              onSwitchToLogin={() => {
+                setShowSignupModal(false);
+                setShowLoginModal(true);
+              }}
+            />
+          }
+        />
         <div className="container-fluid">
           <Navbar.Brand as={Link} to="/">
             {' '}
@@ -63,46 +98,26 @@ const NavBar = () => {
               <Nav.Link as={Link} to={'/projects'}>
                 Projects
               </Nav.Link>
+            </Nav>
+            <Nav>
               {token ? (
-                <>
-                  <Nav.Link as={Link} to={'/profile'}>
+                <NavDropdown
+                  title={
+                    <>
+                      <i className="bi bi-person me-1"></i>
+                      {currentUser}
+                    </>
+                  }
+                  id="user-dropdown"
+                  align="end"
+                >
+                  <NavDropdown.Item as={Link} to="/profile">
                     Profile
-                  </Nav.Link>
-                  <Nav.Link
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      navigate('/');
-                      logout();
-                      // showMessage('You have successfully logged out!', 'success');
-                    }}
-                  >
-                    Logout ({currentUser})
-                  </Nav.Link>
-                </>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                </NavDropdown>
               ) : (
                 <>
-                  <Nav.Link
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      setShowLoginModal(true);
-                    }}
-                  >
-                    Login
-                  </Nav.Link>
-                  <ModalWindow
-                    show={showLoginModal}
-                    onHide={() => setShowLoginModal(false)}
-                    title={'Login'}
-                    form={
-                      <LoginForm
-                        onSubmit={handleLogin}
-                        onSwitchToRegister={() => {
-                          setShowLoginModal(false);
-                          setShowSignupModal(true);
-                        }}
-                      />
-                    }
-                  />
                   <Nav.Link
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
@@ -111,20 +126,14 @@ const NavBar = () => {
                   >
                     Signup
                   </Nav.Link>
-                  <ModalWindow
-                    show={showSignupModal}
-                    onHide={() => setShowSignupModal(false)}
-                    title={'Signup!'}
-                    form={
-                      <SignupForm
-                        onSubmit={handleSignup}
-                        onSwitchToLogin={() => {
-                          setShowSignupModal(false);
-                          setShowLoginModal(true);
-                        }}
-                      />
-                    }
-                  />
+                  <Nav.Link
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setShowLoginModal(true);
+                    }}
+                  >
+                    Login
+                  </Nav.Link>
                 </>
               )}
             </Nav>

@@ -100,6 +100,7 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     // TODO: Do I need to logout of the backend here too?
     setToken('');
+    setCurrentuser('');
     setIsAdmin(false);
   };
 
