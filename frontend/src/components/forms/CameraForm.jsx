@@ -7,7 +7,7 @@ const CameraForm = ({ onSubmit, camData, buttonLabel = 'Add' }) => {
     sensorType: camData?.sensorType ? camData.sensorType : '',
     sensorSize: camData?.sensorSize ? camData.sensorSize : '',
     maxFilmbackWidth: camData?.maxFilmbackWidth ? camData.maxFilmbackWidth : '',
-    maxFilmbackHeight: camData?.maxFilmbackHeight ? camData.maxImageHeight : '',
+    maxFilmbackHeight: camData?.maxFilmbackHeight ? camData.maxFilmbackHeight : '',
     maxImageWidth: camData?.maxImageWidth ? camData.maxImageWidth : '',
     maxImageHeight: camData?.maxImageHeight ? camData.maxImageHeight : '',
     minFrameRate: camData?.minFrameRate ? camData.minFrameRate : '',

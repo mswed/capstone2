@@ -411,8 +411,9 @@ class GrumpyApi {
    */
 
   static async addSource(sourceData) {
-    let res = await this.apiCall(`api/v1/sources/`, sourceData, 'post');
-    return res.source;
+    const snakeCaseData = humps.depascalizeKeys(sourceData);
+    let res = await this.apiCall(`api/v1/sources/`, snakeCaseData, 'post');
+    return humps.camelizeKeys(res.source);
   }
 
   /**

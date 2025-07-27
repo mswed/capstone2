@@ -11,6 +11,7 @@ import CameraForm from '../../components/forms/CameraForm.jsx';
 import FormatForm from '../../components/forms/FormatForm.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 import { AuthContext } from '../../context/AuthContext.jsx';
+import { MessageContext } from '../../context/MessageContext.jsx';
 import useSources from '../../hooks/useSources.js';
 
 const CameraDetails = () => {
@@ -23,6 +24,7 @@ const CameraDetails = () => {
   const [showConfirmDelete, setConfirmDelete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { sources, setSources } = useSources();
+  const { showMessage } = useContext(MessageContext);
 
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -70,7 +72,9 @@ const CameraDetails = () => {
 
       // Close the modal
       setShowEditCameraModal(false);
+      showMessage('Updated camera!', 'success');
     } catch (error) {
+      showMessage('Failed to update camera', 'danger');
       console.error('Failed to update camera:', error);
     }
   };
@@ -79,6 +83,7 @@ const CameraDetails = () => {
     const response = await GrumpyApi.deleteCamera(cameraId);
     if (response.success) {
       navigate(-1);
+      showMessage('Deleted camera', 'success');
     }
   };
 
@@ -94,7 +99,9 @@ const CameraDetails = () => {
 
       // Close the modal
       setShowNewFormatModal(false);
+      showMessage('Added format', 'success');
     } catch (error) {
+      showMessage('Failed to add format', 'danger');
       console.error('Failed to create format:', error);
     }
   };
@@ -104,9 +111,11 @@ const CameraDetails = () => {
       const newSource = await GrumpyApi.addSource(sourceData);
       setSources((prev) => [...prev, newSource]);
 
+      showMessage('Added source', 'success');
       // Retrun the new source so we can update the UI
       return newSource;
     } catch (error) {
+      showMessage('Failed to add source', 'danger');
       console.error('Failed to add source', error);
 
       throw error;
