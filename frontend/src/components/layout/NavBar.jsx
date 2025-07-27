@@ -5,13 +5,13 @@ import { AuthContext } from '../../context/AuthContext';
 import ModalWindow from '../ui/ModalWindow';
 import LoginForm from '../forms/LoginForm';
 import SignupForm from '../forms/SignupForm';
-// import { MessageContext } from './MessageContext';
+import { MessageContext } from '../../context/MessageContext';
 
 const NavBar = () => {
   const { token, currentUser, signup, login, logout, isAdmin } = useContext(AuthContext);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
-  // const { showMessage } = useContext(MessageContext);
+  const { showMessage } = useContext(MessageContext);
 
   const navigate = useNavigate();
 
@@ -19,10 +19,10 @@ const NavBar = () => {
     const res = await login(username, password);
     if (res.success) {
       setShowLoginModal(false);
-      // showMessage('Login Successfull', 'success');
+      showMessage('Login Successfull', 'success');
     } else {
       console.log('failed to login');
-      // showMessage('Login Failed! Incorrect username or password!', 'danger');
+      showMessage('Login Failed! Incorrect username or password!', 'danger');
     }
   };
 
@@ -30,16 +30,17 @@ const NavBar = () => {
     const res = await signup(newUserData);
     if (res.success) {
       setShowSignupModal(false);
-      // showMessage('Login Successfull', 'success');
+      showMessage('Signup Successfull', 'success');
     } else {
       console.log('failed to login');
-      // showMessage('Login Failed! Incorrect username or password!', 'danger');
+      showMessage('Signup Failed!', 'danger');
     }
   };
 
   const handleLogout = () => {
     logout();
     navigate('/');
+    showMessage('Logout out!', 'success');
   };
 
   return (
