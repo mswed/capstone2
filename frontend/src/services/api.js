@@ -451,6 +451,7 @@ class GrumpyApi {
     let res = await this.apiCall(`api/v1/sources/${sourceId}`, {}, 'delete');
     return res;
   }
+
   /*
    ****************************** Authorization Routes **************************************************
    * */
@@ -477,6 +478,7 @@ class GrumpyApi {
     let res = await this.apiCall(`api/v1/users/`, { ...snakeCaseData }, 'post');
     return res;
   }
+
   /**
    * Logout a user
    *
@@ -485,6 +487,37 @@ class GrumpyApi {
     let res = await this.apiCall(`api/v1/users/auth`, 'delete');
     GrumpyApi.token = res.token;
     return res.token;
+  }
+
+  /*
+   ****************************** User Routes **************************************************
+   * */
+
+  /**
+   * Get user details
+   *
+   * @param {Integer} userId - The user id to search for
+   * @returns {Object} Full user details (without password, obviously)
+   */
+
+  static async getUserDetails(userId) {
+    let res = await this.apiCall(`api/v1/users/${userId}`);
+    console.log(res);
+    return humps.camelizeKeys(res);
+  }
+
+  /**
+   * Update a user
+   *
+   * @param {Integer} userId - The ID of the user we are updating
+   * @param {object} userData - The updated user data
+   * @returns {Object} Full source details
+   */
+
+  static async updateUser(userId, userData) {
+    const snakeCaseData = humps.decamelizeKeys(userData);
+    let res = await this.apiCall(`api/v1/users/${userId}`, snakeCaseData, 'patch');
+    return humps.camelizeKeys(res.user);
   }
 }
 

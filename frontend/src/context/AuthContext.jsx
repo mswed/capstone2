@@ -17,6 +17,7 @@ const AuthProvider = ({ children }) => {
   // Set up state
   const [token, setToken] = useState(null);
   const [currentUser, setCurrentuser] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -35,6 +36,7 @@ const AuthProvider = ({ children }) => {
       // Decode the token to get admin status
       try {
         const decoded = jwtDecode(storedToken);
+        setUserId(decoded.user_id);
         setIsAdmin(decoded.is_admin || false);
       } catch (error) {
         console.error('Error decoding token', error);
@@ -79,6 +81,7 @@ const AuthProvider = ({ children }) => {
       const decoded = jwtDecode(authToken);
       setToken(authToken);
       setCurrentuser(decoded.username);
+        setUserId(decoded.user_id);
       setIsAdmin(decoded.is_admin || false);
       return { success: true };
     } catch (error) {
@@ -99,8 +102,9 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     // TODO: Do I need to logout of the backend here too?
-    setToken('');
-    setCurrentuser('');
+    setToken(null),
+    setCurrentuser(null),
+    setUserId(null)
     setIsAdmin(false);
   };
 
@@ -122,6 +126,7 @@ const AuthProvider = ({ children }) => {
   const value = {
     token,
     currentUser,
+    userId,
     isAdmin,
     login,
     signup,

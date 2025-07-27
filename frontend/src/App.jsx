@@ -16,6 +16,7 @@ import Projects from './pages/projects/Projects';
 import ProjectDetails from './pages/projects/ProjectDetails';
 import FormContainer from './components/ui/FormContainer';
 import LoginForm from './components/forms/LoginForm';
+import Profile from './pages/users/profile.jsx';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/projects/" element={<Projects />} />
           <Route path="/projects/:projectId" element={<ProjectDetails />} />
           <Route path="/login" element={<FormContainer FormComponent={LoginForm} />} />
+          <Route path="/profile/" element={<Profile />} />
         </Routes>
       </AuthProvider>
     </>

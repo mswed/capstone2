@@ -198,7 +198,9 @@ class UserDetailsView(LoginRequiredMixin, View):
                         setattr(user, field, value)
 
             user.save()
-            return JsonResponse({"success": f"Partialy updated format {user}"})
+            return JsonResponse(
+                {"success": f"Partialy updated user {user}", "user": user.as_dict()}
+            )
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
