@@ -10,10 +10,13 @@ import MakeForm from '../../components/forms/MakeForm.jsx';
 import CameraForm from '../../components/forms/CameraForm.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 import { AuthContext } from '../../context/AuthContext.jsx';
+import { MessageContext } from '../../context/MessageContext.jsx';
 
 const MakeDetails = () => {
   const navigate = useNavigate();
+  const { showMessage } = useContext(MessageContext);
 
+  // Setup state
   const { makeId } = useParams();
   const [makeData, setMakeData] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -58,7 +61,10 @@ const MakeDetails = () => {
 
       // Close the modal
       setShowEditModal(false);
+
+      showMessage('Updated make', 'success');
     } catch (error) {
+      showMessage('Failed to update make', 'danger');
       console.error('Failed to update make:', error);
     }
   };
@@ -67,6 +73,9 @@ const MakeDetails = () => {
     const response = await GrumpyApi.deleteMake(makeId);
     if (response.success) {
       navigate('/makes');
+      showMessage('Deleted make', 'success');
+    } else {
+      showMessage('Failed to delete make', 'danger');
     }
   };
 
@@ -98,8 +107,10 @@ const MakeDetails = () => {
 
       // Close the modal
       setShowNewCameraModal(false);
+      showMessage('Added new camera', 'success');
     } catch (error) {
-      console.error('Failed to update make:', error);
+      showMessage('Failed to add new camera', 'success');
+      console.error('Failed to add new camera:', error);
     }
   };
 

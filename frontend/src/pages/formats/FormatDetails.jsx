@@ -9,11 +9,13 @@ import ActionBar from '../../components/ui/ActionBar.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import { AuthContext } from '../../context/AuthContext.jsx';
+import { MessageContext } from '../../context/MessageContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import useSources from '../../hooks/useSources.js';
 
 const FormatDetails = () => {
   const navigate = useNavigate();
+  const { showMessage } = useContext(MessageContext);
 
   // Set up state
   const { formatId } = useParams();
@@ -41,7 +43,9 @@ const FormatDetails = () => {
   const handleCopy = async (value) => {
     try {
       await navigator.clipboard.writeText(value);
+      showMessage('Copied!', 'success');
     } catch (error) {
+      showMessage('Faild to copy value!', 'danger');
       consoel.error('Failed to copy:', error);
     }
   };
@@ -53,19 +57,25 @@ const FormatDetails = () => {
 
       // Close the modal
       setShowEditFormatModal(false);
+      showMessage('Updated format', 'success');
     } catch (error) {
+      showMessage('Failed to update format', 'danger');
       console.error('Failed to update format:', error);
     }
   };
 
+  // TODO: This code is similar to the code in CameraDetails
+  // The two need to be extracted
   const handleAddSource = async (sourceData) => {
     try {
       const newSource = await GrumpyApi.addSource(sourceData);
       setSources((prev) => [...prev, newSource]);
 
       // Retrun the new source so we can update the UI
+      showMessage('Added source', 'success');
       return newSource;
     } catch (error) {
+      showMessage('Failed to add source', 'danger');
       console.error('Failed to add source', error);
 
       throw error;
@@ -76,6 +86,9 @@ const FormatDetails = () => {
     const response = await GrumpyApi.deleteFormat(formatId);
     if (response.success) {
       navigate(-1);
+      showMessage('Deleted format', 'success');
+    } else {
+      showMessage('Failed to delete format', 'success');
     }
   };
 

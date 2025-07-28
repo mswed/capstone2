@@ -9,9 +9,11 @@ import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import { MessageContext } from '../../context/MessageContext.jsx';
 
 const SourceDetails = () => {
   const navigate = useNavigate();
+  const { showMessage } = useContext(MessageContext);
 
   // Set up state
   const { sourceId } = useParams();
@@ -42,7 +44,9 @@ const SourceDetails = () => {
 
       // Close the modal
       setShowEditSourceModal(false);
+      showMessage('Updated source', 'success');
     } catch (error) {
+      showMessage('Failed to update source', 'danger');
       console.error('Failed to update source:', error);
     }
   };
@@ -51,6 +55,9 @@ const SourceDetails = () => {
     const response = await GrumpyApi.deleteSource(sourceId);
     if (response.success) {
       navigate(-1);
+      showMessage('Deleted source', 'success');
+    } else {
+      showMessage('Failed to delete source', 'danger');
     }
   };
 

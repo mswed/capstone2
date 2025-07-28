@@ -15,8 +15,10 @@ import { MessageContext } from '../../context/MessageContext.jsx';
 import useSources from '../../hooks/useSources.js';
 
 const CameraDetails = () => {
-  // Set up state
   const { cameraId } = useParams();
+  const { showMessage } = useContext(MessageContext);
+
+  // Set up state
   const [cameraData, setCameraData] = useState(null);
   const [formatsData, setFormatsData] = useState([]);
   const [showEditCameraModal, setShowEditCameraModal] = useState(false);
@@ -24,7 +26,6 @@ const CameraDetails = () => {
   const [showConfirmDelete, setConfirmDelete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { sources, setSources } = useSources();
-  const { showMessage } = useContext(MessageContext);
 
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();

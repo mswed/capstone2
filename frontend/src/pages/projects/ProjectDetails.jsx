@@ -9,10 +9,13 @@ import FormatList from '../../features/formats/components/FormatList.jsx';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import FormatSearchModal from '../../features/formats/components/FormatSearchModal.jsx';
 import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
+import { MessageContext } from '../../context/MessageContext.jsx';
 
 const ProjectDetails = () => {
-  // Set up state
   const { projectId } = useParams();
+  const { showMessage } = useContext(MessageContext);
+
+  // Set up state
   const [projectData, setProjectData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showFormatsModal, setShowFormatsModal] = useState(false);
@@ -41,7 +44,10 @@ const ProjectDetails = () => {
       // Refresh the project
       const response = await GrumpyApi.getProjectDetails(projectId);
       setProjectData(response);
-    } catch (error) {}
+      showMessage('Added format to project', 'success');
+    } catch (error) {
+      showMessage('Failed to add format to project', 'danger');
+    }
   };
 
   const handleVote = async (formatId, vote) => {
@@ -51,6 +57,7 @@ const ProjectDetails = () => {
       const response = await GrumpyApi.getProjectDetails(projectId);
       setProjectData(response);
     } catch (error) {
+      showMessage('Vote failed', 'danger');
       console.error('Error failed to vote on format', error);
     }
   };
@@ -59,6 +66,9 @@ const ProjectDetails = () => {
     const response = await GrumpyApi.deleteProject(projectId);
     if (response.success) {
       navigate(-1);
+      showMessage('Deleted project', 'success');
+    } else {
+      showMessage('Failed to delete project', 'danger');
     }
   };
 
@@ -69,7 +79,7 @@ const ProjectDetails = () => {
         const response = await GrumpyApi.getProjectDetails(projectId);
         setProjectData(response);
       } catch (error) {
-        console.error('Error fetching camera details', error);
+        console.error('Error fetching project details', error);
       } finally {
         setIsLoading(false);
       }

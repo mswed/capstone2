@@ -50,7 +50,6 @@ const Cameras = () => {
   };
 
   useEffect(() => {
-    console.log('useEffect was called! Search term is', searchTerm);
     if (searchTerm.trim() !== '') {
       findCameras();
     } else {
