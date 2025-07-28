@@ -208,8 +208,8 @@ const FormatDetails = () => {
                 <dl>
                   {formatData.notes && <dt className="col-sm-4">Notes:</dt>}
                   {formatData.notes && <dd className="col-sm-8">{formatData.notes}</dd>}
-                  {formatData.make_notes && <dt className="col-sm-4">Manufacturer Notes:</dt>}
-                  {formatData.make_notes && <dd className="col-sm-8">{formatData.makeNotes}</dd>}
+                  {formatData.makeNotes && <dt className="col-sm-4">Manufacturer Notes:</dt>}
+                  {formatData.makeNotes && <dd className="col-sm-8">{formatData.makeNotes}</dd>}
                 </dl>
               </div>
             </Card.Body>

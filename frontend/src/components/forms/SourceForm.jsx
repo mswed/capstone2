@@ -27,20 +27,20 @@ const SourceForm = ({ onSubmit, sourceData }) => {
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="name">
-        <Form.Label>Name</Form.Label>
-        <Form.Control placeholder="Alexa Mini Formats List" name="name" onChange={handleChange} value={sourceFormData.name} />
+        <Form.Label className="required-field">Name</Form.Label>
+        <Form.Control placeholder="A clear name describing the source" name="name" onChange={handleChange} value={sourceFormData.name} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="url">
-        <Form.Label>URL</Form.Label>
-        <Form.Control placeholder="https://www.webpage.com" name="url" onChange={handleChange} value={sourceFormData.url} />
+        <Form.Label className="required-field">URL</Form.Label>
+        <Form.Control placeholder="Where did you find this data?" name="url" onChange={handleChange} value={sourceFormData.url} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="fileName">
-        <Form.Label>Filename</Form.Label>
-        <Form.Control placeholder="alexa_formats_list.pdf" name="fileName" onChange={handleChange} value={sourceFormData.fileName} />
+        <Form.Label className="required-field">Filename</Form.Label>
+        <Form.Control placeholder="Name of local file with backup of data" name="fileName" onChange={handleChange} value={sourceFormData.fileName} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="note">
         <Form.Label>Note</Form.Label>
-        <Form.Control placeholder="Some additional info" name="note" onChange={handleChange} value={sourceFormData.note} />
+        <Form.Control placeholder="Any additional info" name="note" onChange={handleChange} value={sourceFormData.note} />
       </Form.Group>
       <Button type="submit" className="w-100">
         Add

@@ -54,12 +54,12 @@ const SignupForm = ({ onSubmit, onSwitchToLogin }) => {
           <Form.Control placeholder="The Best Studio" name="studio" onChange={handleChange} value={signupFormData.studio} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="username">
-          <Form.Label>Username</Form.Label>
-          <Form.Control placeholder="Username" name="username" onChange={handleChange} value={signupFormData.username} />
+          <Form.Label className="required-field">Username</Form.Label>
+          <Form.Control placeholder="Username" name="username" onChange={handleChange} value={signupFormData.username} required />
         </Form.Group>
         <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" name="password" onChange={handleChange} value={signupFormData.password} />
+          <Form.Label className="required-field">Password</Form.Label>
+          <Form.Control type="password" placeholder="Password" name="password" onChange={handleChange} value={signupFormData.password} required />
         </Form.Group>
         <Button type="submit" className="w-100">
           Signup

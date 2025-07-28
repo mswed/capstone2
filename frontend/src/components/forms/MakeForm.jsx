@@ -29,12 +29,12 @@ const MakeForm = ({ onSubmit, makeData }) => {
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="name">
-        <Form.Label>Name</Form.Label>
-        <Form.Control placeholder="Make Name" name="name" onChange={handleChange} value={makeFormData.name} />
+        <Form.Label className="required-field">Name</Form.Label>
+        <Form.Control placeholder="Make Name" name="name" onChange={handleChange} value={makeFormData.name} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="website">
-        <Form.Label>Website</Form.Label>
-        <Form.Control placeholder="https://www.webpage.com" name="website" onChange={handleChange} value={makeFormData.website} />
+        <Form.Label className="required-field">Website</Form.Label>
+        <Form.Control placeholder="https://www.webpage.com" name="website" onChange={handleChange} value={makeFormData.website} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="logo">
         <Form.Label>Logo</Form.Label>

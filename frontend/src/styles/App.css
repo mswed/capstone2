@@ -4,3 +4,8 @@
   padding: 2rem;
   text-align: center;
 }
+
+.required-field::after {
+  content: " *";
+  color: red;
+}

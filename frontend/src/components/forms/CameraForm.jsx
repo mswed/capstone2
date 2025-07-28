@@ -42,40 +42,41 @@ const CameraForm = ({ onSubmit, camData, buttonLabel = 'Add' }) => {
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="model">
-        <Form.Label>Model</Form.Label>
-        <Form.Control placeholder="Model" name="model" onChange={handleChange} value={cameraFormData.model} />
+        <Form.Label className="required-field">Model</Form.Label>
+        <Form.Control placeholder="Model" name="model" onChange={handleChange} value={cameraFormData.model} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="sensorType">
-        <Form.Label>Sensor Type</Form.Label>
-        <Form.Control placeholder="Sensor Type" name="sensorType" onChange={handleChange} value={cameraFormData.sensorType} />
+        <Form.Label className="required-field">Sensor Type</Form.Label>
+        <Form.Control placeholder="Sensor Type" name="sensorType" onChange={handleChange} value={cameraFormData.sensorType} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="maxFilmbackWidth">
-        <Form.Label>Max Filmback Width</Form.Label>
-        <Form.Control placeholder="Max Filmback Width" name="maxFilmbackWidth" onChange={handleChange} value={cameraFormData.maxFilmbackWidth} />
+        <Form.Label className="required-field">Max Filmback Width</Form.Label>
+        <Form.Control placeholder="Max Filmback Width" name="maxFilmbackWidth" onChange={handleChange} value={cameraFormData.maxFilmbackWidth} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="maxFilmbackHeight">
-        <Form.Label>Max Filmback Height</Form.Label>
-        <Form.Control placeholder="Max Filmback Height" name="maxFilmbackHeight" onChange={handleChange} value={cameraFormData.maxFilmbackHeight} />
+        <Form.Label className="required-field">Max Filmback Height</Form.Label>
+        <Form.Control placeholder="Max Filmback Height" name="maxFilmbackHeight" onChange={handleChange} value={cameraFormData.maxFilmbackHeight} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="maxImageWidth">
-        <Form.Label>Max Image Width</Form.Label>
-        <Form.Control placeholder="Max Image Width" name="maxImageWidth" onChange={handleChange} value={cameraFormData.maxImageWidth} />
+        <Form.Label className="required-field">Max Image Width</Form.Label>
+        <Form.Control placeholder="Max Image Width" name="maxImageWidth" onChange={handleChange} value={cameraFormData.maxImageWidth} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="maxImageHeight">
-        <Form.Label>Max Image Height</Form.Label>
-        <Form.Control placeholder="Max Image Height" name="maxImageHeight" onChange={handleChange} value={cameraFormData.maxImageHeight} />
+        <Form.Label className="required-field">Max Image Height</Form.Label>
+        <Form.Control placeholder="Max Image Height" name="maxImageHeight" onChange={handleChange} value={cameraFormData.maxImageHeight} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="minFrameRate">
-        <Form.Label>Min Frame Rate</Form.Label>
-        <Form.Control placeholder="Min Frame Rate" name="minFrameRate" onChange={handleChange} value={cameraFormData.minFrameRate} />
+        <Form.Label className="required-field">Min Frame Rate</Form.Label>
+        <Form.Control placeholder="Min Frame Rate" name="minFrameRate" onChange={handleChange} value={cameraFormData.minFrameRate} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="maxFrameRate">
-        <Form.Label>Max Frame Rate</Form.Label>
-        <Form.Control placeholder="Max Frame Rate" name="maxFrameRate" onChange={handleChange} value={cameraFormData.maxFrameRate} />
+        <Form.Label className="required-field">Max Frame Rate</Form.Label>
+        <Form.Control placeholder="Max Frame Rate" name="maxFrameRate" onChange={handleChange} value={cameraFormData.maxFrameRate} required />
       </Form.Group>
       <Form.Group className="mb-3" controlId="notes">
         <Form.Label>Notes</Form.Label>
-        <Form.Control placeholder="Notes" name="notes" onChange={handleChange} value={cameraFormData.notes} />
+        <Form.Control placeholder="Notes" name="notes" onChange={handleChange} value={cameraFormData.notes} maxLength={500} />
+        <Form.Text className="text-muted"> {cameraFormData.notes.length}/500 characters</Form.Text>{' '}
       </Form.Group>
       <Form.Check type="switch" className="mb-3" id="discontinued" name="discontinued" label="Discontinued?" onChange={handleChange} checked={cameraFormData.discontinued} />
       <Form.Group className="mb-3" controlId="image">
