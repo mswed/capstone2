@@ -32,11 +32,13 @@ const FormatDetails = () => {
       text: 'Delete Format',
       variant: 'outline-danger',
       onClick: () => setConfirmDelete(true),
+      adminOnly: true,
     },
     {
       text: 'Edit Format',
       variant: 'outline-warning',
       onClick: () => setShowEditFormatModal(true),
+      adminOnly: true,
     },
   ];
 

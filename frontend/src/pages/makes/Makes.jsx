@@ -18,6 +18,7 @@ const MakeList = () => {
       text: 'Add Make',
       variant: 'outline-success',
       onClick: () => setShowAddModal(true),
+      adminOnly: true,
     },
   ];
 

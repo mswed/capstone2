@@ -29,11 +29,13 @@ const SourceDetails = () => {
       text: 'Delete Source',
       variant: 'outline-danger',
       onClick: () => setConfirmDelete(true),
+      adminOnly: true,
     },
     {
       text: 'Edit Source',
       variant: 'outline-warning',
       onClick: () => setShowEditSourceModal(true),
+      adminOnly: true,
     },
   ];
 

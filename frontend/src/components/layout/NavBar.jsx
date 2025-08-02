@@ -99,6 +99,9 @@ const NavBar = () => {
               <Nav.Link as={Link} to={'/projects'}>
                 Projects
               </Nav.Link>
+              <Nav.Link as={Link} to={'/about'}>
+                About
+              </Nav.Link>
             </Nav>
             <Nav>
               {token ? (

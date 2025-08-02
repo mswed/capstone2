@@ -31,16 +31,19 @@ const MakeDetails = () => {
       text: 'Delete Make',
       variant: 'outline-danger',
       onClick: () => setConfirmDelete(true),
+      adminOnly: true,
     },
     {
       text: 'Edit Make',
       variant: 'outline-warning',
       onClick: () => setShowEditModal(true),
+      adminOnly: true,
     },
     {
       text: 'Add Camera',
       variant: 'outline-success',
       onClick: () => setShowNewCameraModal(true),
+      adminOnly: true,
     },
   ];
 
