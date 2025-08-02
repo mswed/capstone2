@@ -165,7 +165,7 @@ const MakeDetails = () => {
         title={`New Camera By ${makeData.name}`}
         form={<CameraForm onSubmit={handleNewCamera} makeData={makeData} />}
       />
-      {makeData.cameras.length > 0 && (
+      {makeData.cameras?.length > 0 && (
         <Row className="mt-3">
           <CameraList cameras={makeData.cameras} />
         </Row>

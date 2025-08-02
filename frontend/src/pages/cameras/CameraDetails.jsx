@@ -71,10 +71,7 @@ const CameraDetails = () => {
         formData.append('image', updatedCamera.image);
       }
 
-      const updatedCameraDetails = await GrumpyApi.updateCamera(
-        cameraData.id,
-        formData
-      );
+      const updatedCameraDetails = await GrumpyApi.updateCamera(cameraData.id, formData);
       setCameraData((prev) => ({ ...prev, ...updatedCameraDetails }));
 
       // Close the modal
@@ -163,11 +160,7 @@ const CameraDetails = () => {
         <Row className="g-0">
           <Col md={4}>
             <Card.Img
-              src={
-                cameraData.image
-                  ? cameraData.image
-                  : '/media/camera_images/missing_image.png'
-              }
+              src={cameraData.image ? cameraData.image : '/media/camera_images/missing_image.png'}
               alt={`Logo for ${cameraData.model}`}
               className="p-3"
               style={{
@@ -189,8 +182,7 @@ const CameraDetails = () => {
 
                 <dt className="col-sm-4">Max Filmback:</dt>
                 <dd className="col-sm-8">
-                  {cameraData.maxFilmbackWidth}mm x{' '}
-                  {cameraData.maxFilmbackHeight}mm
+                  {cameraData.maxFilmbackWidth}mm x {cameraData.maxFilmbackHeight}mm
                 </dd>
 
                 <dt className="col-sm-4">Max Resolution:</dt>
@@ -221,36 +213,19 @@ const CameraDetails = () => {
         show={showEditCameraModal}
         onHide={() => setShowEditCameraModal(false)}
         title={`Edit ${cameraData.makeName} ${cameraData.model}`}
-        form={
-          <CameraForm
-            onSubmit={handleEditCamera}
-            camData={cameraData}
-            buttonLabel="Update"
-          />
-        }
+        form={<CameraForm onSubmit={handleEditCamera} camData={cameraData} buttonLabel="Update" />}
       />
       <ModalWindow
         show={showNewFormatModal}
         onHide={() => setShowNewFormatModal(false)}
         title={`Add format to ${cameraData.make_name} ${cameraData.model}`}
-        form={
-          <FormatForm
-            onSubmit={handleAddFormat}
-            sources={sources}
-            onSourceAdded={handleAddSource}
-          />
-        }
+        form={<FormatForm onSubmit={handleAddFormat} sources={sources} onSourceAdded={handleAddSource} />}
       />
-      {cameraData.formats.length > 0 && (
+      {cameraData.formats?.length > 0 && (
         <Row className="mt-3">
           <Col>
             <Row>
-              <LocalSearchForm
-                fields={['imageFormat', 'imageAspect', 'formatName']}
-                targetArray={formatsData}
-                setTargetArray={setFormatsData}
-                originalArray={cameraData.formats}
-              />
+              <LocalSearchForm fields={['imageFormat', 'imageAspect', 'formatName']} targetArray={formatsData} setTargetArray={setFormatsData} originalArray={cameraData.formats} />
             </Row>
             <Row>
               <FormatList formats={formatsData} />
