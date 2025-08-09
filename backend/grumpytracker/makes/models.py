@@ -32,6 +32,8 @@ class Make(models.Model):
             # This is a file added via the API
             make.logo.save(logo_file.name, logo_file, save=True)
 
+        return make
+
     def update_logo(self, logo_file):
         self.logo.save(logo_file.name, logo_file, save=True)
 

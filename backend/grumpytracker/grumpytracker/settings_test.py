@@ -1,11 +1,11 @@
-from .settings import *  # We import our existing settings
+from .settings import *
 from decouple import config
 
 # Override the database entry
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "name": "grumpytracker_test_db",
+        "NAME": "grumpytracker_test_db",
         "USER": config("DB_USER"),
         "PASSWORD": config("DB_PASSWORD"),
         "HOST": config("DB_HOST"),
@@ -16,6 +16,7 @@ DATABASES = {
 }
 
 # Override the media root
+# TODO: Decide if to keep this here or just user the override_settings decorator in tests
 MEDIA_ROOT = BASE_DIR / "test_media"
 MEDIA_URL = "/test_media"
 

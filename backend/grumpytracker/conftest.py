@@ -4,7 +4,6 @@ Test configuration for pytest-django
 
 import os
 import django
-from django.conf import settings
 
 
 def pytest_configure():
