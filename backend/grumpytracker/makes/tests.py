@@ -1,52 +1,6 @@
 import pytest
-import tempfile
-import shutil
-from PIL import Image
-from io import BytesIO
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from makes.models import Make
-
-
-@pytest.fixture
-def sample_uploaded_file():
-    """
-    Create a sample uploaded file
-    """
-
-    # Create a red square
-    image = Image.new("RGB", (100, 100), color="red")
-    image_io = BytesIO()
-    image.save(image_io, format="PNG")
-    image_io.seek(0)
-
-    return SimpleUploadedFile(
-        name="test_logo.png", content=image_io.getvalue(), content_type="image/png"
-    )
-
-
-@pytest.fixture
-def sample_image_file(tmp_path):
-    """
-    Create a sample image on disk
-    """
-
-    # Create a blue square
-    image = Image.new("RGB", (100, 100), color="blue")
-    image_path = tmp_path / "logo_on_disk.png"
-    image.save(image_path, format="png")
-
-    return str(image_path)
-
-
-@pytest.fixture
-def temp_media_dir():
-    """
-    Create a media directory for testing
-    """
-    temp_dir = tempfile.mkdtemp()
-    yield temp_dir
-    shutil.rmtree(temp_dir)
 
 
 @pytest.mark.django_db
@@ -174,10 +128,16 @@ class TestMakeModel:
         assert "test_logo" in make.logo.name
 
     def test_make_str(self):
+        """
+        The string representation of a make is its name
+        """
         make = Make(name="Sony")
         assert str(make) == "Sony"
 
     def test_audit_fields(self):
+        """
+        We auto update audit fields on creation
+        """
         make = Make.objects.create(name="DJI", website="https://www.dji.com")
 
         assert make.created_at is not None
@@ -191,6 +151,9 @@ class TestMakeModel:
         assert make.updated_at > original_updated_at
 
     def test_as_dict_without_logo(self):
+        """
+        Can we create a make without a logo?
+        """
         make = Make.objects.create(
             name="Panasonic", website="https://www.panasonic.com"
         )
@@ -206,6 +169,9 @@ class TestMakeModel:
         assert result["cameras_count"] == 0
 
     def test_with_cameras(self):
+        """
+        A make should return cameras that are attached to it (or an empty list in this case)
+        """
         make = Make.objects.create(name="Fujifilm", website="https://www.fujifilm.com")
         result = make.with_cameras()
 

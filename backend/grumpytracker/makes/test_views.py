@@ -1,18 +1,7 @@
 import pytest
-import json
-from django.test import Client
 from django.urls import reverse
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
-from PIL import Image
-from io import BytesIO
 from makes.models import Make
-from .test_fixtures import (
-    multiple_makes,
-    sample_uploaded_file,
-    regular_user,
-    single_make,
-)
 from django.test.client import encode_multipart, BOUNDARY
 
 User = get_user_model()
@@ -65,6 +54,9 @@ class TestMakeListView:
 
     @pytest.mark.django_db
     def test_create_make_no_logo(self, admin_client):
+        """
+        Can we create a make without a logo?
+        """
         data = {"name": "Arri", "website": "https://www.arri.com"}
         res = admin_client.post(reverse("makes"), data)
 
@@ -79,6 +71,9 @@ class TestMakeListView:
 
     @pytest.mark.django_db
     def test_create_make_with_logo(self, admin_client, sample_uploaded_file):
+        """
+        Can we create a make with a logo?
+        """
         data = {
             "name": "Arri With Logo",
             "website": "https://www.arri.com",
@@ -98,6 +93,9 @@ class TestMakeListView:
 
     @pytest.mark.django_db
     def test_create_make_with_missing_fields(self, admin_client):
+        """
+        Missing required fields should return an error
+        """
         data = {
             "name": "Incomplete Make",
         }
@@ -168,7 +166,7 @@ class TestMakeDetailsView:
     @pytest.mark.django_db
     def test_get_make_details_not_found(self, client):
         """
-        Test that we get a 404 when we look for a Make that does not exist
+        When we get a make that does not exist should get a 404
         """
         res = client.get(reverse("make", args=[9999]))
 
@@ -176,6 +174,9 @@ class TestMakeDetailsView:
 
     @pytest.mark.django_db
     def test_patch_make_details_no_logo(self, admin_client, single_make):
+        """
+        We should get the make details even if it has no logo
+        """
         update = {"name": "Updated Make", "website": "https://www.updated-make.com"}
         res = admin_client.patch(
             reverse("make", args=[single_make.id]),
@@ -197,6 +198,9 @@ class TestMakeDetailsView:
     def test_patch_make_details_with_logo(
         self, admin_client, single_make, sample_uploaded_file
     ):
+        """
+        We should be able to update a make with a new logo
+        """
         updated_data = {
             "name": "Updated Make",
             "website": "https://www.updated-make.com",
@@ -229,6 +233,9 @@ class TestMakeDetailsView:
 
     @pytest.mark.django_db
     def test_patch_make_details_not_authenticated(self, client, single_make):
+        """
+        We can not update a make if we are not logged in
+        """
         update = {"name": "Updated Make", "website": "https://www.updated-make.com"}
         res = client.patch(
             reverse("make", args=[single_make.id]),
@@ -242,6 +249,9 @@ class TestMakeDetailsView:
 
     @pytest.mark.django_db
     def test_patch_make_details_not_admin(self, client, single_make, regular_user):
+        """
+        Regular users are not allowd to update makes
+        """
         # We can use our regular user fixture to log in
         client.force_login(regular_user)
 
@@ -262,6 +272,9 @@ class TestMakeDetailsView:
 
     @pytest.mark.django_db
     def test_delete_make(self, admin_client, single_make):
+        """
+        We should be able to delete a make
+        """
         make_id = single_make.id
         res = admin_client.delete(reverse("make", args=[single_make.id]))
 
@@ -274,12 +287,18 @@ class TestMakeDetailsView:
 
     @pytest.mark.django_db
     def test_delete_make_not_found(self, admin_client):
+        """
+        If we try to delete a make that does not exists we should get a 404
+        """
         res = admin_client.delete(reverse("make", args=[999]))
 
         assert res.status_code == 404
 
     @pytest.mark.django_db
     def test_delete_make_not_authenticated(self, client, single_make):
+        """
+        We can not delete a make if we are not logged in
+        """
         make_id = single_make.id
         res = client.delete(reverse("make", args=[make_id]))
 
@@ -290,6 +309,9 @@ class TestMakeDetailsView:
 
     @pytest.mark.django_db
     def test_delete_make_not_admin(self, client, single_make, regular_user):
+        """
+        Regular users are not allowed to delete makes
+        """
         make_id = single_make.id
 
         # We use our regular user fixture to log in
@@ -305,6 +327,9 @@ class TestMakeDetailsView:
 class TestMakesSearchView:
     @pytest.mark.django_db
     def test_search_makes(self, client, multiple_makes):
+        """
+        We should be able to search makes based on their names
+        """
         res = client.get(reverse("search_makes", query={"q": "Canon"}))
 
         assert res.status_code == 200
@@ -320,6 +345,10 @@ class TestMakesSearchView:
 
     @pytest.mark.django_db
     def test_search_makes_partial(self, client, multiple_makes):
+        """
+        If we search for a part of a name we should get all results that contain that
+        partial string
+        """
         # Create more makes for partial search
         (Make.objects.create(name="Canon EOS", website="https://www.canon.com"),)
         (Make.objects.create(name="Canon PowerShot", website="https://www.canon.com"),)
@@ -338,6 +367,9 @@ class TestMakesSearchView:
 
     @pytest.mark.django_db
     def test_search_makes_case_insensitive(self, client, multiple_makes):
+        """
+        Search should be case insensitive
+        """
         res = client.get(reverse("search_makes", query={"q": "CANON"}))
 
         assert res.status_code == 200
@@ -349,6 +381,9 @@ class TestMakesSearchView:
 
     @pytest.mark.django_db
     def test_search_makes_no_results(self, client, multiple_makes):
+        """
+        If no results are found we should get an empty string
+        """
         res = client.get(reverse("search_makes", query={"q": "fake make"}))
 
         assert res.status_code == 200
@@ -359,8 +394,12 @@ class TestMakesSearchView:
 
     @pytest.mark.django_db
     def test_search_makes_no_query(self, client, multiple_makes):
+        """
+        No query should return an error
+        """
         res = client.get(reverse("search_makes"))
 
+        # TODO: Shouldn't this return 400?
         assert res.status_code == 200
 
         # Check that we got an error
@@ -370,8 +409,12 @@ class TestMakesSearchView:
 
     @pytest.mark.django_db
     def test_search_makes_empty_query(self, client, multiple_makes):
+        """
+        Empty queries should return an error?
+        """
         res = client.get(reverse("search_makes", query={"q": ""}))
 
+        # TODO: Shouldn't this return 400?
         assert res.status_code == 200
 
         # Check that we found the correct make
