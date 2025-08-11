@@ -1,5 +1,4 @@
 import pytest
-from django.test import override_settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from cameras.models import Camera
 
@@ -68,7 +67,6 @@ class TestCameraModel:
         assert camera.notes == ""
         assert camera.discontinued is False
 
-    @override_settings(MEDIA_ROOT="/tmp/test_media")
     def test_camera_with_image_creation(
         self, single_make, sample_image_file, temp_media_dir
     ):
@@ -96,7 +94,6 @@ class TestCameraModel:
         # Finally check that we actually created a file
         assert camera.image.file is not None
 
-    @override_settings(MEDIA_ROOT="/tmp/test_media")
     def test_camera_with_missing_image_creation(self, single_make):
         """
         Test Camea creation where the provided logo does not exist on disk
@@ -117,7 +114,6 @@ class TestCameraModel:
         assert camera.model == "Alexa 35"
         assert not camera.image or camera.image is None
 
-    @override_settings(MEDIA_ROOT="/tmp/test_media")
     def test_camera_with_uploaded_image_creation(
         self, single_make, sample_uploaded_file, temp_media_dir
     ):

@@ -1,5 +1,4 @@
 import pytest
-from django.test import override_settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from makes.models import Make
 
@@ -30,7 +29,6 @@ class TestMakeModel:
         assert make.name == "RED"
         assert make.website == ""
 
-    @override_settings(MEDIA_ROOT="/tmp/test_media")
     def test_make_with_logo_creation(self, sample_image_file, temp_media_dir):
         """
         Test Make creation with logo from disk (local creation)
@@ -48,7 +46,6 @@ class TestMakeModel:
         # Finally check that we actually created a file
         assert make.logo.file is not None
 
-    @override_settings(MEDIA_ROOT="/tmp/test_media")
     def test_make_with_missing_logo_creation(self):
         """
         Test Make creation where the provided logo does not exist on disk
@@ -63,7 +60,6 @@ class TestMakeModel:
         assert make.website == "https://www.cannon.com"
         assert not make.logo or make.logo is None
 
-    @override_settings(MEDIA_ROOT="/tmp/test_media")
     def test_make_with_uploaded_logo_creation(
         self, sample_uploaded_file, temp_media_dir
     ):
