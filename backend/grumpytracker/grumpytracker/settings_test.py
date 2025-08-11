@@ -1,3 +1,5 @@
+import os
+import tempfile
 from .settings import *
 from decouple import config
 
@@ -17,8 +19,8 @@ DATABASES = {
 
 # Override the media root
 # TODO: Decide if to keep this here or just user the override_settings decorator in tests
-MEDIA_ROOT = BASE_DIR / "test_media"
-MEDIA_URL = "/test_media"
+MEDIA_ROOT = os.path.join(tempfile.gettempdir(), "grumpytracker_test_media")
+MEDIA_URL = "/test_media/"
 
 DEBUG = True
 TESTING = True

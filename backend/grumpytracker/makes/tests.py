@@ -1,5 +1,6 @@
 import pytest
 from django.test import override_settings
+from django.core.files.uploadedfile import SimpleUploadedFile
 from makes.models import Make
 
 
@@ -42,7 +43,7 @@ class TestMakeModel:
         assert make.website == "https://www.cannon.com"
         assert make.logo is not None
         assert make.logo.name is not None
-        assert "logo_on_disk" in make.logo.name
+        assert "image_on_disk" in make.logo.name
 
         # Finally check that we actually created a file
         assert make.logo.file is not None
@@ -79,7 +80,7 @@ class TestMakeModel:
         assert make.website == "https://www.cannon.com"
         assert make.logo is not None
         assert make.logo.name is not None
-        assert "test_logo" in make.logo.name
+        assert "test_uploaded_image" in make.logo.name
 
     def test_update_logo(self, sample_uploaded_file, temp_media_dir):
         """
@@ -101,7 +102,7 @@ class TestMakeModel:
         # Confirm that the logo has been updated
         assert make.logo is not None
         assert make.logo.name is not None
-        assert "test_logo" in make.logo.name
+        assert "test_uploaded_image" in make.logo.name
 
     def test_update_and_replace_logo(self, sample_uploaded_file, temp_media_dir):
         """
@@ -125,7 +126,7 @@ class TestMakeModel:
 
         # Confirm that the logo has been updated
         assert make.logo.name != initial_logo_name
-        assert "test_logo" in make.logo.name
+        assert "test_uploaded_image" in make.logo.name
 
     def test_make_str(self):
         """

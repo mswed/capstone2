@@ -1,6 +1,7 @@
 import os
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.core.files import File
 from makes.models import Make
 from typing import Dict, Any
 
@@ -62,10 +63,12 @@ class Camera(models.Model):
         if image_path and os.path.exists(image_path):
             # This is a local file used during seeding
             with open(image_path, "rb") as f:
-                camera.logo.save(os.path.basename(image_path), File(f), save=True)
+                camera.image.save(os.path.basename(image_path), File(f), save=True)
         elif image_file:
             # This is a file added via the API
-            camera.logo.save(image_file.name, image_file, save=True)
+            camera.image.save(image_file.name, image_file, save=True)
+
+        return camera
 
     def update_image(self, image_file):
         self.image.save(image_file.name, image_file, save=True)
