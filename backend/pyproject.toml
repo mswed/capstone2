@@ -18,3 +18,13 @@ dependencies = [
     "python-decouple>=3.8",
     "requests>=2.32.3",
 ]
+
+[dependency-groups]
+dev = [
+    "factory-boy>=3.3.3",
+    "pillow>=11.2.1",
+    "psycopg2-binary>=2.9.10",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "pytest-django>=4.11.1",
+]
