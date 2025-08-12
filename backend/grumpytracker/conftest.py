@@ -83,7 +83,7 @@ def single_make():
 @pytest.fixture
 def multiple_makes():
     """
-    Create multiple makes on the database
+    Create multiple makes in the database
     """
     from makes.models import Make
 
@@ -94,6 +94,101 @@ def multiple_makes():
     ]
 
     return makes
+
+
+@pytest.fixture
+def single_camera():
+    """
+    Create a single Make in the database
+    """
+    # We import models inside the fixtures to make sure they are imported only after
+    # django is set up
+    from makes.models import Make
+    from cameras.models import Camera
+
+    make = Make.objects.create(name="RED", website="https://www.red.com")
+
+    return Camera.objects.create(
+        make=make,
+        model="KOMODO",
+        sensor_type="KOMODO® 19.9 MP Super 35mm Global Shutter CMOS",
+        sensor_size="Super 35",
+        max_filmback_width=27.03,
+        max_filmback_height=14.26,
+        max_image_width=6144,
+        max_image_height=3240,
+        min_frame_rate=24,
+        max_frame_rate=120,
+    )
+
+
+@pytest.fixture
+def multiple_cameras():
+    """
+    Create multiple cameras in the database
+    """
+    from makes.models import Make
+    from cameras.models import Camera
+
+    makes = [
+        Make.objects.create(name="Arri", website="https://www.arri.com"),
+        Make.objects.create(name="RED", website="https://www.red.com"),
+    ]
+    cameras_data = [
+        {
+            "make": makes[0],
+            "model": "Alexa 35",
+            "sensor_type": "Super 35 format ARRI ALEV 4 CMOS sensor with Bayer pattern color filter array",
+            "sensor_size": "Super 35",
+            "max_filmback_width": 27.99,
+            "max_filmback_height": 19.22,
+            "max_image_width": 4608,
+            "max_image_height": 3164,
+            "min_frame_rate": 0.75,
+            "max_frame_rate": 120,
+        },
+        {
+            "make": makes[0],
+            "model": "Alexa Mini LF",
+            "sensor_type": "Large Format ARRI ALEV III (A2X) CMOS sensor with Bayer pattern color filter array",
+            "sensor_size": "Large Format",
+            "max_filmback_width": 36.70,
+            "max_filmback_height": 25.54,
+            "max_image_width": 4448,
+            "max_image_height": 3096,
+            "min_frame_rate": 0.75,
+            "max_frame_rate": 90,
+            "image": "arri_alexa_mini.png",
+        },
+        {
+            "make": makes[1],
+            "model": "KOMODO",
+            "sensor_type": "KOMODO® 19.9 MP Super 35mm Global Shutter CMOS",
+            "sensor_size": "Super 35",
+            "max_filmback_width": 27.03,
+            "max_filmback_height": 14.26,
+            "max_image_width": 6144,
+            "max_image_height": 3240,
+            "min_frame_rate": 24,
+            "max_frame_rate": 120,
+        },
+        {
+            "make": makes[1],
+            "model": "KOMODO-X",
+            "sensor_type": "KOMODO-X™ 19.9MP Super 35mm Global Shutter CMOS",
+            "sensor_size": "Super 35",
+            "max_filmback_width": 27.03,
+            "max_filmback_height": 14.26,
+            "max_image_width": 6144,
+            "max_image_height": 3240,
+            "min_frame_rate": 24,
+            "max_frame_rate": 240,
+        },
+    ]
+
+    cameras = [Camera.objects.create(**cam) for cam in cameras_data]
+
+    return cameras
 
 
 @pytest.fixture

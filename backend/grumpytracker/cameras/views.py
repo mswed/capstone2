@@ -74,6 +74,7 @@ class CamerasListView(View):
                 make=make,
                 model=data.get("model"),
                 sensor_type=data.get("sensor_type"),
+                sensor_size=data.get("sensor_size"),
                 max_filmback_width=data.get("max_filmback_width"),
                 max_filmback_height=data.get("max_filmback_height"),
                 max_image_width=data.get("max_image_width"),
