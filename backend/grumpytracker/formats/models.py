@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from cameras.models import Camera
 from sources.models import Source
+from loguru import logger
 
 
 class Format(models.Model):
@@ -36,24 +37,25 @@ class Format(models.Model):
     image_width = models.IntegerField(validators=[MinValueValidator(0)])
     image_height = models.IntegerField(validators=[MinValueValidator(0)])
 
+    pixel_aspect = models.DecimalField(
+        max_digits=4, decimal_places=2, default=1.0, help_text="Pixel aspect"
+    )
+
     # Anamorphic information
     is_anamorphic = models.BooleanField(
         default=False, help_text="Is this format anamorphic?"
-    )
-
-    anamorphic_squeeze = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
-        default=1.0,
-        help_text="Lens anamorphic factor (2.0 is the most common but can me 1.8, 1.33, etc)",
     )
 
     is_desqueezed = models.BooleanField(
         default=False, help_text="Has this footage already beed desqueezed in-camera?"
     )
 
-    pixel_aspect = models.DecimalField(
-        max_digits=4, decimal_places=2, default=1.0, help_text="Pixel aspect"
+    # This field is only used to backup the pixel aspect on desqueezed anamorphic formats
+    anamorphic_squeeze = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        default=1.0,
+        help_text="Lens anamorphic factor (2.0 is the most common but can me 1.8, 1.33, etc)",
     )
 
     # 3DE information
@@ -133,10 +135,10 @@ class Format(models.Model):
             "sensor_height": self.sensor_height,
             "image_width": self.image_width,
             "image_height": self.image_height,
-            "is_anamorphic": self.is_anamorphic,
-            "anamorphic_squeeze": self.anamorphic_squeeze,
-            "is_desqueezed": self.is_desqueezed,
             "pixel_aspect": self.pixel_aspect,
+            "is_anamorphic": self.is_anamorphic,
+            "is_desqueezed": self.is_desqueezed,
+            "anamorphic_squeeze": self.anamorphic_squeeze,
             "filmback_width_3de": self.filmback_width_3de,
             "filmback_height_3de": self.filmback_height_3de,
             "distortion_model_3de": self.distortion_model_3de,
@@ -184,35 +186,21 @@ class Format(models.Model):
             # This is raw footage
             if not self.filmback_width_3de or not self.filmback_height_3de:
                 # Calculate correct filmback - simply multiply width by squeeze factor
-                self.filmback_width_3de = self.sensor_width * self.anamorphic_squeeze
+                self.filmback_width_3de = self.sensor_width * self.pixel_aspect
                 self.filmback_height_3de = self.sensor_height
+
             return False
         else:
             # This is already desqueezed footage with PAR 1.0
+            # Backup the original pixel aspect
+            self.anamorphic_squeeze = self.pixel_aspect
+
+            # Set the pixel aspect to 1
             self.pixel_aspect = 1.0
+
             if not self.filmback_width_3de or not self.filmback_height_3de:
-                # Calculate the filmback to represent the actual field of view
-
-                # The desqueezed width should be the sensor's actual field of view
-                desqueezed_width = self.sensor_width * self.anamorphic_squeeze
-
-                # Calculate the aspect ratio change from sensor to final image
-                original_aspect = self.sensor_width / self.sensor_height
-                output_aspect = self.image_width / self.image_height
-
-                # For 3.3K/4K example: (4096/1716) / (20.2/16.9) = 2.39/1.19 = 2.0
-                aspect_change = output_aspect / original_aspect
-
-                # Check if the aspect ratio changed substantially
-                if abs(aspect_change - 1.0) > 0.1:
-                    # Aspect ratio changed significantly (likely crop/reformat)
-                    # Adjust the height to represent the portion of sensor actually used
-                    self.filmback_width_3de = desqueezed_width
-                    self.filmback_height_3de = desqueezed_width / output_aspect
-                else:
-                    # Simply use desqueezed dimensions
-                    self.filmback_width_3de = desqueezed_width
-                    self.filmback_height_3de = self.sensor_height
+                # Desqueezed plates are treated like spherical plates we just set the original filmback
+                self.ensure_sperical_filmback()
 
             return True
 
@@ -237,7 +225,7 @@ class Format(models.Model):
 
                 self.tracking_workflow = (
                     "IMPORTANT: Although this footage appears with square pixels (PAR 1.0), "
-                    "it was shot in an anamorphic format and desqeezed in-camera!\n\n"
+                    "it was shot in an anamorphic format and desqueezed in-camera!\n\n"
                     "1. Import with Pixel Aspect = 1.0\n"
                     "2. Set Filmback to {:.2f} x {:.2f} mm\n"
                     "3. Use '{}' lens distortion model\n"
@@ -269,11 +257,12 @@ class Format(models.Model):
 
     def get_3de_setup_string(self) -> str:
         """Returns formatted string with complete 3DE setup values"""
+        # TODO: This is not exposed anywhere in the api
         setup = (
             f"Format: {self.image_format} {self.image_aspect} ({self.format_name})\n"
         )
         setup += f"Resolution: {self.image_width} × {self.image_height}\n"
-        setup += f"Pixel Aspect Ratio: {self.pixel_aspect_3de}\n"
+        setup += f"Pixel Aspect Ratio: {self.pixel_aspect}\n"
 
         if self.filmback_width_3de and self.filmback_height_3de:
             setup += f"Filmback: {self.filmback_width_3de:.2f} mm × {self.filmback_height_3de:.2f} mm\n"
@@ -282,8 +271,8 @@ class Format(models.Model):
             setup += f"Recommended Distortion Model: {self.distortion_model_3de}\n"
 
         if self.is_anamorphic:
-            setup += f"Anamorphic Squeeze Factor: {self.anamorphic_squeeze}\n"
             if self.is_desqueezed:
+                setup += f"Anamorphic Squeeze Factor: {self.anamorphic_squeeze}\n"
                 setup += "IMPORTANT: This is desqueezed anamorphic footage!\n"
 
         return setup
