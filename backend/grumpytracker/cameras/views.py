@@ -1,4 +1,3 @@
-from typing import List, Optional, Dict, Any
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views import View
@@ -8,8 +7,6 @@ from django.shortcuts import get_object_or_404
 from django.http.multipartparser import MultiPartParser
 from grumpytracker.utils import (
     validate_required_fields,
-    login_required,
-    require_owner_or_admin,
     require_admin,
 )
 import json

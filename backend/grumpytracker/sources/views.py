@@ -1,10 +1,11 @@
+from logging import log
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
-from grumpytracker.utils import validate_required_fields
+from grumpytracker.utils import validate_required_fields, require_admin
 import json
 from loguru import logger
 
@@ -32,6 +33,7 @@ class SourcesListView(View):
 
         return JsonResponse(data, safe=False)
 
+    @method_decorator(require_admin)
     def post(self, request) -> JsonResponse:
         try:
             data = json.loads(request.body)
@@ -68,6 +70,7 @@ class SourcesListView(View):
             )
 
         except Exception as e:
+            logger.info(f"Something went wrong {e}")
             return JsonResponse({"error": str(e)}, status=400)
 
 
@@ -88,6 +91,7 @@ class SourceDetailsView(View):
         source = get_object_or_404(Source, id=source_id)
         return JsonResponse(source.as_dict(), safe=False)
 
+    @method_decorator(require_admin)
     def patch(self, request, source_id):
         """
         Do a partial update on a source
@@ -114,6 +118,7 @@ class SourceDetailsView(View):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
+    @method_decorator(require_admin)
     def delete(self, request, source_id):
         """Handle DELETE /formats/123/"""
         source = get_object_or_404(Source, id=source_id)

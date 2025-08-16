@@ -192,6 +192,60 @@ def multiple_cameras():
 
 
 @pytest.fixture
+def single_source():
+    """
+    Create a single Source in the database
+    """
+    # We import models inside the fixtures to make sure they are imported only after
+    # django is set up
+    from sources.models import Source
+
+    return Source.objects.create(
+        name="Sample Source",
+        url="https://www.samplesource.com",
+        file_name="file_on_disk.pdf",
+        note="Nothing to see here",
+    )
+
+
+@pytest.fixture
+def multiple_sources():
+    """
+    Create multiple sources in the database
+    """
+    from sources.models import Source
+
+    makes = [
+        Source.objects.create(
+            name="Source-A",
+            url="https://www.example_a.net",
+            file_name="source_a.pdf",
+            note="source A note",
+        ),
+        Source.objects.create(
+            name="Source-B",
+            url="https://www.example_b.net",
+            file_name="source_b.pdf",
+            note="source B note",
+        ),
+        Source.objects.create(
+            name="Source-C",
+            url="https://www.example_c.org",
+            file_name="source_c.pdf",
+            note="source C note",
+        ),
+        Source.objects.create(
+            name="Source-CD",
+            url="https://www.example_d.dev",
+            file_name="source_cd.pdf",
+            note="source CD note",
+        ),
+    ]
+
+    return makes
+
+
+@pytest.fixture
 def temp_media_dir():
     """
     Create a media directory for testing
