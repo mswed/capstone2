@@ -1,6 +1,6 @@
 from typing import Dict, Any
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from cameras.models import Camera
 from sources.models import Source
 from loguru import logger
@@ -26,19 +26,21 @@ class Format(models.Model):
     format_search = models.CharField(max_length=500, blank=True)
 
     # Physical sensor info
-    sensor_width = models.DecimalField(
-        max_digits=6, decimal_places=2, validators=[MinValueValidator(0)]
+    sensor_width = models.FloatField(
+        validators=[MinValueValidator(0), MaxValueValidator(1000)]
     )
-    sensor_height = models.DecimalField(
-        max_digits=6, decimal_places=2, validators=[MinValueValidator(0)]
+    sensor_height = models.FloatField(
+        validators=[MinValueValidator(0), MaxValueValidator(1000)]
     )
 
     # Image resolution in pixels
     image_width = models.IntegerField(validators=[MinValueValidator(0)])
     image_height = models.IntegerField(validators=[MinValueValidator(0)])
 
-    pixel_aspect = models.DecimalField(
-        max_digits=4, decimal_places=2, default=1.0, help_text="Pixel aspect"
+    pixel_aspect = models.FloatField(
+        default=1.0,
+        help_text="Pixel aspect",
+        validators=[MinValueValidator(0.1), MaxValueValidator(5)],
     )
 
     # Anamorphic information
@@ -51,24 +53,18 @@ class Format(models.Model):
     )
 
     # This field is only used to backup the pixel aspect on desqueezed anamorphic formats
-    anamorphic_squeeze = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
+    anamorphic_squeeze = models.FloatField(
         default=1.0,
         help_text="Lens anamorphic factor (2.0 is the most common but can me 1.8, 1.33, etc)",
     )
 
     # 3DE information
-    filmback_width_3de = models.DecimalField(
-        max_digits=6,
-        decimal_places=3,
+    filmback_width_3de = models.FloatField(
         null=True,
         blank=True,
         help_text="3DE filmback width in mm",
     )
-    filmback_height_3de = models.DecimalField(
-        max_digits=6,
-        decimal_places=3,
+    filmback_height_3de = models.FloatField(
         null=True,
         blank=True,
         help_text="3DE filmback height in mm",

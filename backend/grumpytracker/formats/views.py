@@ -196,15 +196,16 @@ class FormatsSearchView(View):
             "source": "source__name__icontains",
             "format": "format_search__icontains",
             "image_aspect": "image_aspect__icontains",
-            "sensor_width": "sensor_width__icontains",
-            "image_width": "image_width__icontains",
-            "image_height": "image_height__icontains",
+            "sensor_width": "float",
+            "sensor_height": "float",
+            "image_width": "int",
+            "image_height": "int",
             "is_anamorphic": "bool",
-            "anamorphic_squeeze": "anamorphic_squeeze__icontains",
+            "anamorphic_squeeze": "float",
             "is_desqueezed": "bool",
-            "pixel_aspect": "pixel_aspect__icontains",
-            "filmback_width_3de": "filmback_width_3de__icontains",
-            "filmback_height_3de": "filmback_height_3de__icontains",
+            "pixel_aspect": "float",
+            "filmback_width_3de": "float",
+            "filmback_height_3de": "float",
             "distortion_model_3de": "distortion_model_3de__icontains",
             "is_downsampled": "bool",
             "is_upscaled": "bool",
@@ -215,19 +216,36 @@ class FormatsSearchView(View):
             "tracking_workflow": "tracking_workflow__icontains",
         }
 
+        # Check if any valid search terms are provided
+        valid_terms_found = False
+        for param in filter_map.keys():
+            term = request.GET.get(param)
+            if term and term.strip():  # Check for non-empty, non-whitespace terms
+                valid_terms_found = True
+                break
+
+        # If no valid search terms, return error
+        if not valid_terms_found:
+            return JsonResponse({"error": "No query provided"}, status=200)
+
         filters = {}
         for param, lookup in filter_map.items():
             term = request.GET.get(param)
-            if term:
+            if term and term.strip():  # Only process non-empty terms
                 # We found the term in the query
                 if lookup == "bool":
                     # We are looking for a boolean value
-                    bool_value = term == "true"
+                    bool_value = term.lower() == "true"
                     filters[param] = bool_value
-
+                elif lookup == "float":
+                    filters[param] = float(term)
+                elif lookup == "int":
+                    filters[param] = int(term)
                 else:
                     # We are looking for a regular value
                     filters[lookup] = term
+
+        logger.info(filters)
 
         # Start building the query by getting all cameras with JOIN on makes
         formats = Format.objects.select_related("camera", "source")

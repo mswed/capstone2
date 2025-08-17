@@ -97,7 +97,7 @@ def multiple_makes():
 
 
 @pytest.fixture
-def single_camera():
+def single_camera(db):
     """
     Create a single Make in the database
     """
@@ -123,9 +123,10 @@ def single_camera():
 
 
 @pytest.fixture
-def multiple_cameras():
+def multiple_cameras(db):
     """
     Create multiple cameras in the database
+    :param db: database markup for this function so it can be run by multiple formats
     """
     from makes.models import Make
     from cameras.models import Camera
@@ -192,9 +193,10 @@ def multiple_cameras():
 
 
 @pytest.fixture
-def single_source():
+def single_source(db):
     """
     Create a single Source in the database
+    :param db: database markup for this function so it can be run by multiple formats
     """
     # We import models inside the fixtures to make sure they are imported only after
     # django is set up
@@ -243,6 +245,107 @@ def multiple_sources():
     ]
 
     return makes
+
+
+@pytest.fixture
+def single_format(single_camera, single_source):
+    """
+    Create a single format in the database
+    """
+    # We import models inside the fixtures to make sure they are imported only after
+    # django is set up
+    from formats.models import Format
+
+    camera = single_camera
+    source = single_source
+
+    return Format.objects.create(
+        camera=camera,
+        image_format="HD",
+        image_aspect="16:9",
+        format_name="S16",
+        sensor_width=13.20,
+        sensor_height=7.43,
+        image_width=1920,
+        image_height=1080,
+        codec="ProRes",
+        source=source,
+        make_notes="Records images in 1920x1080 resolution. Uses a 1600x900 sensor center crop and scales it to 1920x1080.",
+    )
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def multiple_formats(multiple_cameras, single_source):
+    """
+    Create multiple formats in the database
+    """
+    from formats.models import Format
+
+    cameras = multiple_cameras
+    source = single_source
+
+    formats_data = [
+        {
+            "camera": cameras[0],
+            "image_format": "4.6K",
+            "image_aspect": "3:2",
+            "format_name": "Open Gate",
+            "sensor_width": 28.0,
+            "sensor_height": 19.2,
+            "image_width": 4608,
+            "image_height": 3164,
+            "codec": "ARRIRAW",
+            "source": source,
+            "make_notes": "4.6K 3:2 Open Gate provides maximum image quality, resolution, and flexibility in post for many spherical and anamorphic lenses in an image area slightly larger than traditional Super 35 film specifications.",
+            "is_downsampled": True,
+        },
+        {
+            "camera": cameras[0],
+            "image_format": "3K",
+            "image_aspect": "3:2",
+            "format_name": "Open Gate",
+            "sensor_width": 28.0,
+            "sensor_height": 19.2,
+            "image_width": 4608,
+            "image_height": 3164,
+            "codec": "ProRes",
+            "source": source,
+            "make_notes": "4.6K 3:2 Open Gate provides maximum image quality, resolution, and flexibility in post for many spherical and anamorphic lenses in an image area slightly larger than traditional Super 35 film specifications.",
+            "is_upscaled": True,
+        },
+        {
+            "camera": cameras[-1],
+            "image_format": "4K",
+            "image_aspect": "16:9",
+            "sensor_width": 16.90,
+            "sensor_height": 9.50,
+            "image_width": 3840,
+            "image_height": 2160,
+            "codec": "R3D",
+            "source": source,
+            "raw_recording_available": False,
+            "notes": "A sample note",
+        },
+        {
+            "camera": cameras[-1],
+            "image_format": "2K",
+            "image_aspect": "17:9",
+            "sensor_width": 9.01,
+            "sensor_height": 4.75,
+            "image_width": 2048,
+            "image_height": 1080,
+            "is_anamorphic": True,
+            "is_desqueezed": True,
+            "pixel_aspect": 2.0,
+            "codec": "R3D",
+            "source": source,
+        },
+    ]
+
+    formats = [Format.objects.create(**fmt) for fmt in formats_data]
+
+    return formats
 
 
 @pytest.fixture

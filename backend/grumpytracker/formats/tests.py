@@ -1,7 +1,5 @@
 import pytest
-from django.core.files.uploadedfile import SimpleUploadedFile
 from formats.models import Format
-from cameras.models import Camera
 
 
 @pytest.mark.django_db
