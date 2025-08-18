@@ -1,5 +1,4 @@
 from django.db import models
-from loguru import logger
 from formats.models import Format
 from users.models import User
 
@@ -9,20 +8,20 @@ class Project(models.Model):
 
     # Base data
     name = models.CharField(max_length=100)
-    url = models.URLField(blank=True)
+    url = models.URLField(blank=True, null=True)
     project_type = models.CharField(
         max_length=10, choices=PROJECT_TYPES, default="feature"
     )
-    description = models.CharField(max_length=500, blank=True)
-    poster_path = models.CharField(max_length=200, blank=True)
-    release_date = models.DateField(blank=True)
+    description = models.CharField(max_length=500, blank=True, null=True)
+    poster_path = models.CharField(max_length=200, blank=True, null=True)
+    release_date = models.DateField(blank=True, null=True)
     adult = models.BooleanField(default=False)
 
     # Data cache from TMDB
     tmdb_id = models.IntegerField(blank=True, null=True)
-    tmdb_original_name = models.CharField(max_length=100, blank=True)
-    genres = models.JSONField(default=list, blank=True)
-    rating = models.JSONField(default=list, blank=True)
+    tmdb_original_name = models.CharField(max_length=100, blank=True, null=True)
+    genres = models.JSONField(default=list, blank=True, null=True)
+    rating = models.JSONField(default=list, blank=True, null=True)
 
     # Relationships
     cameras = models.ManyToManyField(
@@ -57,9 +56,6 @@ class Project(models.Model):
         """
         Returns the project with its cameras and formats AND the votes on each format
         """
-        print("**************************************************")
-        print("with formats recieved user", user)
-        print("**************************************************")
         formats_with_votes = []
 
         for fmt in self.formats.all():
@@ -129,4 +125,5 @@ class Vote(models.Model):
         unique_together = ["project", "fmt", "user"]
 
     def __str__(self):
+        # TODO: This was set up like __repr__ which is technically wrong
         return f"<Vote Project: {self.project} Format: {self.fmt} User: {self.user} Vote: {self.vote_type}>"

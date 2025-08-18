@@ -275,7 +275,6 @@ def single_format(single_camera, single_source):
 
 
 @pytest.fixture
-@pytest.mark.django_db
 def multiple_formats(multiple_cameras, single_source):
     """
     Create multiple formats in the database
@@ -346,6 +345,103 @@ def multiple_formats(multiple_cameras, single_source):
     formats = [Format.objects.create(**fmt) for fmt in formats_data]
 
     return formats
+
+
+@pytest.fixture
+def single_user():
+    """
+    Create a single user for testing
+    """
+    from django.contrib.auth import get_user_model
+
+    User = get_user_model()
+
+    return User.objects.create_user(
+        username="testuser", email="test@example.com", password="testpass123"
+    )
+
+
+@pytest.fixture
+def multiple_users():
+    """
+    Create multiple users for testing
+    """
+
+    from django.contrib.auth import get_user_model
+
+    User = get_user_model()
+
+    users = []
+    for i in range(5):
+        user = User.objects.create_user(
+            username=f"testuser{i}",
+            email=f"test{i}@example.com",
+            password="testpass123",
+        )
+        users.append(user)
+    return users
+
+
+@pytest.fixture
+def multiple_projects():
+    """
+    Create multiple projects in the database
+    """
+    from projects.models import Project
+
+    projects_data = [
+        {
+            "name": "One Piece",
+            "project_type": "episodic",
+            "description": "A fun pirates show",
+            "poster_path": "https://www.onepieceposter.com",
+            "release_date": "2025-01-02",
+            "adult": False,
+            "tmdb_id": 123456,
+            "tmdb_original_name": "Also One Piece",
+            "genres": [],
+            "rating": "PG-13",
+        },
+        {
+            "name": "Daredevil",
+            "project_type": "feature",
+            "description": "A not so great movie",
+            "poster_path": "https://www.daredevilmovie.com",
+            "release_date": "2004-07-08",
+            "adult": False,
+            "tmdb_id": 654321,
+            "tmdb_original_name": "You guessed it, daredevil",
+            "genres": [],
+            "rating": "R",
+        },
+    ]
+
+    projects = [Project.objects.create(**project) for project in projects_data]
+
+    return projects
+
+
+@pytest.fixture
+def single_project():
+    """
+    Create a single project in the database
+    """
+    # We import models inside the fixtures to make sure they are imported only after
+    # django is set up
+    from projects.models import Project
+
+    return Project.objects.create(
+        name="Edge of Tomorrow",
+        project_type="feature",
+        description="A really fun movie",
+        poster_path="https://www.edgeoftomorrow.com",
+        release_date="2014-06-06",
+        adult=False,
+        tmdb_id=137113,
+        tmdb_original_name="Edge of Tomorrow",
+        genres=["action", "sci-fi"],
+        rating="PG-13",
+    )
 
 
 @pytest.fixture

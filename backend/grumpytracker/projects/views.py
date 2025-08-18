@@ -60,6 +60,9 @@ class ProjectsListView(View):
             if not tmdb_id:
                 return JsonResponse({"error": "tmdb_id is required"}, status=400)
 
+            if not project_type:
+                return JsonResponse({"error": "project_type is required"}, status=400)
+
             project, created = get_or_create_project_from_tmdb(tmdb_id, project_type)
             if not project:
                 # Something went wrong while trying to get the project
@@ -87,16 +90,9 @@ class ProjectDetailsView(View):
         """
         project = get_object_or_404(Project, id=project_id)
         current_user = request.user
-        print("-----------------------------------")
-        print(request.user)
-        print(current_user.username)
-        print(current_user.id)
         if current_user.id is None:
             current_user = None
 
-        print("Current user is", current_user)
-
-        print("-----------------------------------")
         return JsonResponse(project.with_formats(user=current_user), safe=False)
 
     @method_decorator(require_admin)
@@ -177,6 +173,9 @@ def search(request):
             "projects": {"local": found_local_projects, "remote": found_remote_projects}
         }
         return JsonResponse(full_result, safe=False)
+
+    else:
+        return JsonResponse({"error": "No query provided"}, safe=False)
 
 
 @method_decorator(csrf_exempt, name="dispatch")
