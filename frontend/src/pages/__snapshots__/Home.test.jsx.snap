@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Home component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="mt-3 container"
+  >
+    <h3>
+      30 Projects
+    </h3>
+    <h3>
+      3 Makes
+    </h3>
+    <h3>
+      10 Cameras
+    </h3>
+    <h3>
+      200 Formats
+    </h3>
+    <h3>
+      Endless complaints... 
+    </h3>
+  </div>
+</DocumentFragment>
+`;

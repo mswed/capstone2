@@ -1,0 +1,82 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MakeList component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="container"
+  >
+    <div
+      class="mt-3 row"
+    >
+      <div
+        class="p-3 col-md-4 col-sm-6 col-12"
+      >
+        <a
+          class="text-decoration-none"
+          data-discover="true"
+          href="/makes/1"
+        >
+          <div
+            class="mt-3 h-100 shadow-lg card"
+          >
+            <img
+              alt="Logo for ARRI"
+              class="card-img-top w-50 mx-auto mt-3"
+              src="arri_logo.png"
+              style="height: 150px; object-fit: contain;"
+            />
+            <div
+              class="card-body"
+            >
+              <div
+                class="h5 card-title h5"
+              >
+                ARRI
+              </div>
+            </div>
+            <div
+              class="text-muted card-footer"
+            >
+              5 Cameras
+            </div>
+          </div>
+        </a>
+      </div>
+      <div
+        class="p-3 col-md-4 col-sm-6 col-12"
+      >
+        <a
+          class="text-decoration-none"
+          data-discover="true"
+          href="/makes/2"
+        >
+          <div
+            class="mt-3 h-100 shadow-lg card"
+          >
+            <img
+              alt="Logo for RED"
+              class="card-img-top w-50 mx-auto mt-3"
+              src="red_logo.png"
+              style="height: 150px; object-fit: contain;"
+            />
+            <div
+              class="card-body"
+            >
+              <div
+                class="h5 card-title h5"
+              >
+                RED
+              </div>
+            </div>
+            <div
+              class="text-muted card-footer"
+            >
+              2 Cameras
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

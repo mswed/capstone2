@@ -1,5 +1,5 @@
 import axios from 'axios';
-import humps from 'humps';
+import humps, { camelizeKeys } from 'humps';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000/';
 
@@ -33,7 +33,12 @@ class GrumpyApi {
       return (await axios({ url, method, data, params, headers })).data;
     } catch (err) {
       console.error('API Error:', err.response);
-      let message = err.response.data.error.message;
+
+      // Catch connection errors
+      if (!err.response) {
+        throw ['Network error: unable to connect to server '];
+      }
+      let message = err.response.data?.error?.message || 'Something went wrong';
       throw Array.isArray(message) ? message : [message];
     }
   }
@@ -50,7 +55,7 @@ class GrumpyApi {
 
   static async getStats() {
     let res = await this.apiCall(`api/v1/stats/`);
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /*
@@ -65,7 +70,7 @@ class GrumpyApi {
 
   static async getMakes() {
     let res = await this.apiCall(`api/v1/makes/`);
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -76,7 +81,7 @@ class GrumpyApi {
 
   static async getMakeDetails(makeId) {
     let res = await this.apiCall(`api/v1/makes/${makeId}`);
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -88,7 +93,7 @@ class GrumpyApi {
 
   static async addMake(formData) {
     let res = await this.apiCall(`api/v1/makes/`, formData, 'post');
-    return res;
+    return camelizeKeys(res);
   }
 
   /**
@@ -101,7 +106,7 @@ class GrumpyApi {
 
   static async updateMake(makeId, updatedData) {
     let res = await this.apiCall(`api/v1/makes/${makeId}`, updatedData, 'patch');
-    return res.make;
+    return camelizeKeys(res.make);
   }
 
   /**
@@ -113,7 +118,7 @@ class GrumpyApi {
 
   static async deleteMake(makeId) {
     let res = await this.apiCall(`api/v1/makes/${makeId}`, {}, 'delete');
-    return res;
+    return humps.camelizeKeys(res);
   }
   /*
    ****************************** Camera Routes **************************************************
@@ -127,7 +132,7 @@ class GrumpyApi {
 
   static async getCameras() {
     let res = await this.apiCall(`api/v1/cameras/`);
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -144,7 +149,7 @@ class GrumpyApi {
     const q = query;
     let res = await this.apiCall(`api/v1/cameras/search`, { q });
 
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -168,7 +173,7 @@ class GrumpyApi {
 
   static async addCamera(cameraData) {
     let res = await this.apiCall(`api/v1/cameras/`, cameraData, 'post');
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -193,7 +198,7 @@ class GrumpyApi {
 
   static async deleteCamera(cameraId) {
     let res = await this.apiCall(`api/v1/cameras/${cameraId}`, {}, 'delete');
-    return res;
+    return humps.camelizeKeys(res.camera);
   }
 
   /*
@@ -249,7 +254,6 @@ class GrumpyApi {
       return [];
     }
 
-    console.log(query);
     let res = await this.apiCall(`api/v1/formats/search`, { ...query });
 
     return res;
@@ -276,7 +280,7 @@ class GrumpyApi {
    */
   static async deleteFormat(formatId) {
     let res = await this.apiCall(`api/v1/formats/${formatId}`, {}, 'delete');
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /*
@@ -303,7 +307,7 @@ class GrumpyApi {
 
   static async getProjects() {
     let res = await this.apiCall(`api/v1/projects/`);
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -315,7 +319,7 @@ class GrumpyApi {
 
   static async deleteProject(projectId) {
     let res = await this.apiCall(`api/v1/projects/${projectId}`, {}, 'delete');
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**
@@ -332,7 +336,7 @@ class GrumpyApi {
     const q = query;
     let res = await this.apiCall(`api/v1/projects/search`, { q });
     if (res) {
-      return res.projects;
+      return humps.camelizeKeys(res);
     } else {
       return [];
     }
@@ -349,7 +353,7 @@ class GrumpyApi {
   static async addTMDBProject(tmdbId, projectType) {
     let res = await this.apiCall(`api/v1/projects/`, { tmdb_id: tmdbId, project_type: projectType }, 'post');
     if (res) {
-      return res;
+      return humps.camelizeKeys(res);
     } else {
       return [];
     }
@@ -365,7 +369,7 @@ class GrumpyApi {
   static async addFormatToProject(projectId, formatId) {
     let res = await this.apiCall(`api/v1/projects/${projectId}/formats/`, { format_id: formatId }, 'post');
     if (res) {
-      return res;
+      return humps.camelizeKeys(res);
     } else {
       return [];
     }
@@ -382,7 +386,7 @@ class GrumpyApi {
   static async voteOnProjectFormat(projectId, formatId, vote) {
     let res = await this.apiCall(`api/v1/projects/${projectId}/formats/${formatId}`, { vote }, 'patch');
     if (res) {
-      return res;
+      return humps.camelizeKeys(res);
     } else {
       return [];
     }
@@ -450,7 +454,7 @@ class GrumpyApi {
    */
   static async deleteSource(sourceId) {
     let res = await this.apiCall(`api/v1/sources/${sourceId}`, {}, 'delete');
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /*
@@ -477,7 +481,7 @@ class GrumpyApi {
   static async signup(userData) {
     const snakeCaseData = humps.decamelizeKeys(userData);
     let res = await this.apiCall(`api/v1/users/`, { ...snakeCaseData }, 'post');
-    return res;
+    return humps.camelizeKeys(res);
   }
 
   /**

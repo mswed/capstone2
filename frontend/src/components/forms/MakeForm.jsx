@@ -1,9 +1,7 @@
 import { Form, Button } from 'react-bootstrap';
-import { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
+import { useState } from 'react';
 
-const MakeForm = ({ onSubmit, makeData }) => {
+const MakeForm = ({ onSubmit, makeData, buttonLabel = 'Add' }) => {
   const INITIAL_STATE = {
     name: makeData?.name ? makeData.name : '',
     website: makeData?.website ? makeData.website : '',
@@ -41,7 +39,7 @@ const MakeForm = ({ onSubmit, makeData }) => {
         <Form.Control type="file" name="logo" onChange={handleChange} />
       </Form.Group>
       <Button type="submit" className="w-100">
-        Add
+        {buttonLabel}
       </Button>
     </Form>
   );

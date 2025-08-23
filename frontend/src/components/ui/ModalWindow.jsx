@@ -1,4 +1,4 @@
-import { Col, Container, Modal, Row } from 'react-bootstrap';
+import { Container, Modal } from 'react-bootstrap';
 
 const ModalWindow = ({ show, onHide, title, form }) => {
   return (

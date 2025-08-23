@@ -158,7 +158,12 @@ const MakeDetails = () => {
         onConfirm={handleDeleteMake}
         onCancel={() => setConfirmDelete(false)}
       />
-      <ModalWindow show={showEditModal} onHide={() => setShowEditModal(false)} title={`Edit ${makeData.name}`} form={<MakeForm onSubmit={handleEditMake} makeData={makeData} />} />
+      <ModalWindow
+        show={showEditModal}
+        onHide={() => setShowEditModal(false)}
+        title={`Edit ${makeData.name}`}
+        form={<MakeForm onSubmit={handleEditMake} makeData={makeData} buttonLabel="Update" />}
+      />
       <ModalWindow
         show={showNewCameraModal}
         onHide={() => setShowNewCameraModal(false)}

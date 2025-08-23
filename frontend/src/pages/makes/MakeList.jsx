@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import GrumpyApi from '../../services/api.js';
-import MakeCard from '../../features/makes/components/MakeCard';
+import MakeCard from '../../features/makes/components/MakeCard.jsx';
 import ActionBar from '../../components/ui/ActionBar.jsx';
 import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import MakeForm from '../../components/forms/MakeForm.jsx';
@@ -61,7 +61,7 @@ const MakeList = () => {
         {makes.map((make) => (
           <Col key={make.id} xs={12} sm={6} md={4} className="p-3">
             <Link to={`/makes/${make.id}`} className="text-decoration-none">
-              <MakeCard name={make.name} logo={make.logo} camCount={make.cameras_count} />
+              <MakeCard name={make.name} logo={make.logo} camCount={make.camerasCount} />
             </Link>
           </Col>
         ))}
