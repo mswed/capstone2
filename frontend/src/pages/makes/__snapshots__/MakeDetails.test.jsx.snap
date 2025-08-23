@@ -84,12 +84,14 @@ exports[`MakeDetails component > matches snapshot 1`] = `
               <td>
                 Alexa 35
               </td>
-              <td />
               <td>
-                mm x mm
+                Super 35 format ARRI ALEV 4 CMOS sensor with Bayer pattern color filter array
               </td>
               <td>
-                 x 
+                27.99mm x 19.22mm
+              </td>
+              <td>
+                4608 x 3164
               </td>
               <td>
                 <a
@@ -112,12 +114,14 @@ exports[`MakeDetails component > matches snapshot 1`] = `
               <td>
                 Alexa Mini LF
               </td>
-              <td />
               <td>
-                mm x mm
+                Large Format ARRI ALEV III (A2X) CMOS sensor with Bayer pattern color filter array
               </td>
               <td>
-                 x 
+                36.7mm x 25.54mm
+              </td>
+              <td>
+                 x 3096
               </td>
               <td>
                 <a

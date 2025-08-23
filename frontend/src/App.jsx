@@ -4,7 +4,7 @@ import './styles/App.css';
 import { AuthProvider } from './context/AuthContext';
 import NavBar from './components/layout/NavBar';
 import Home from './pages/Home';
-import Makes from './pages/makes/MakeList.jsx';
+import Makes from './pages/makes/Makes.jsx';
 import MakeDetails from './pages/makes/MakeDetails';
 import Cameras from './pages/cameras/Cameras';
 import CameraDetails from './pages/cameras/CameraDetails';

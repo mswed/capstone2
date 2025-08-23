@@ -6,14 +6,14 @@ const CameraRow = ({ camera, showMake = true }) => {
       <td>
         <img src={camera.image ? camera.image : '/media/camera_images/missing_image.png'} alt={`Image of ${camera.model}`} style={{ width: '60px' }} />
       </td>
-      {showMake && <td>{camera.make_name}</td>}
+      {showMake && <td>{camera.makeName}</td>}
       <td>{camera.model}</td>
-      <td>{camera.sensor_type}</td>
+      <td>{camera.sensorType}</td>
       <td>
-        {camera.max_filmback_width}mm x {camera.max_filmback_height}mm
+        {camera.maxFilmbackWidth}mm x {camera.maxFilmbackHeight}mm
       </td>
       <td>
-        {camera.max_image_width} x {camera.max_image_height}
+        {camera.maxImageWidth} x {camera.maxImageHeight}
       </td>
       <td>
         <Link to={`/cameras/${camera.id}`} className="btn btn-outline-primary btn-sm">

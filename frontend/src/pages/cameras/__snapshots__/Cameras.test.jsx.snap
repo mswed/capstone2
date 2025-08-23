@@ -1,0 +1,97 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Cameras component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="container"
+  >
+    <form
+      class=""
+    >
+      <div
+        class="my-3 input-group"
+      >
+        <input
+          class="form-control"
+          placeholder="Enter search term..."
+          value=""
+        />
+        <button
+          class="btn btn-primary"
+          type="submit"
+        >
+          Search!
+        </button>
+      </div>
+    </form>
+    <div
+      class="table-responsive"
+    >
+      <table
+        class="table table-striped table-hover"
+      >
+        <thead>
+          <tr>
+            <th>
+              Image
+            </th>
+            <th>
+              Make
+            </th>
+            <th>
+              Model
+            </th>
+            <th>
+              Sensor Type
+            </th>
+            <th>
+              Max Filmback Size
+            </th>
+            <th>
+              Max Resolution
+            </th>
+            <th>
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <img
+                alt="Image of Alexa 35"
+                src="/media/camera_images/missing_image.png"
+                style="width: 60px;"
+              />
+            </td>
+            <td>
+              ARRI
+            </td>
+            <td>
+              Alexa 35
+            </td>
+            <td>
+              Super 35 format ARRI ALEV 4 CMOS sensor with Bayer pattern color filter array
+            </td>
+            <td>
+              27.99mm x 19.22mm
+            </td>
+            <td>
+              4608 x 3164
+            </td>
+            <td>
+              <a
+                class="btn btn-outline-primary btn-sm"
+                data-discover="true"
+                href="/cameras/1"
+              >
+                View
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</DocumentFragment>
+`;

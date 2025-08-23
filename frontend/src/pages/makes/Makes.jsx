@@ -8,7 +8,7 @@ import ModalWindow from '../../components/ui/ModalWindow.jsx';
 import MakeForm from '../../components/forms/MakeForm.jsx';
 import { AuthContext } from '../../context/AuthContext.jsx';
 
-const MakeList = () => {
+const Makes = () => {
   const [makes, setMakes] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const { token } = useContext(AuthContext);
@@ -70,4 +70,4 @@ const MakeList = () => {
   );
 };
 
-export default MakeList;
+export default Makes;

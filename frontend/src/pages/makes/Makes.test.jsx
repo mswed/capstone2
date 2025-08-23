@@ -1,7 +1,7 @@
 import { vi, it, expect, beforeEach } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import MakeList from './MakeList.jsx';
+import Makes from './Makes.jsx';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import { Component } from 'react';
 
@@ -46,7 +46,7 @@ describe('MakeList component', () => {
     return render(
       <MemoryRouter>
         <AuthContext.Provider value={authValue}>
-          <MakeList />
+          <Makes />
         </AuthContext.Provider>
       </MemoryRouter>
     );
