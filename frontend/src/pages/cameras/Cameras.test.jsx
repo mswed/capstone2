@@ -1,5 +1,5 @@
 import { vi, it, expect, beforeEach } from 'vitest';
-import { findByText, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Cameras from './Cameras.jsx';
 import { AuthContext } from '../../context/AuthContext.jsx';

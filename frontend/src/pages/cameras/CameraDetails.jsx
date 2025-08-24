@@ -175,7 +175,7 @@ const CameraDetails = () => {
               <Card.Title>{cameraData.model}</Card.Title>
               <dl className="row">
                 <dt className="col-sm-4">Make:</dt>
-                <dd className="col-sm-8">{cameraData.make_name}</dd>
+                <dd className="col-sm-8">{cameraData.makeName}</dd>
 
                 <dt className="col-sm-4">Sensor Type:</dt>
                 <dd className="col-sm-8">{cameraData.sensorType}</dd>
