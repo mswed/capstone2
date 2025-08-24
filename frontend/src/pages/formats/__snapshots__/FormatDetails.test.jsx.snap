@@ -1,0 +1,302 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FormatDetails component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="container"
+  >
+    <div
+      class="shadow-lg rounded-0 rounded-bottom card"
+    >
+      <div
+        class="g-0 row"
+      >
+        <div
+          class="col-md-3"
+        >
+          <img
+            alt="Film strip image"
+            class="card-img p-3"
+            src="/film.png"
+            style="object-fit: contain; max-height: 250px; max-width: 100%;"
+          />
+        </div>
+        <div
+          class="col-md-4"
+        >
+          <div
+            class="text-start card-body"
+          >
+            <div
+              class="card-title h5"
+            >
+              4.6K 3:2 Open Gate
+            </div>
+            <div>
+              <dl
+                class="row"
+              >
+                <dt
+                  class="col-sm-4"
+                >
+                  Make:
+                </dt>
+                <dd
+                  class="col-sm-8"
+                >
+                  ARRI
+                </dd>
+                <dt
+                  class="col-sm-4"
+                >
+                  Model:
+                </dt>
+                <dd
+                  class="col-sm-8"
+                >
+                  Alexa 35
+                </dd>
+                <dt
+                  class="col-sm-4"
+                >
+                  Resolution:
+                </dt>
+                <dd
+                  class="col-sm-8"
+                >
+                  4608 x 3164
+                </dd>
+                <dt
+                  class="col-sm-4"
+                >
+                  Filmback:
+                </dt>
+                <dd
+                  class="col-sm-8"
+                >
+                  28mm x 19.2mm
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div
+          class="text-start p-3 col-md-5"
+        >
+          <div>
+            <dl
+              class="row"
+            >
+              <dt
+                class="col-sm-4"
+              >
+                Anamorphic?:
+              </dt>
+              <dd
+                class="col-sm-8"
+              >
+                <span
+                  class="text-danger"
+                >
+                  ✗
+                </span>
+              </dd>
+              <dt
+                class="col-sm-4"
+              >
+                Desqueezed?:
+              </dt>
+              <dd
+                class="col-sm-8"
+              >
+                <span
+                  class="text-danger"
+                >
+                  ✗
+                </span>
+              </dd>
+              <dt
+                class="col-sm-4"
+              >
+                Pixel Aspect:
+              </dt>
+              <dd
+                class="col-sm-8"
+              >
+                1
+              </dd>
+              <dt
+                class="col-sm-4"
+              >
+                Downsampled?:
+              </dt>
+              <dd
+                class="col-sm-8"
+              >
+                <span
+                  class="text-danger"
+                >
+                  ✗
+                </span>
+              </dd>
+              <dt
+                class="col-sm-4"
+              >
+                Upscaled?:
+              </dt>
+              <dd
+                class="col-sm-8"
+              >
+                <span
+                  class="text-danger"
+                >
+                  ✗
+                </span>
+              </dd>
+              <dt
+                class="col-sm-4"
+              >
+                Codec:
+              </dt>
+              <dd
+                class="col-sm-8"
+              >
+                ARRIRAW
+              </dd>
+              <dt
+                class="col-sm-4"
+              >
+                Raw recording available?:
+              </dt>
+              <dd
+                class="col-sm-8"
+              >
+                <span
+                  class="text-danger"
+                >
+                  ✗
+                </span>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="mt-3 row"
+    >
+      <div
+        class="col"
+      >
+        <div
+          class="shadow-lg card"
+        >
+          <div
+            class="text-start card-body"
+          >
+            <div
+              class="card-title h5"
+            >
+              Notes
+            </div>
+            <div>
+              <dl>
+                <dt
+                  class="col-sm-4"
+                >
+                  Notes:
+                </dt>
+                <dd
+                  class="col-sm-8"
+                >
+                  sample notes
+                </dd>
+                <dt
+                  class="col-sm-4"
+                >
+                  Manufacturer Notes:
+                </dt>
+                <dd
+                  class="col-sm-8"
+                >
+                  4.6K 3:2 Open Gate provides maximum image quality, resolution, and flexibility in post for many spherical and anamorphic lenses in an image area slightly larger than traditional Super 35 film specifications.
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="mt-3 row"
+    >
+      <div
+        class="col-md-6"
+      >
+        <div
+          class="shadow-lg card"
+        >
+          <div
+            class="text-start card-body"
+          >
+            <div
+              class="card-title h5"
+            >
+              3DE Info
+            </div>
+            <div>
+              <dl
+                class="row"
+              >
+                <dt
+                  class="col-sm-4"
+                >
+                  Filmback Width:
+                </dt>
+                <dd
+                  class="col-md-8"
+                >
+                  28mm 
+                  <i
+                    aria-label="Copy"
+                    class="bi bi-copy text-muted ms-3"
+                    role="button"
+                    style="cursor: pointer;"
+                  />
+                </dd>
+                <dt
+                  class="col-sm-4"
+                >
+                  Filmback Height:
+                </dt>
+                <dd
+                  class="col-md-8"
+                >
+                  19.2mm 
+                  <i
+                    aria-label="Copy"
+                    class="bi bi-copy text-muted ms-3"
+                    role="button"
+                    style="cursor: pointer;"
+                  />
+                </dd>
+                <dt
+                  class="col-sm-4"
+                >
+                  Distortion Model:
+                </dt>
+                <dd
+                  class="col-sm-8"
+                />
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-md-6"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
