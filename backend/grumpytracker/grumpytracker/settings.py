@@ -42,7 +42,8 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Your Vite dev server
+    "http://localhost:5173",  # For local development
+    "wholesome-renewal-production.up.railway.app",  # Railway front end
 ]
 
 # Application definition
