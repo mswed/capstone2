@@ -1,4 +1,4 @@
-import { Card, Row, Col } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 const CameraCard = ({ camera }) => {
   return (
     <Card className="h-50 shadow-lg">

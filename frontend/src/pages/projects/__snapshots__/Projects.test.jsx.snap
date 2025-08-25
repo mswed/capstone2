@@ -1,0 +1,134 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Projects component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="container"
+  >
+    <form
+      class=""
+    >
+      <div
+        class="my-3 input-group"
+      >
+        <input
+          class="form-control"
+          placeholder="Enter search term..."
+          value=""
+        />
+        <button
+          class="btn btn-primary"
+          type="submit"
+        >
+          Search!
+        </button>
+      </div>
+    </form>
+    <div
+      class="mb-4"
+    >
+      <h3
+        class="text-start"
+      >
+        In Database
+      </h3>
+      <div
+        class="table-responsive"
+      >
+        <table
+          class="table table-striped table-hover"
+        >
+          <thead>
+            <tr>
+              <th>
+                Image
+              </th>
+              <th>
+                Name
+              </th>
+              <th>
+                Release Date
+              </th>
+              <th>
+                Type
+              </th>
+              <th>
+                Description
+              </th>
+              <th>
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <img
+                  alt="Image of undefined"
+                  src="/media/camera_images/missing_image.png"
+                  style="width: 60px;"
+                />
+              </td>
+              <td>
+                One Piece
+              </td>
+              <td>
+                2023-08-31
+              </td>
+              <td>
+                episodic
+              </td>
+              <td
+                class="text-start"
+              >
+                With his straw hat and ragtag crew, young pirate Monkey D. Luffy goes on an epic voyage for treasure.
+              </td>
+              <td>
+                <a
+                  class="btn btn-outline-primary btn-sm"
+                  data-discover="true"
+                  href="/projects/1"
+                >
+                  View
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <img
+                  alt="Image of undefined"
+                  src="/media/camera_images/missing_image.png"
+                  style="width: 60px;"
+                />
+              </td>
+              <td>
+                Daredevil
+              </td>
+              <td>
+                2010-02-01
+              </td>
+              <td>
+                feature
+              </td>
+              <td
+                class="text-start"
+              >
+                A pretty bad movie
+              </td>
+              <td>
+                <a
+                  class="btn btn-outline-primary btn-sm"
+                  data-discover="true"
+                  href="/projects/2"
+                >
+                  View
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

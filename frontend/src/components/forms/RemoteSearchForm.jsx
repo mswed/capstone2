@@ -20,8 +20,6 @@ const RemoteSearchForm = ({ search }) => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    console.log('Remote search set to', searchField);
-    console.log('using function', search);
     search(searchField);
   };
 

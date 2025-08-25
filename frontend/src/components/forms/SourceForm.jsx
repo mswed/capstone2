@@ -1,7 +1,5 @@
 import { Form, Button } from 'react-bootstrap';
-import { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
+import { useState } from 'react';
 
 const SourceForm = ({ onSubmit, sourceData }) => {
   const INITIAL_STATE = {
@@ -28,19 +26,42 @@ const SourceForm = ({ onSubmit, sourceData }) => {
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="name">
         <Form.Label className="required-field">Name</Form.Label>
-        <Form.Control placeholder="A clear name describing the source" name="name" onChange={handleChange} value={sourceFormData.name} required />
+        <Form.Control
+          placeholder="A clear name describing the source"
+          name="name"
+          onChange={handleChange}
+          value={sourceFormData.name}
+          required
+        />
       </Form.Group>
       <Form.Group className="mb-3" controlId="url">
         <Form.Label className="required-field">URL</Form.Label>
-        <Form.Control placeholder="Where did you find this data?" name="url" onChange={handleChange} value={sourceFormData.url} required />
+        <Form.Control
+          placeholder="Where did you find this data?"
+          name="url"
+          onChange={handleChange}
+          value={sourceFormData.url}
+          required
+        />
       </Form.Group>
       <Form.Group className="mb-3" controlId="fileName">
         <Form.Label className="required-field">Filename</Form.Label>
-        <Form.Control placeholder="Name of local file with backup of data" name="fileName" onChange={handleChange} value={sourceFormData.fileName} required />
+        <Form.Control
+          placeholder="Name of local file with backup of data"
+          name="fileName"
+          onChange={handleChange}
+          value={sourceFormData.fileName}
+          required
+        />
       </Form.Group>
       <Form.Group className="mb-3" controlId="note">
         <Form.Label>Note</Form.Label>
-        <Form.Control placeholder="Any additional info" name="note" onChange={handleChange} value={sourceFormData.note} />
+        <Form.Control
+          placeholder="Any additional info"
+          name="note"
+          onChange={handleChange}
+          value={sourceFormData.note}
+        />
       </Form.Group>
       <Button type="submit" className="w-100">
         Add

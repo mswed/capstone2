@@ -1,4 +1,4 @@
-import { Card, Row, Col } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 const MakeCard = ({ name, logo, camCount }) => {
   return (
     <Card className="mt-3 h-100 shadow-lg">

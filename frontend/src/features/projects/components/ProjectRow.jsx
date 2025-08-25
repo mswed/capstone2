@@ -16,8 +16,8 @@ const ProjectRow = ({ project, rowType = 'local', onProjectAdd }) => {
   const handleAdd = async () => {
     setIsAdding(true);
     try {
-      const projectId = project.tmdb_id;
-      await onProjectAdd(projectId, project.project_type);
+      const projectId = project.tmdbId;
+      await onProjectAdd(projectId, project.projectType);
       setIsAdded(true);
     } catch (error) {
       console.error('Failed to add project:', error);
@@ -61,11 +61,11 @@ const ProjectRow = ({ project, rowType = 'local', onProjectAdd }) => {
   return (
     <tr>
       <td>
-        <img src={project.poster_path ? project.poster_path : '/media/camera_images/missing_image.png'} alt={`Image of ${project.model}`} style={{ width: '60px' }} />
+        <img src={project.posterPath ? project.posterPath : '/media/camera_images/missing_image.png'} alt={`Image of ${project.model}`} style={{ width: '60px' }} />
       </td>
       <td>{project.name}</td>
-      <td>{project.release_date}</td>
-      <td>{project.project_type}</td>
+      <td>{project.releaseDate}</td>
+      <td>{project.projectType}</td>
       <td className="text-start">{project.description}</td>
       <td>{renderActionButton()}</td>
     </tr>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Button, InputGroup } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
 /**
  * A search form components that runs a setState function provided by

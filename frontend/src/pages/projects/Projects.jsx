@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Card, Row, Col } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import GrumpyApi from '../../services/api';
 import Loading from '../../components/ui/Loading';
 import RemoteSearchForm from '../../components/forms/RemoteSearchForm';
@@ -45,8 +45,7 @@ const Projects = () => {
   const findProjects = async () => {
     try {
       const response = await GrumpyApi.findProjects(searchTerm);
-      setProjects(response);
-      console.log('search set state to', projects);
+      setProjects(response.projects);
     } catch (error) {
       console.error('Error fetching projects', error);
     } finally {
