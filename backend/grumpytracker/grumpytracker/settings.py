@@ -31,7 +31,7 @@ JWT_SECRET = "django-insecure-s$&)1fl_9&khs1$zs=+@_n0q$4g2oig(07m5a&8r%i#mpoc6rl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",")
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Your Vite dev server
