@@ -9,6 +9,7 @@ dependencies = [
     "django-cors-headers>=4.7.0",
     "django-extensions>=4.1",
     "djangorestframework>=3.16.0",
+    "gunicorn>=23.0.0",
     "loguru>=0.7.3",
     "parse>=1.20.2",
     "pdfplumber>=0.11.6",
