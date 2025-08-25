@@ -16,6 +16,9 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    allowedHosts: ['wholesome-renewal-production.up.railway.app', 'localhost'],
+  },
   test: {
     globals: true,
     environment: 'jsdom',
