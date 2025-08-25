@@ -35,6 +35,11 @@ if not DEBUG:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",")
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://capstone2-production-b8aa.up.railway.app",  # Railway URL
+    "http://localhost:8000",  # For local development
+]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Your Vite dev server
