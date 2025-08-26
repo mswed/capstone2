@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 const baseUrl = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000/';
 
 const CameraRow = ({ camera, showMake = true }) => {
-  console.log('base url is', baseUrl);
-  console.log('image is', camera.image);
   return (
     <tr>
       <td>
