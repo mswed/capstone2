@@ -113,7 +113,8 @@ class GrumpyApi {
 
     console.log('backend url is', BASE_URL);
     console.log('backend responded with', camalized);
-    console.log('res has been edited to', res);
+    const test = this.getAbsoluteMediaUrl(camalized);
+    console.log('res has been edited to', test);
     return this.getAbsoluteMediaUrl(camalized);
   }
 
