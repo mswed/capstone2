@@ -18,6 +18,7 @@ export default defineConfig({
   },
   preview: {
     allowedHosts: ['wholesome-renewal-production.up.railway.app', 'localhost'],
+    // No proxy configuration for preview mode
   },
   test: {
     globals: true,
