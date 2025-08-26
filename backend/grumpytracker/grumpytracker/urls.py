@@ -16,9 +16,10 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 from .views import StatsView
 
 urlpatterns = [
@@ -30,16 +31,10 @@ urlpatterns = [
     path("api/v1/projects/", include("projects.urls")),
     path("api/v1/users/", include("users.urls")),
     path("api/v1/stats/", StatsView.as_view(), name="stats"),
+    re_path(
+        r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}
+    ),  # this replaces the commented code below
 ]
 
-# Debug: Print before adding media URLs
-print(f"MEDIA_URL: {settings.MEDIA_URL}")
-print(f"MEDIA_ROOT: {settings.MEDIA_ROOT}")
-print("Adding media URLs...")
-
-media_patterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-print(f"Media patterns: {media_patterns}")
-
-urlpatterns += media_patterns
-
-print(f"Final urlpatterns count: {len(urlpatterns)}")
+# media_patterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += media_patterns
