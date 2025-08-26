@@ -32,4 +32,14 @@ urlpatterns = [
     path("api/v1/stats/", StatsView.as_view(), name="stats"),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Debug: Print before adding media URLs
+print(f"MEDIA_URL: {settings.MEDIA_URL}")
+print(f"MEDIA_ROOT: {settings.MEDIA_ROOT}")
+print("Adding media URLs...")
+
+media_patterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+print(f"Media patterns: {media_patterns}")
+
+urlpatterns += media_patterns
+
+print(f"Final urlpatterns count: {len(urlpatterns)}")
