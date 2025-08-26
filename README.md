@@ -2,6 +2,15 @@
 
 A web application designed for VFX Matchmove Artists, providing centralized access to camera technical specifications based on make, model, or film/tv project.
 
+## Live Demo
+
+https://wholesome-renewal-production.up.railway.app
+
+Most of the actions on the site are only allowed for admin users at the moment. Since this is just a demo you can login using:
+
+- user: admin
+- pass: password123
+
 ## Overview
 
 The Grumpy Tracker serves the VFX community by offering accurate camera technical data essential for shot tracking and matchmoving work. Users can browse camera manufacturers, search for specific models, and access project-specific camera information sourced from verified industry data.
@@ -178,10 +187,6 @@ cd frontend
 npm run lint
 ```
 
-### API Testing
-
-Bruno API collection is included in `backend/grumpy/`. Import this collection into Bruno to test all API endpoints (though this has not been tested thoroly.
-
 ## Data Models
 
 ### Core Models
@@ -228,16 +233,6 @@ Bruno API collection is included in `backend/grumpy/`. Import this collection in
 - **Frontend**: 9 test files with component and page tests
 - **API Testing**: Complete Bruno collection for all endpoints
 
-## Future Enhancements
-
-- [ ] Enhanced search filters
-- [ ] User favorites system
-- [ ] Advanced format comparison tools
-- [ ] Mobile responsive design improvements
-- [ ] Bulk data import tools
-- [ ] Advanced analytics dashboard
-
 ---
 
 _Built with ❤️ for the VFX community_
-
