@@ -54,7 +54,7 @@ class GrumpyApi {
   static getMediaUrl = (relativePath) => {
     if (!relativePath) return null;
     if (relativePath.startsWith('http')) return relativePath;
-    return `${BASE_URL}/${relativePath}`;
+    return `${BASE_URL}${relativePath}`;
   };
 
   /*
