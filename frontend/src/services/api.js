@@ -54,7 +54,7 @@ class GrumpyApi {
   static getMediaUrl = (relativePath) => {
     if (!relativePath) return null;
     if (relativePath.startsWith('http')) return relativePath;
-    return `${BASE_URL}media/${relativePath}`;
+    return `${BASE_URL}/${relativePath}`;
   };
 
   /*
@@ -96,7 +96,8 @@ class GrumpyApi {
   static async getMakeDetails(makeId) {
     console.log('getting make details', makeId);
     let res = await this.apiCall(`api/v1/makes/${makeId}`);
-    console.log('backedn responded with', res);
+    console.log('backend url is', BASE_URL);
+    console.log('backend responded with', res);
     if (res.logo) {
       res.logo = this.getMediaUrl(res.logo);
     }
