@@ -67,6 +67,7 @@ class GrumpyApi {
       }
     });
 
+    console.log('processed item is now item', processedItem);
     return processedItem;
   };
 
