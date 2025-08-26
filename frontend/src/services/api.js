@@ -113,7 +113,7 @@ class GrumpyApi {
     let res = await this.apiCall(`api/v1/makes/${makeId}`);
     const camalized = humps.camelizeKeys(res);
     camalized['cameras'].map(this.getAbsoluteMediaUrl);
-    console.log('proper camera images');
+    console.log('proper camera images', camalized);
 
     return this.getAbsoluteMediaUrl(camalized);
   }
