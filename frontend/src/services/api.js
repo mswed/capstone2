@@ -98,11 +98,9 @@ class GrumpyApi {
 
   static async getMakes() {
     let res = await this.apiCall(`api/v1/makes/`);
-    const camalized = humps.camelizeKeys(res);
-    console.log('backend has these makes', camalized);
-    console.log('which are now', camalized.map(this.getAbsoluteMediaUrl));
+    const camelized = humps.camelizeKeys(res);
 
-    return camalized.map(this.getAbsoluteMediaUrl);
+    return camelized.map(this.getAbsoluteMediaUrl);
   }
 
   /**
@@ -113,12 +111,12 @@ class GrumpyApi {
 
   static async getMakeDetails(makeId) {
     let res = await this.apiCall(`api/v1/makes/${makeId}`);
-    const camalized = humps.camelizeKeys(res);
-    console.log('original response', camalized);
-    camalized['cameras'].map(this.getAbsoluteMediaUrl);
-    console.log('proper camera images', camalized);
+    const camelized = humps.camelizeKeys(res);
+    console.log('original response', camelized);
+    camelized['cameras'] = camelized['cameras'].map(this.getAbsoluteMediaUrl);
+    console.log('proper camera images', camelized);
 
-    return this.getAbsoluteMediaUrl(camalized);
+    return this.getAbsoluteMediaUrl(camelized);
   }
 
   /**
@@ -143,9 +141,9 @@ class GrumpyApi {
 
   static async updateMake(makeId, updatedData) {
     let res = await this.apiCall(`api/v1/makes/${makeId}`, updatedData, 'patch');
-    const camalized = humps.camelizeKeys(res.make);
+    const camelized = humps.camelizeKeys(res.make);
 
-    return this.getAbsoluteMediaUrl(camalized);
+    return this.getAbsoluteMediaUrl(camelized);
   }
 
   /**
@@ -171,10 +169,10 @@ class GrumpyApi {
 
   static async getCameras() {
     let res = await this.apiCall(`api/v1/cameras/`);
-    const camalized = humps.camelizeKeys(res);
-    console.log('backend has these cameras', camalized);
-    console.log('which are now', camalized.map(this.getAbsoluteMediaUrl));
-    return camalized.map(this.getAbsoluteMediaUrl);
+    const camelized = humps.camelizeKeys(res);
+    console.log('backend has these cameras', camelized);
+    console.log('which are now', camelized.map(this.getAbsoluteMediaUrl));
+    return camelized.map(this.getAbsoluteMediaUrl);
   }
 
   /**
@@ -191,8 +189,8 @@ class GrumpyApi {
     const q = query;
     let res = await this.apiCall(`api/v1/cameras/search`, { q });
 
-    const camalized = humps.camelizeKeys(res);
-    return camalized.map(this.getAbsoluteMediaUrl);
+    const camelized = humps.camelizeKeys(res);
+    return camelized.map(this.getAbsoluteMediaUrl);
   }
 
   /**
@@ -204,10 +202,10 @@ class GrumpyApi {
 
   static async getCameraDetails(cameraId) {
     let res = await this.apiCall(`api/v1/cameras/${cameraId}`);
-    const camalized = humps.camelizeKeys(res);
-    console.log('backend has this amera', camalized);
-    console.log('which is now now', this.getAbsoluteMediaUrl(camalized));
-    return this.getAbsoluteMediaUrl(camalized);
+    const camelized = humps.camelizeKeys(res);
+    console.log('backend has this amera', camelized);
+    console.log('which is now now', this.getAbsoluteMediaUrl(camelized));
+    return this.getAbsoluteMediaUrl(camelized);
   }
 
   /**
@@ -232,9 +230,9 @@ class GrumpyApi {
 
   static async updateCamera(cameraId, cameraData) {
     let res = await this.apiCall(`api/v1/cameras/${cameraId}`, cameraData, 'patch');
-    const camalized = humps.camelizeKeys(res.camera);
+    const camelized = humps.camelizeKeys(res.camera);
 
-    return this.getAbsoluteMediaUrl(camalized);
+    return this.getAbsoluteMediaUrl(camelized);
   }
 
   /**
