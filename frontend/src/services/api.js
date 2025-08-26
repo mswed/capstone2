@@ -53,6 +53,7 @@ class GrumpyApi {
 
   static getAbsoluteMediaUrl = (item) => {
     if (!item) return null;
+    console.log('processing item', item);
 
     const processedItem = { ...item };
 
