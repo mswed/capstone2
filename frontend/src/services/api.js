@@ -62,7 +62,7 @@ class GrumpyApi {
     // process the URL fields
     mediaFields.forEach((field) => {
       if (processedItem[field] && !processedItem[field].startsWith('http')) {
-        processedItem[field] = `${BASE_URL}${field}`;
+        processedItem[field] = `${BASE_URL}${processedItem[field]}`;
       }
     });
 
