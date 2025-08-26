@@ -44,6 +44,19 @@ class GrumpyApi {
     }
   }
 
+  /**
+   * A helper function to format image urls. The backend returns
+   * relatives paths so we need to onvert them to absolute
+   * @param {String} relativePath - relatice path to image
+   * @returns {String} absolute path to image
+   */
+
+  static getMediaUrl = (relativePath) => {
+    if (!relativePath) return null;
+    if (relativePath.startsWith('http')) return relativePath;
+    return `${BASE_URL}media/${relativePath}`;
+  };
+
   /*
    ****************************** Stats Routes **************************************************
    * */
@@ -82,6 +95,9 @@ class GrumpyApi {
 
   static async getMakeDetails(makeId) {
     let res = await this.apiCall(`api/v1/makes/${makeId}`);
+    if (res.logo) {
+      res.logo = this.getMediaUrl(res.logo);
+    }
     return humps.camelizeKeys(res);
   }
 
@@ -106,11 +122,7 @@ class GrumpyApi {
    */
 
   static async updateMake(makeId, updatedData) {
-    let res = await this.apiCall(
-      `api/v1/makes/${makeId}`,
-      updatedData,
-      'patch'
-    );
+    let res = await this.apiCall(`api/v1/makes/${makeId}`, updatedData, 'patch');
     return camelizeKeys(res.make);
   }
 
@@ -190,11 +202,7 @@ class GrumpyApi {
    */
 
   static async updateCamera(cameraId, cameraData) {
-    let res = await this.apiCall(
-      `api/v1/cameras/${cameraId}`,
-      cameraData,
-      'patch'
-    );
+    let res = await this.apiCall(`api/v1/cameras/${cameraId}`, cameraData, 'patch');
     return humps.camelizeKeys(res.camera);
   }
 
@@ -236,11 +244,7 @@ class GrumpyApi {
 
   static async updateFormat(formatId, formatData) {
     const snakeCaseData = humps.decamelizeKeys(formatData);
-    let res = await this.apiCall(
-      `api/v1/formats/${formatId}`,
-      snakeCaseData,
-      'patch'
-    );
+    let res = await this.apiCall(`api/v1/formats/${formatId}`, snakeCaseData, 'patch');
     return humps.camelizeKeys(res.format);
   }
 
@@ -364,11 +368,7 @@ class GrumpyApi {
    */
 
   static async addTMDBProject(tmdbId, projectType) {
-    let res = await this.apiCall(
-      `api/v1/projects/`,
-      { tmdb_id: tmdbId, project_type: projectType },
-      'post'
-    );
+    let res = await this.apiCall(`api/v1/projects/`, { tmdb_id: tmdbId, project_type: projectType }, 'post');
     if (res) {
       return humps.camelizeKeys(res);
     } else {
@@ -384,11 +384,7 @@ class GrumpyApi {
    */
 
   static async addFormatToProject(projectId, formatId) {
-    let res = await this.apiCall(
-      `api/v1/projects/${projectId}/formats/`,
-      { format_id: formatId },
-      'post'
-    );
+    let res = await this.apiCall(`api/v1/projects/${projectId}/formats/`, { format_id: formatId }, 'post');
     if (res) {
       return humps.camelizeKeys(res);
     } else {
@@ -405,11 +401,7 @@ class GrumpyApi {
    */
 
   static async voteOnProjectFormat(projectId, formatId, vote) {
-    let res = await this.apiCall(
-      `api/v1/projects/${projectId}/formats/${formatId}`,
-      { vote },
-      'patch'
-    );
+    let res = await this.apiCall(`api/v1/projects/${projectId}/formats/${formatId}`, { vote }, 'patch');
     if (res) {
       return humps.camelizeKeys(res);
     } else {
@@ -467,11 +459,7 @@ class GrumpyApi {
 
   static async updateSource(sourceId, sourceData) {
     const snakeCaseData = humps.decamelizeKeys(sourceData);
-    let res = await this.apiCall(
-      `api/v1/sources/${sourceId}`,
-      snakeCaseData,
-      'patch'
-    );
+    let res = await this.apiCall(`api/v1/sources/${sourceId}`, snakeCaseData, 'patch');
     return humps.camelizeKeys(res.source);
   }
 
@@ -497,11 +485,7 @@ class GrumpyApi {
    * @param {String} password - password of user
    */
   static async login(username, password) {
-    let res = await this.apiCall(
-      `api/v1/users/auth`,
-      { username, password },
-      'post'
-    );
+    let res = await this.apiCall(`api/v1/users/auth`, { username, password }, 'post');
     GrumpyApi.token = res.token;
     return res.token;
   }
@@ -554,11 +538,7 @@ class GrumpyApi {
 
   static async updateUser(userId, userData) {
     const snakeCaseData = humps.decamelizeKeys(userData);
-    let res = await this.apiCall(
-      `api/v1/users/${userId}`,
-      snakeCaseData,
-      'patch'
-    );
+    let res = await this.apiCall(`api/v1/users/${userId}`, snakeCaseData, 'patch');
     return humps.camelizeKeys(res.user);
   }
 }
