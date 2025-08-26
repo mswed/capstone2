@@ -334,7 +334,10 @@ class GrumpyApi {
 
   static async getProjectDetails(projectId) {
     let res = await this.apiCall(`api/v1/projects/${projectId}`);
-    return humps.camelizeKeys(res);
+    const camelized = humps.camelizeKeys(res);
+    camelized['cameras'] = camelized['cameras'].map(this.getAbsoluteMediaUrl);
+
+    return camelized;
   }
 
   /**
