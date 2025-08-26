@@ -94,10 +94,13 @@ class GrumpyApi {
    */
 
   static async getMakeDetails(makeId) {
+    console.log('getting make details', makeId);
     let res = await this.apiCall(`api/v1/makes/${makeId}`);
+    console.log('backedn responded with', res);
     if (res.logo) {
       res.logo = this.getMediaUrl(res.logo);
     }
+    console.log('res has been edited to', res);
     return humps.camelizeKeys(res);
   }
 
