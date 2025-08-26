@@ -47,14 +47,26 @@ class GrumpyApi {
   /**
    * A helper function to format image urls. The backend returns
    * relatives paths so we need to onvert them to absolute
-   * @param {String} relativePath - relatice path to image
-   * @returns {String} absolute path to image
+   * @param {Object} item - original item with a relative media path
+   * @returns {Object} item with absolute path
    */
 
-  static getMediaUrl = (relativePath) => {
-    if (!relativePath) return null;
-    if (relativePath.startsWith('http')) return relativePath;
-    return `${BASE_URL}${relativePath}`;
+  static getAbsoluteMediaUrl = (item) => {
+    if (!item) return null;
+
+    const processedItem = { ...item };
+
+    // media fields
+    const mediaFields = ['logo', 'image'];
+
+    // process the URL fields
+    mediaFields.forEach((field) => {
+      if (processedItem[field] && !processedItem[field].startsWith('http')) {
+        processedItem[field] = `${BASE_URL}${relativePath}`;
+      }
+    });
+
+    return processedItem;
   };
 
   /*
@@ -84,7 +96,8 @@ class GrumpyApi {
 
   static async getMakes() {
     let res = await this.apiCall(`api/v1/makes/`);
-    return humps.camelizeKeys(res);
+    const camalized = humps.camelizeKeys(res);
+    return camalized.map(this.getAbsoluteMediaUrl);
   }
 
   /**
@@ -96,13 +109,12 @@ class GrumpyApi {
   static async getMakeDetails(makeId) {
     console.log('getting make details', makeId);
     let res = await this.apiCall(`api/v1/makes/${makeId}`);
+    const camalized = humps.camelizeKeys(res);
+
     console.log('backend url is', BASE_URL);
-    console.log('backend responded with', res);
-    if (res.logo) {
-      res.logo = this.getMediaUrl(res.logo);
-    }
+    console.log('backend responded with', camalized);
     console.log('res has been edited to', res);
-    return humps.camelizeKeys(res);
+    return this.getAbsoluteMediaUrl(camalized);
   }
 
   /**
