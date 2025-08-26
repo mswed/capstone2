@@ -107,14 +107,9 @@ class GrumpyApi {
    */
 
   static async getMakeDetails(makeId) {
-    console.log('getting make details', makeId);
     let res = await this.apiCall(`api/v1/makes/${makeId}`);
     const camalized = humps.camelizeKeys(res);
 
-    console.log('backend url is', BASE_URL);
-    console.log('backend responded with', camalized);
-    const test = this.getAbsoluteMediaUrl(camalized);
-    console.log('res has been edited to', test);
     return this.getAbsoluteMediaUrl(camalized);
   }
 
@@ -140,7 +135,9 @@ class GrumpyApi {
 
   static async updateMake(makeId, updatedData) {
     let res = await this.apiCall(`api/v1/makes/${makeId}`, updatedData, 'patch');
-    return camelizeKeys(res.make);
+    const camalized = humps.camelizeKeys(res.make);
+
+    return this.getAbsoluteMediaUrl(camalized);
   }
 
   /**
@@ -166,7 +163,8 @@ class GrumpyApi {
 
   static async getCameras() {
     let res = await this.apiCall(`api/v1/cameras/`);
-    return humps.camelizeKeys(res);
+    const camalized = humps.camelizeKeys(res);
+    return camalized.map(this.getAbsoluteMediaUrl);
   }
 
   /**
@@ -183,7 +181,8 @@ class GrumpyApi {
     const q = query;
     let res = await this.apiCall(`api/v1/cameras/search`, { q });
 
-    return humps.camelizeKeys(res);
+    const camalized = humps.camelizeKeys(res);
+    return camalized.map(this.getAbsoluteMediaUrl);
   }
 
   /**
@@ -195,7 +194,8 @@ class GrumpyApi {
 
   static async getCameraDetails(cameraId) {
     let res = await this.apiCall(`api/v1/cameras/${cameraId}`);
-    return humps.camelizeKeys(res);
+    const camalized = humps.camelizeKeys(res);
+    return this.getAbsoluteMediaUrl(camalized);
   }
 
   /**
@@ -220,7 +220,9 @@ class GrumpyApi {
 
   static async updateCamera(cameraId, cameraData) {
     let res = await this.apiCall(`api/v1/cameras/${cameraId}`, cameraData, 'patch');
-    return humps.camelizeKeys(res.camera);
+    const camalized = humps.camelizeKeys(res.camera);
+
+    return this.getAbsoluteMediaUrl(camalized);
   }
 
   /**
