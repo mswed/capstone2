@@ -32,6 +32,4 @@ urlpatterns = [
     path("api/v1/stats/", StatsView.as_view(), name="stats"),
 ]
 
-if not settings.DEBUG:
-    # When in development mode Django loads the images
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
