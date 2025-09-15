@@ -3,12 +3,13 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.files import File
 from makes.models import Make
+from django.conf import settings
 from typing import Dict, Any
 
 
 class Camera(models.Model):
     # Define the relationship
-    make = models.ForeignKey(Make, on_delete=models.CASCADE, related_name="cameras")
+    make = models.ForeignKey(Make, on_delete=models.CASCADE, related_name='cameras')
 
     # Camera info
     model = models.CharField(max_length=200)
@@ -18,13 +19,13 @@ class Camera(models.Model):
         max_digits=5,
         decimal_places=2,
         default=0.0,
-        help_text="Maximum filmback size in mm",
+        help_text='Maximum filmback size in mm',
     )
     max_filmback_height = models.DecimalField(
         max_digits=5,
         decimal_places=2,
         default=0.0,
-        help_text="Maximum filmback size in mm",
+        help_text='Maximum filmback size in mm',
     )
 
     max_image_width = models.IntegerField(default=0, validators=[MinValueValidator(0)])
@@ -39,17 +40,17 @@ class Camera(models.Model):
 
     notes = models.CharField(max_length=500, blank=True)
     discontinued = models.BooleanField(
-        default=False, help_text="Was this model discontinued by the make?"
+        default=False, help_text='Was this model discontinued by the make?'
     )
 
-    image = models.ImageField(upload_to="camera_images/", blank=True, null=True)
+    image = models.ImageField(upload_to='camera_images/', blank=True, null=True)
 
     # Audit fields
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.make.name} {self.model}"
+        return f'{self.make.name} {self.model}'
 
     @classmethod
     def create_with_image(cls, image_file=None, image_path=None, **kwargs):
@@ -58,11 +59,15 @@ class Camera(models.Model):
         form disk (for seeding) or from an API call (for the actual site)
         """
 
+        # Make sure we have a media directory
+        if not os.path.exists(settings.MEDIA_ROOT):
+            os.makedirs(settings.MEDIA_ROOT)
+
         camera = cls.objects.create(**kwargs)
 
         if image_path and os.path.exists(image_path):
             # This is a local file used during seeding
-            with open(image_path, "rb") as f:
+            with open(image_path, 'rb') as f:
                 camera.image.save(os.path.basename(image_path), File(f), save=True)
         elif image_file:
             # This is a file added via the API
@@ -71,6 +76,10 @@ class Camera(models.Model):
         return camera
 
     def update_image(self, image_file):
+        # Make sure we have a media directory
+        if not os.path.exists(settings.MEDIA_ROOT):
+            os.makedirs(settings.MEDIA_ROOT)
+
         self.image.save(image_file.name, image_file, save=True)
 
     def as_dict(self) -> Dict[str, Any]:
@@ -79,28 +88,28 @@ class Camera(models.Model):
         """
 
         return {
-            "id": self.id,
-            "make": self.make.id,
-            "make_name": self.make.name,
-            "model": self.model,
-            "sensor_type": self.sensor_type,
-            "sensor_size": self.sensor_size,
-            "max_filmback_width": self.max_filmback_width,
-            "max_filmback_height": self.max_filmback_height,
-            "max_image_width": self.max_image_width,
-            "max_image_height": self.max_image_height,
-            "min_frame_rate": self.min_frame_rate,
-            "max_frame_rate": self.max_frame_rate,
-            "notes": self.notes,
-            "discontinued": self.discontinued,
-            "image": self.image.url if self.image else None,
+            'id': self.id,
+            'make': self.make.id,
+            'make_name': self.make.name,
+            'model': self.model,
+            'sensor_type': self.sensor_type,
+            'sensor_size': self.sensor_size,
+            'max_filmback_width': self.max_filmback_width,
+            'max_filmback_height': self.max_filmback_height,
+            'max_image_width': self.max_image_width,
+            'max_image_height': self.max_image_height,
+            'min_frame_rate': self.min_frame_rate,
+            'max_frame_rate': self.max_frame_rate,
+            'notes': self.notes,
+            'discontinued': self.discontinued,
+            'image': self.image.url if self.image else None,
         }
 
     def with_formats(self):
         return {
             **self.as_dict(),
-            "formats": [fmt.as_dict() for fmt in self.formats.all()],
+            'formats': [fmt.as_dict() for fmt in self.formats.all()],
         }
 
     class Meta:
-        unique_together = ["make", "model"]
+        unique_together = ['make', 'model']

@@ -1,12 +1,13 @@
 from django.db import models
 from django.core.files import File
+from django.conf import settings
 import os
 
 
 class Make(models.Model):
     name = models.CharField(max_length=100)
     website = models.URLField(blank=True)
-    logo = models.ImageField(upload_to="make_logos", blank=True, null=True)
+    logo = models.ImageField(upload_to='make_logos', blank=True, null=True)
 
     # Audit fields
     created_at = models.DateTimeField(auto_now_add=True)
@@ -22,11 +23,15 @@ class Make(models.Model):
         form disk (for seeding) or from an API call (for the actual site)
         """
 
+        # Make sure we have a media directory
+        if not os.path.exists(settings.MEDIA_ROOT):
+            os.makedirs(settings.MEDIA_ROOT)
+
         make = cls.objects.create(name=name, website=website)
 
         if logo_path and os.path.exists(logo_path):
             # This is a local file used during seeding
-            with open(logo_path, "rb") as f:
+            with open(logo_path, 'rb') as f:
                 make.logo.save(os.path.basename(logo_path), File(f), save=True)
         elif logo_file:
             # This is a file added via the API
@@ -39,15 +44,15 @@ class Make(models.Model):
 
     def as_dict(self):
         return {
-            "id": self.id,
-            "name": self.name,
-            "website": self.website,
-            "logo": self.logo.url if self.logo else None,
-            "cameras_count": self.cameras.count(),
+            'id': self.id,
+            'name': self.name,
+            'website': self.website,
+            'logo': self.logo.url if self.logo else None,
+            'cameras_count': self.cameras.count(),
         }
 
     def with_cameras(self):
         return {
             **self.as_dict(),
-            "cameras": [camera.as_dict() for camera in self.cameras.all()],
+            'cameras': [camera.as_dict() for camera in self.cameras.all()],
         }
