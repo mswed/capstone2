@@ -20,6 +20,7 @@ import Profile from './pages/users/profile.jsx';
 import About from './pages/About.jsx';
 import Messages from './components/ui/Messages.jsx';
 import { MessagesProvider } from './context/MessageContext.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/login" element={<FormContainer FormComponent={LoginForm} />} />
             <Route path="/profile/" element={<Profile />} />
             <Route path="/about/" element={<About />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
       </MessagesProvider>

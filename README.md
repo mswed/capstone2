@@ -4,12 +4,7 @@ A web application designed for VFX Matchmove Artists, providing centralized acce
 
 ## Live Demo
 
-https://wholesome-renewal-production.up.railway.app
-
-Most of the actions on the site are only allowed for admin users at the moment. Since this is just a demo you can login using:
-
-- user: admin
-- pass: password123
+https://www.thegrumpytracker.xyz
 
 ## Overview
 
