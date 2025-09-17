@@ -1,17 +1,17 @@
-import { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Card, Row, Col } from 'react-bootstrap';
-import GrumpyApi from '../../services/api';
-import Loading from '../../components/ui/Loading';
-import Checkmark from '../../components/ui/Checkmark';
-import FormatForm from '../../components/forms/FormatForm.jsx';
-import ActionBar from '../../components/ui/ActionBar.jsx';
-import ConfirmDialog from '../../components/ui/ConfirmDialog.jsx';
-import ModalWindow from '../../components/ui/ModalWindow.jsx';
-import { AuthContext } from '../../context/AuthContext.jsx';
-import { MessageContext } from '../../context/MessageContext.jsx';
-import { useNavigate } from 'react-router-dom';
-import useSources from '../../hooks/useSources.js';
+import { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { Container, Card, Row, Col } from "react-bootstrap";
+import GrumpyApi from "../../services/api";
+import Loading from "../../components/ui/Loading";
+import Checkmark from "../../components/ui/Checkmark";
+import FormatForm from "../../components/forms/FormatForm.jsx";
+import ActionBar from "../../components/ui/ActionBar.jsx";
+import ConfirmDialog from "../../components/ui/ConfirmDialog.jsx";
+import ModalWindow from "../../components/ui/ModalWindow.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
+import { MessageContext } from "../../context/MessageContext.jsx";
+import { useNavigate } from "react-router-dom";
+import useSources from "../../hooks/useSources.js";
 
 const FormatDetails = () => {
   const navigate = useNavigate();
@@ -29,14 +29,14 @@ const FormatDetails = () => {
 
   const actionButtons = [
     {
-      text: 'Delete Format',
-      variant: 'outline-danger',
+      text: "Delete Format",
+      variant: "outline-danger",
       onClick: () => setConfirmDelete(true),
       adminOnly: true,
     },
     {
-      text: 'Edit Format',
-      variant: 'outline-warning',
+      text: "Edit Format",
+      variant: "outline-warning",
       onClick: () => setShowEditFormatModal(true),
       adminOnly: true,
     },
@@ -45,24 +45,27 @@ const FormatDetails = () => {
   const handleCopy = async (value) => {
     try {
       await navigator.clipboard.writeText(value);
-      showMessage('Copied!', 'success');
+      showMessage("Copied!", "success");
     } catch (error) {
-      showMessage('Faild to copy value!', 'danger');
-      consoel.error('Failed to copy:', error);
+      showMessage("Faild to copy value!", "danger");
+      consoel.error("Failed to copy:", error);
     }
   };
 
   const handleUpdateFormat = async (formatData) => {
     try {
-      const updatedFormatDetails = await GrumpyApi.updateFormat(formatId, formatData);
+      const updatedFormatDetails = await GrumpyApi.updateFormat(
+        formatId,
+        formatData,
+      );
       setFormatData((prev) => ({ ...prev, ...updatedFormatDetails }));
 
       // Close the modal
       setShowEditFormatModal(false);
-      showMessage('Updated format', 'success');
+      showMessage("Updated format", "success");
     } catch (error) {
-      showMessage('Failed to update format', 'danger');
-      console.error('Failed to update format:', error);
+      showMessage("Failed to update format", "danger");
+      console.error("Failed to update format:", error);
     }
   };
 
@@ -74,11 +77,11 @@ const FormatDetails = () => {
       setSources((prev) => [...prev, newSource]);
 
       // Retrun the new source so we can update the UI
-      showMessage('Added source', 'success');
+      showMessage("Added source", "success");
       return newSource;
     } catch (error) {
-      showMessage('Failed to add source', 'danger');
-      console.error('Failed to add source', error);
+      showMessage("Failed to add source", "danger");
+      console.error("Failed to add source", error);
 
       throw error;
     }
@@ -88,9 +91,9 @@ const FormatDetails = () => {
     const response = await GrumpyApi.deleteFormat(formatId);
     if (response.success) {
       navigate(-1);
-      showMessage('Deleted format', 'success');
+      showMessage("Deleted format", "success");
     } else {
-      showMessage('Failed to delete format', 'success');
+      showMessage("Failed to delete format", "success");
     }
   };
 
@@ -101,7 +104,7 @@ const FormatDetails = () => {
         const response = await GrumpyApi.getFormatDetails(formatId);
         setFormatData(response);
       } catch (error) {
-        console.error('Error fetching camera details', error);
+        console.error("Error fetching camera details", error);
       } finally {
         setIsLoading(false);
       }
@@ -118,7 +121,7 @@ const FormatDetails = () => {
       <ConfirmDialog
         show={showConfirmDelete}
         title={`Delete format "${formatData.imageFormat} ${formatData.imageAspect} ${formatData.formatName}"`}
-        message={'Are you sure?'}
+        message={"Are you sure?"}
         confirmText="Delete"
         onConfirm={handleDeleteFormat}
         onCancel={() => setConfirmDelete(false)}
@@ -131,16 +134,17 @@ const FormatDetails = () => {
               alt="Film strip image"
               className="p-3"
               style={{
-                objectFit: 'contain',
-                maxHeight: '250px',
-                maxWidth: '100%',
+                objectFit: "contain",
+                maxHeight: "250px",
+                maxWidth: "100%",
               }}
             />
           </Col>
           <Col md={4}>
             <Card.Body className="text-start">
               <Card.Title>
-                {formatData.imageFormat} {formatData.imageAspect} {formatData.formatName}
+                {formatData.imageFormat} {formatData.imageAspect}{" "}
+                {formatData.formatName}
               </Card.Title>
               <div>
                 <dl className="row">
@@ -167,27 +171,42 @@ const FormatDetails = () => {
               <dl className="row">
                 <dt className="col-sm-4">Anamorphic?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.isAnamorphic} title="anamorphic?" />
+                  <Checkmark
+                    checked={formatData.isAnamorphic}
+                    title="anamorphic?"
+                  />
                 </dd>
                 <dt className="col-sm-4">Desqueezed?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.isDesqueezed} title="desqueezed?" />
+                  <Checkmark
+                    checked={formatData.isDesqueezed}
+                    title="desqueezed?"
+                  />
                 </dd>
                 <dt className="col-sm-4">Pixel Aspect:</dt>
                 <dd className="col-sm-8">{formatData.pixelAspect}</dd>
                 <dt className="col-sm-4">Downsampled?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.isDownsampled} title="downsampled?" />
+                  <Checkmark
+                    checked={formatData.isDownsampled}
+                    title="downsampled?"
+                  />
                 </dd>
                 <dt className="col-sm-4">Upscaled?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.isUpscaled} title="upscaled?" />
+                  <Checkmark
+                    checked={formatData.isUpscaled}
+                    title="upscaled?"
+                  />
                 </dd>
                 <dt className="col-sm-4">Codec:</dt>
                 <dd className="col-sm-8">{formatData.codec}</dd>
                 <dt className="col-sm-4">Raw recording available?:</dt>
                 <dd className="col-sm-8">
-                  <Checkmark checked={formatData.rawRecordingAvailable} title="row recording available?" />
+                  <Checkmark
+                    checked={formatData.rawRecordingAvailable}
+                    title="row recording available?"
+                  />
                 </dd>
               </dl>
             </div>
@@ -198,7 +217,15 @@ const FormatDetails = () => {
         show={showEditFormatModal}
         onHide={() => setShowEditFormatModal(false)}
         title={`Edit format ${formatData.imageFormat} ${formatData.imageAspect} ${formatData.formatName}`}
-        form={<FormatForm onSubmit={handleUpdateFormat} formatData={formatData} sources={sources} onSourceAdded={handleAddSource} buttonLabel="Update" />}
+        form={
+          <FormatForm
+            onSubmit={handleUpdateFormat}
+            formatData={formatData}
+            sources={sources}
+            onSourceAdded={handleAddSource}
+            buttonLabel="Update"
+          />
+        }
       />
       {token && <ActionBar buttons={actionButtons} className="mt-3" />}
       <Row className="mt-3">
@@ -209,9 +236,15 @@ const FormatDetails = () => {
               <div>
                 <dl>
                   {formatData.notes && <dt className="col-sm-4">Notes:</dt>}
-                  {formatData.notes && <dd className="col-sm-8">{formatData.notes}</dd>}
-                  {formatData.makeNotes && <dt className="col-sm-4">Manufacturer Notes:</dt>}
-                  {formatData.makeNotes && <dd className="col-sm-8">{formatData.makeNotes}</dd>}
+                  {formatData.notes && (
+                    <dd className="col-sm-8">{formatData.notes}</dd>
+                  )}
+                  {formatData.makeNotes && (
+                    <dt className="col-sm-4">Manufacturer Notes:</dt>
+                  )}
+                  {formatData.makeNotes && (
+                    <dd className="col-sm-8">{formatData.makeNotes}</dd>
+                  )}
                 </dl>
               </div>
             </Card.Body>
@@ -227,22 +260,22 @@ const FormatDetails = () => {
                 <dl className="row">
                   <dt className="col-sm-4">Filmback Width:</dt>
                   <dd className="col-md-8">
-                    {formatData.filmbackWidth3de}mm{' '}
+                    {formatData.filmbackWidth3de}mm{" "}
                     <i
                       className="bi bi-copy text-muted ms-3"
                       role="button"
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                       aria-label="Copy"
                       onClick={() => handleCopy(formatData.filmbackWidth3de)}
                     ></i>
                   </dd>
                   <dt className="col-sm-4">Filmback Height:</dt>
                   <dd className="col-md-8">
-                    {formatData.filmbackHeight3de}mm{' '}
+                    {formatData.filmbackHeight3de}mm{" "}
                     <i
                       className="bi bi-copy text-muted ms-3"
                       role="button"
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                       aria-label="Copy"
                       onClick={() => handleCopy(formatData.filmbackHeight3de)}
                     ></i>
@@ -255,7 +288,7 @@ const FormatDetails = () => {
           </Card>
         </Col>
         <Col md={6}>
-          {formatData.tracking_workflow && (
+          {formatData.trackingWorkflow && (
             <Card className="shadow-lg">
               <Card.Body className="text-start">
                 <div>
