@@ -1,9 +1,15 @@
-import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import Checkmark from '../../../components/ui/Checkmark';
-import VoteWidget from './VoteWidget';
+import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import Checkmark from "../../../components/ui/Checkmark";
+import VoteWidget from "./VoteWidget";
 
-const FormatRow = ({ format, showModel = true, showAddButton = false, onFormatAdd, onVote }) => {
+const FormatRow = ({
+  format,
+  showModel = true,
+  showAddButton = false,
+  onFormatAdd,
+  onVote,
+}) => {
   const handleAdd = () => {
     if (onFormatAdd) {
       onFormatAdd(format.id);
@@ -28,11 +34,17 @@ const FormatRow = ({ format, showModel = true, showAddButton = false, onFormatAd
         <Checkmark checked={format.isAnamorphic} title="anamorphic?" />
       </td>
       <td className="text-center">
-        <Checkmark checked={format.isDesqueeezed} title="desqueezed?" />
+        <Checkmark checked={format.isDesqueezed} title="desqueezed?" />
       </td>
       {onVote && (
         <td>
-          <VoteWidget formatId={format.id} upVotes={format.upVotes} downVotes={format.downVotes} userVote={format.userVote} onVote={onVote} />
+          <VoteWidget
+            formatId={format.id}
+            upVotes={format.upVotes}
+            downVotes={format.downVotes}
+            userVote={format.userVote}
+            onVote={onVote}
+          />
         </td>
       )}
       <td>
@@ -41,7 +53,10 @@ const FormatRow = ({ format, showModel = true, showAddButton = false, onFormatAd
             Add
           </Button>
         ) : (
-          <Link to={`/formats/${format.id}`} className="btn btn-outline-primary btn-sm">
+          <Link
+            to={`/formats/${format.id}`}
+            className="btn btn-outline-primary btn-sm"
+          >
             View
           </Link>
         )}
