@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import { Container } from 'react-bootstrap';
-import GrumpyApi from '../../services/api';
-import Loading from '../../components/ui/Loading';
-import RemoteSearchForm from '../../components/forms/RemoteSearchForm';
-import ProjectList from '../../features/projects/components/ProjectList';
-import NoResults from '../../components/ui/NoResults';
+import { useState, useEffect } from "react";
+import { Container } from "react-bootstrap";
+import GrumpyApi from "../../services/api";
+import Loading from "../../components/ui/Loading";
+import RemoteSearchForm from "../../components/forms/RemoteSearchForm";
+import ProjectList from "../../features/projects/components/ProjectList";
+import NoResults from "../../components/ui/NoResults";
 
 const Projects = () => {
   const [projects, setProjects] = useState({ local: [], remote: [] });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   // Conditions for rendering
-  const hasSearch = searchTerm.trim() !== '';
+  const hasSearch = searchTerm.trim() !== "";
   const hasLocalResults = projects.local.length > 0;
   const hasRemoteResults = projects.remote.length > 0;
 
@@ -29,7 +29,7 @@ const Projects = () => {
       const response = await GrumpyApi.getProjects();
       setProjects({ local: response, remote: [] });
     } catch (error) {
-      console.error('Error fetching cameras', error);
+      console.error("Error fetching cameras", error);
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +47,7 @@ const Projects = () => {
       const response = await GrumpyApi.findProjects(searchTerm);
       setProjects(response.projects);
     } catch (error) {
-      console.error('Error fetching projects', error);
+      console.error("Error fetching projects", error);
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +69,7 @@ const Projects = () => {
   };
 
   useEffect(() => {
-    if (searchTerm.trim() !== '') {
+    if (searchTerm.trim() !== "") {
       findProjects();
     } else {
       getAllProjects();
@@ -81,7 +81,10 @@ const Projects = () => {
   }
   return (
     <Container>
-      <RemoteSearchForm search={setSearchTerm} />
+      <RemoteSearchForm
+        search={setSearchTerm}
+        placeholder="Can't see your project? Search here to find and add it!"
+      />
       <div className="mb-4">
         <h3 className="text-start">In Database</h3>
         {hasLocalResults ? (
@@ -94,8 +97,16 @@ const Projects = () => {
       </div>
       {hasSearch && (
         <div>
-          <h3 className="text-start">Browse TMDB</h3>{' '}
-          {hasRemoteResults ? <ProjectList projects={projects.remote} projectsType="remote" onProjectAdd={addProject} /> : <NoResults message="No results found on TMDB" />}
+          <h3 className="text-start">Browse TMDB</h3>{" "}
+          {hasRemoteResults ? (
+            <ProjectList
+              projects={projects.remote}
+              projectsType="remote"
+              onProjectAdd={addProject}
+            />
+          ) : (
+            <NoResults message="No results found on TMDB" />
+          )}
         </div>
       )}
     </Container>

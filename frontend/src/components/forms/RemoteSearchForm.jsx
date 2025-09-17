@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Form, Button, InputGroup } from 'react-bootstrap';
+import { useState } from "react";
+import { Form, Button, InputGroup } from "react-bootstrap";
 
 /**
  * A search form components that runs a setState function provided by
@@ -10,8 +10,8 @@ import { Form, Button, InputGroup } from 'react-bootstrap';
  * @returns {Component} - a search form with a search field and a button
  */
 
-const RemoteSearchForm = ({ search }) => {
-  const INITIAL_STATE = '';
+const RemoteSearchForm = ({ search, placeholder = "Enter search term..." }) => {
+  const INITIAL_STATE = "";
   const [searchField, setSearchField] = useState(INITIAL_STATE);
 
   const handleChange = (evt) => {
@@ -24,16 +24,24 @@ const RemoteSearchForm = ({ search }) => {
   };
 
   const handleClear = () => {
-    setSearchField('');
-    search('');
+    setSearchField("");
+    search("");
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <InputGroup className="my-3">
-        <Form.Control placeholder="Enter search term..." onChange={handleChange} value={searchField} />
+        <Form.Control
+          placeholder={placeholder}
+          onChange={handleChange}
+          value={searchField}
+        />
         {searchField && (
-          <Button variant="outline-secondary" onClick={handleClear} aria-label="Clear search">
+          <Button
+            variant="outline-secondary"
+            onClick={handleClear}
+            aria-label="Clear search"
+          >
             x
           </Button>
         )}
